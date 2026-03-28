@@ -147,6 +147,7 @@ MEDIA_URL = '/media/'
 # المسار الحقيقي على جهازك حيث سيتم تخزين الملفات فعلياً
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 LOGIN_URL = '/login/'
 
 DATABASE_ROUTERS = ['sales.db_router.TenantDatabaseRouter']
