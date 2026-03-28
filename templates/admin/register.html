@@ -208,13 +208,7 @@
 <div class="auth-wrap">
     <div class="auth-card">
         <h3 class="auth-title">إنشاء حساب جديد</h3>
-        <p class="auth-subtitle">أنشئ بيئة معرضك ثم أكمل التحقق الإلزامي عبر Google قبل تفعيل الحساب</p>
-
-        {% if not google_oauth_enabled %}
-            <div class="alert alert-danger py-2 small text-end">
-                Google OAuth غير مفعّل في إعدادات النظام، لذلك لا يمكن إكمال إنشاء الحساب حاليًا.
-            </div>
-        {% endif %}
+        <p class="auth-subtitle">أنشئ بيئة معرضك وحساب المدير مباشرة أثناء مرحلة التطوير.</p>
 
         <form method="post">
             {% csrf_token %}
@@ -271,7 +265,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-register-primary">متابعة وربط Google</button>
+            <button type="submit" class="btn-register-primary">إنشاء الحساب</button>
         </form>
 
         <a href="{% url 'login' %}" class="btn btn-register-secondary mt-2">العودة لتسجيل الدخول</a>

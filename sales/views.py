@@ -179,6 +179,8 @@ CENTRAL_TENANT_BUSINESS_MODELS = [
 
 def _google_oauth_enabled():
     return bool(
+        getattr(settings, 'GOOGLE_OAUTH_ENABLED', False)
+        and
         getattr(settings, 'GOOGLE_OAUTH_CLIENT_ID', '').strip()
         and getattr(settings, 'GOOGLE_OAUTH_CLIENT_SECRET', '').strip()
         and getattr(settings, 'GOOGLE_OAUTH_REDIRECT_URI', '').strip()
@@ -3296,10 +3298,6 @@ def user_login(request):
     if request.method == 'POST':
         form = TenantLoginForm(request.POST)
         if form.is_valid():
-            if not _google_oauth_enabled():
-                form.add_error(None, 'تسجيل الدخول متوقف مؤقتًا: إعدادات Google OAuth غير مكتملة.')
-                return render(request, 'admin/login.html', {'form': form, 'next': next_url, 'google_oauth_enabled': False})
-
             tenant_id = normalize_tenant_id(form.cleaned_data['tenant_id'])
             tenant_key = form.cleaned_data['tenant_key']
             username = form.cleaned_data['username']
@@ -3321,14 +3319,21 @@ def user_login(request):
                 elif not user.is_active:
                     form.add_error(None, 'هذا الحساب غير نشط.')
                 else:
-                    request.session[PENDING_TENANT_LOGIN_SESSION_KEY] = {
-                        'tenant_id': tenant_id,
-                        'tenant_alias': alias,
-                        'username': username,
-                        'next_url': next_url,
-                        'created_at': timezone.now().isoformat(),
-                    }
-                    return redirect(f"{reverse('google_auth_start')}?flow=login")
+                    request.session.pop(PENDING_TENANT_LOGIN_SESSION_KEY, None)
+                    request.session.pop(PENDING_TENANT_REGISTER_SESSION_KEY, None)
+                    set_current_tenant(tenant_id, alias)
+                    login(request, user, backend='sales.auth_backend.TenantModelBackend')
+                    request.session['tenant_id'] = tenant_id
+                    request.session[TENANT_DB_ALIAS_SESSION_KEY] = alias
+                    write_platform_audit(
+                        event_type='tenant_login',
+                        tenant_id=tenant_id,
+                        actor_username=user.username,
+                        notes='تسجيل دخول بكلمة المرور',
+                    )
+                    if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                        return redirect(next_url)
+                    return redirect('home')
     else:
         form = TenantLoginForm()
 
@@ -3638,18 +3643,39 @@ def register(request):
     if request.method == 'POST':
         form = TenantRegisterForm(request.POST)
         if form.is_valid():
-            if not _google_oauth_enabled():
-                form.add_error(None, 'إنشاء الحساب متوقف مؤقتًا: إعدادات Google OAuth غير مكتملة.')
+            tenant_id = normalize_tenant_id(form.cleaned_data['tenant_id'])
+            tenant_key = form.cleaned_data['tenant_key']
+            showroom_name = form.cleaned_data['showroom_name']
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+
+            try:
+                with transaction.atomic(using='default'):
+                    tenant = PlatformTenant(name=showroom_name, tenant_id=tenant_id)
+                    tenant.set_access_key(tenant_key)
+                    tenant.save(using='default')
+            except IntegrityError:
+                form.add_error('tenant_id', 'هذا المعرف مستخدم مسبقًا. اختر معرفًا آخر.')
             else:
-                request.session[PENDING_TENANT_REGISTER_SESSION_KEY] = {
-                    'tenant_id': normalize_tenant_id(form.cleaned_data['tenant_id']),
-                    'tenant_key': form.cleaned_data['tenant_key'],
-                    'showroom_name': form.cleaned_data['showroom_name'],
-                    'username': form.cleaned_data['username'],
-                    'password': form.cleaned_data['password1'],
-                    'created_at': timezone.now().isoformat(),
-                }
-                return redirect(f"{reverse('google_auth_start')}?flow=register")
+                try:
+                    alias = migrate_tenant_database(tenant_id)
+                    user = User.objects.db_manager(alias).create_superuser(
+                        username=username,
+                        email='',
+                        password=password,
+                    )
+                except Exception:
+                    tenant.delete(using='default')
+                    form.add_error(None, 'تعذر إنشاء قاعدة بيانات المعرض أو حساب المدير. حاول مرة أخرى.')
+                else:
+                    request.session.pop(PENDING_TENANT_LOGIN_SESSION_KEY, None)
+                    request.session.pop(PENDING_TENANT_REGISTER_SESSION_KEY, None)
+                    set_current_tenant(tenant_id, alias)
+                    login(request, user, backend='sales.auth_backend.TenantModelBackend')
+                    request.session['tenant_id'] = tenant_id
+                    request.session[TENANT_DB_ALIAS_SESSION_KEY] = alias
+                    messages.success(request, f'تم إنشاء بيئة معرض {showroom_name} بنجاح.')
+                    return redirect('home')
     else:
         form = TenantRegisterForm()
 

@@ -242,13 +242,7 @@
         <div class="card-body text-center">
             <div class="mb-2 admin-login-logo"><i class="bi bi-car-front"></i></div>
             <h3 class="admin-login-title mb-1">بوابة الدخول</h3>
-            <p class="admin-login-subtitle">أدخل بيانات المعرض والحساب، ثم سيتم التحقق الإلزامي عبر Google لإكمال الدخول</p>
-
-            {% if not google_oauth_enabled %}
-                <div class="alert alert-danger py-2 small text-end">
-                    Google OAuth غير مفعّل في إعدادات النظام، لذلك لا يمكن إكمال تسجيل الدخول حاليًا.
-                </div>
-            {% endif %}
+            <p class="admin-login-subtitle">أدخل بيانات المعرض والحساب لتسجيل الدخول مباشرة.</p>
 
             <form method="post" action="">
                 {% csrf_token %}
@@ -257,7 +251,7 @@
                 {% if next %}
                     <input type="hidden" name="next" value="{{ next }}" />
                 {% endif %}
-                <button type="submit" class="btn-login-gold">متابعة التحقق عبر Google</button>
+                <button type="submit" class="btn-login-gold">تسجيل الدخول</button>
             </form>
 
             <div class="mt-3">
