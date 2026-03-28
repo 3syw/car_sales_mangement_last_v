@@ -7,7 +7,7 @@ celery>=5.4,<6.0
 redis>=5.0,<6.0
 Pillow
 openpyxl
-gunicorn==20.1.0
+gunicorn>=23.0.0,<24.0.0
 psycopg2-binary==2.9.9; python_version < "3.13"
 psycopg[binary]>=3.2,<4.0; python_version >= "3.13"
 dj-database-url==2.1.0
