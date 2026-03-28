@@ -4,6 +4,14 @@
 {% block extrastyle %}
 {{ block.super }}
 <style>
+    .car-detail-page .car-top-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
     .car-detail-page .breadcrumb-item,
     .car-detail-page .breadcrumb-item.active {
         color: var(--text-soft);
@@ -112,13 +120,85 @@
         color: #fff;
     }
 
+    .car-detail-page .car-facts-mobile,
+    .car-detail-page .car-maintenance-mobile,
+    .car-detail-page .car-documents-mobile {
+        display: none;
+    }
+
+    .car-detail-page .car-mobile-card {
+        border-radius: 1rem;
+        border: 1px solid rgba(201, 164, 106, 0.18);
+        background: rgba(255, 255, 255, 0.04);
+        padding: 1rem;
+    }
+
+    .car-detail-page .car-mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .car-detail-page .car-mobile-grid div {
+        padding: 0.75rem;
+        border-radius: 0.8rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(201, 164, 106, 0.1);
+    }
+
+    .car-detail-page .car-mobile-grid small {
+        display: block;
+        color: var(--text-soft);
+        margin-bottom: 0.15rem;
+    }
+
+    .car-detail-page .nav-tabs {
+        gap: 0.5rem;
+        border-bottom: 0;
+        flex-wrap: wrap;
+    }
+
+    .car-detail-page .nav-tabs .nav-link {
+        border-radius: 999px;
+        border: 1px solid rgba(201, 164, 106, 0.22);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-main);
+    }
+
+    .car-detail-page .nav-tabs .nav-link.active {
+        background: rgba(201, 164, 106, 0.2);
+        color: #fff;
+        border-color: rgba(201, 164, 106, 0.42);
+    }
+
     @media (max-width: 767.98px) {
+        .car-detail-page .car-top-actions {
+            align-items: stretch;
+        }
+
         .car-detail-page .car-summary-card .card-body {
             padding: 1.2rem;
         }
 
         .car-detail-page .car-meta-row {
             font-size: 0.95rem;
+        }
+
+        .car-detail-page .car-mobile-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .car-detail-page .car-basic-table,
+        .car-detail-page .car-maintenance-table,
+        .car-detail-page .car-documents-table {
+            display: none;
+        }
+
+        .car-detail-page .car-facts-mobile,
+        .car-detail-page .car-maintenance-mobile,
+        .car-detail-page .car-documents-mobile {
+            display: grid;
+            gap: 0.9rem;
         }
     }
 </style>
@@ -146,6 +226,13 @@
     {% if request.GET.document_saved == '1' %}
     <div class="alert alert-success">تم رفع المستند وحفظه في الأرشيف الرقمي للسيارة.</div>
     {% endif %}
+
+    <div class="car-top-actions mb-3">
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge text-bg-light">رقم المركبة: #{{ car.id }}</span>
+            <span class="badge {% if car.is_sold %}text-bg-danger{% else %}text-bg-success{% endif %}">{% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}</span>
+        </div>
+    </div>
 
     <div class="row pt-2">
         <div class="col-md-7 mb-4">
@@ -250,7 +337,7 @@
 
             <div class="tab-content">
             <div class="tab-pane fade {% if selected_tab != 'maintenance' and selected_tab != 'documents' %}show active{% endif %}" id="car-basic-tab" role="tabpanel">
-                <div class="table-responsive">
+                <div class="car-basic-table table-responsive">
                     <table class="table table-hover align-middle">
                         <tbody>
                             <tr><th style="width: 220px;">المعرف</th><td>{{ car.id }}</td></tr>
@@ -271,10 +358,27 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="car-facts-mobile">
+                    <div class="car-mobile-card">
+                        <div class="car-mobile-grid">
+                            <div><small>المعرف</small><strong>{{ car.id }}</strong></div>
+                            <div><small>الماركة</small><strong>{{ car.brand }}</strong></div>
+                            <div><small>الموديل</small><strong>{{ car.model_name }}</strong></div>
+                            <div><small>رقم الشاسيه</small><strong>{{ car.vin }}</strong></div>
+                            <div><small>سنة الصنع</small><strong>{{ car.year }}</strong></div>
+                            <div><small>الحالة</small><strong>{% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}</strong></div>
+                            <div><small>التكلفة الأساسية</small><strong>{{ car.cost_price|intcomma }} {{ car.currency }}</strong></div>
+                            <div><small>إجمالي التكلفة</small><strong>{{ total_cost_price|intcomma }} {{ car.currency }}</strong></div>
+                            <div><small>سعر البيع</small><strong>{{ car.selling_price|intcomma }} {{ car.currency }}</strong></div>
+                            <div><small>الربح المتوقع</small><strong class="{% if expected_profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ expected_profit|intcomma }} {{ car.currency }}</strong></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="tab-pane fade {% if selected_tab == 'maintenance' %}show active{% endif %}" id="car-maintenance-tab" role="tabpanel">
-                <div class="table-responsive mb-3">
+                <div class="car-maintenance-table table-responsive mb-3">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
@@ -321,6 +425,25 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+
+                <div class="car-maintenance-mobile mb-3">
+                    {% for record in maintenance_records %}
+                    <div class="car-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                            <strong>{{ record.get_maintenance_type_display }}</strong>
+                            <span class="badge text-bg-light">{{ record.amount|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="car-mobile-grid">
+                            <div><small>التاريخ</small><strong>{{ record.operation_date|date:"Y-m-d" }}</strong></div>
+                            <div><small>الورشة/المورد</small><strong>{{ record.supplier_workshop|default:'-' }}</strong></div>
+                            <div><small>طريقة الدفع</small><strong>{{ record.get_payment_method_display }}</strong></div>
+                            <div><small>أضيف بواسطة</small><strong>{% if record.added_by %}{{ record.added_by.username }}{% else %}-{% endif %}</strong></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="car-mobile-card text-center text-muted">لا توجد عمليات صيانة مسجلة لهذه السيارة.</div>
+                    {% endfor %}
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -416,7 +539,7 @@
                     </div>
                 </div>
 
-                <div class="table-responsive mb-3">
+                <div class="car-documents-table table-responsive mb-3">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
@@ -441,6 +564,23 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+
+                <div class="car-documents-mobile mb-3">
+                    {% for document in document_records %}
+                    <div class="car-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                            <strong>{{ document.get_document_type_display }}</strong>
+                            <a href="{{ document.file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">عرض</a>
+                        </div>
+                        <div class="car-mobile-grid">
+                            <div><small>تاريخ الرفع</small><strong>{{ document.upload_date|date:'Y-m-d H:i' }}</strong></div>
+                            <div><small>أضيف بواسطة</small><strong>{% if document.uploaded_by %}{{ document.uploaded_by.username }}{% else %}-{% endif %}</strong></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="car-mobile-card text-center text-muted">لا توجد مستندات مرفوعة لهذه السيارة.</div>
+                    {% endfor %}
                 </div>
 
                 <div class="card p-3 mt-2">

@@ -320,6 +320,58 @@
         background: rgba(210, 210, 210, 0.12);
     }
 
+    .monitor-summary-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .monitor-summary-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.72rem 1rem;
+        border-radius: 999px;
+        color: #f5ead0;
+        border: 1px solid rgba(212, 175, 55, 0.28);
+        background: rgba(0, 0, 0, 0.22);
+        font-weight: 700;
+    }
+
+    .monitor-mobile-list {
+        display: none;
+    }
+
+    .monitor-mobile-card {
+        border-radius: 0.95rem;
+        padding: 0.95rem;
+        background: rgba(0, 0, 0, 0.24);
+        border: 1px solid rgba(212, 175, 55, 0.18);
+        margin-top: 0.8rem;
+    }
+
+    .monitor-mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.7rem;
+        margin-top: 0.75rem;
+    }
+
+    .monitor-mobile-grid div {
+        border-radius: 0.75rem;
+        padding: 0.65rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .monitor-mobile-grid small {
+        display: block;
+        color: rgba(255, 255, 255, 0.68);
+        margin-bottom: 0.12rem;
+    }
+
     @media (max-width: 991.98px) {
         .manual-search-form {
             grid-template-columns: 1fr;
@@ -332,6 +384,24 @@
         .error-sidebar {
             position: static;
             top: auto;
+        }
+
+        .monitor-summary-chip {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .monitor-table-shell {
+            display: none;
+        }
+
+        .monitor-mobile-list {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .monitor-mobile-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -357,6 +427,12 @@
             <h2>نظام الرقابة والتدقيق المركزي</h2>
             <p>مراقبة فورية لسلامة العزل بين المعارض، التدفقات المالية، وسجل العمليات الحرج.</p>
             <p class="hint-text mt-2 mb-0">{{ scope_label }}</p>
+        </div>
+
+        <div class="monitor-summary-row">
+            <span class="monitor-summary-chip"><i class="bi bi-hdd-network"></i> اتصالات نشطة: {{ active_connection_count }}</span>
+            <span class="monitor-summary-chip"><i class="bi bi-building"></i> معارض نشطة: {{ active_tenants_count }}</span>
+            <span class="monitor-summary-chip"><i class="bi bi-bug"></i> أخطاء تقنية: {{ technical_errors|length }}</span>
         </div>
     </section>
 
@@ -479,7 +555,7 @@
                 </form>
 
                 {% if trace_has_query %}
-                <div class="table-responsive mt-3">
+                <div class="monitor-table-shell table-responsive mt-3">
                     <table class="table audit-table mb-0">
                         <thead>
                             <tr>
@@ -511,6 +587,28 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="monitor-mobile-list">
+                    {% for item in trace_results %}
+                    <div class="monitor-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <strong class="d-block">{{ item.lookup_type }}</strong>
+                                <small>{{ item.timestamp|date:'Y-m-d H:i:s' }}</small>
+                            </div>
+                            <span class="audit-status {% if item.status == 'failed' %}audit-status-failed{% else %}audit-status-success{% endif %}">
+                                {% if item.status == 'failed' %}Failed{% else %}Success{% endif %}
+                            </span>
+                        </div>
+                        <div class="monitor-mobile-grid">
+                            <div><small>المعرض</small><strong>{{ item.showroom_id }}</strong></div>
+                            <div><small>النتيجة</small><strong>{{ item.operation }}</strong></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="monitor-mobile-card text-center">لا توجد نتائج مطابقة لهذا البحث.</div>
+                    {% endfor %}
+                </div>
                 {% endif %}
             </div>
 
@@ -520,7 +618,7 @@
                 <p class="hint-text mb-2">
                     مرتفع: {{ heat_high_count }} | متوسط: {{ heat_medium_count }} | منخفض: {{ heat_low_count }}
                 </p>
-                <div class="table-responsive mt-2 mb-3">
+                <div class="monitor-table-shell table-responsive mt-2 mb-3">
                     <table class="table audit-table mb-0">
                         <thead>
                             <tr>
@@ -564,12 +662,36 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="monitor-mobile-list">
+                    {% for row in tenant_activity_rows %}
+                    <div class="monitor-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <strong class="d-block">{{ row.tenant_name }}</strong>
+                                <small>{{ row.tenant_id }}</small>
+                            </div>
+                            <span class="heat-badge {{ row.heat_class }}">{{ row.heat_label }}</span>
+                        </div>
+                        <div class="monitor-mobile-grid">
+                            <div><small>المستخدمون</small><strong>{{ row.users_count }}</strong></div>
+                            <div><small>السيارات</small><strong>{{ row.cars_count }}</strong></div>
+                            <div><small>المباعة</small><strong>{{ row.sold_cars_count }}</strong></div>
+                            <div><small>السندات</small><strong>{{ row.vouchers_count }}</strong></div>
+                            <div><small>عمليات 30 يوم</small><strong>{{ row.operations_30d }}</strong></div>
+                            <div><small>النشاط</small><strong>{{ row.activity_score }} / 100</strong></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="monitor-mobile-card text-center">لا توجد بيانات نشاط متاحة حاليًا.</div>
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="monitor-card p-3">
                 <h5>سجل العمليات والتدقيق</h5>
                 <small class="text-muted">Activity & Audit Log</small>
-                <div class="table-responsive mt-2">
+                <div class="monitor-table-shell table-responsive mt-2">
                     <table class="table audit-table mb-0">
                         <thead>
                             <tr>
@@ -598,6 +720,28 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+
+                <div class="monitor-mobile-list">
+                    {% for event in activity_events %}
+                    <div class="monitor-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <strong class="d-block">{{ event.operation }}</strong>
+                                <small>{{ event.timestamp|date:'Y-m-d H:i:s' }}</small>
+                            </div>
+                            <span class="audit-status {% if event.status == 'failed' %}audit-status-failed{% else %}audit-status-success{% endif %}">
+                                {% if event.status == 'failed' %}Failed{% else %}Success{% endif %}
+                            </span>
+                        </div>
+                        <div class="monitor-mobile-grid">
+                            <div><small>المعرض</small><strong>{{ event.showroom_id }}</strong></div>
+                            <div><small>الحالة</small><strong>{{ event.status }}</strong></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="monitor-mobile-card text-center">لا توجد عمليات تدقيق متاحة حالياً.</div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

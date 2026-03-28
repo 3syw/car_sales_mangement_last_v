@@ -1,6 +1,83 @@
 {% extends "sales/base.html" %}
 {% load humanize %}
 
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .sold-car-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .sold-car-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.75rem 1rem;
+        border-radius: 999px;
+        background: rgba(212, 175, 55, 0.12);
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .sold-car-mobile-list,
+    .sold-maintenance-mobile-list {
+        display: none;
+    }
+
+    .sold-car-mobile-card {
+        padding: 1rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .sold-car-mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.8rem;
+    }
+
+    .sold-car-mobile-grid div {
+        padding: 0.7rem 0.8rem;
+        border-radius: 0.85rem;
+        background: rgba(15, 23, 42, 0.04);
+    }
+
+    .sold-car-mobile-grid small {
+        display: block;
+        color: #64748b;
+        margin-bottom: 0.15rem;
+    }
+
+    @media (max-width: 767.98px) {
+        .sold-car-chip {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .sold-car-table-shell,
+        .sold-maintenance-table-shell {
+            display: none;
+        }
+
+        .sold-car-mobile-list,
+        .sold-maintenance-mobile-list {
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .sold-car-mobile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-12">
@@ -11,7 +88,13 @@
                     <a href="{% url 'sold_cars_cards' %}" class="btn btn-sm btn-outline-secondary">العودة للسيارات المباعة</a>
                 </div>
 
-                <div class="table-responsive">
+                <div class="sold-car-summary">
+                    <span class="sold-car-chip"><i class="fas fa-user"></i> {% if sale %}{{ sale.customer.name }}{% else %}بدون عميل{% endif %}</span>
+                    <span class="sold-car-chip"><i class="fas fa-money-bill-wave"></i> {% if sale %}{{ sale.sale_price|intcomma }}{% else %}-{% endif %} {{ car.currency }}</span>
+                    <span class="sold-car-chip"><i class="fas fa-chart-line"></i> صافي الربح: {% if real_profit is not None %}{{ real_profit|intcomma }}{% else %}-{% endif %}</span>
+                </div>
+
+                <div class="sold-car-table-shell table-responsive">
                     <table class="table table-hover table-light align-middle">
                         <tbody>
                             <tr><th>المعرف</th><td>{{ car.id }}</td></tr>
@@ -51,8 +134,27 @@
                     </table>
                 </div>
 
+                <div class="sold-car-mobile-list">
+                    <div class="sold-car-mobile-card">
+                        <div class="sold-car-mobile-grid">
+                            <div><small>المعرف</small><strong>{{ car.id }}</strong></div>
+                            <div><small>الماركة</small><strong>{{ car.brand }}</strong></div>
+                            <div><small>الموديل</small><strong>{{ car.model_name }}</strong></div>
+                            <div><small>رقم الشاسيه</small><strong>{{ car.vin }}</strong></div>
+                            <div><small>سنة الصنع</small><strong>{{ car.year }}</strong></div>
+                            <div><small>الحالة</small><strong>مباعة</strong></div>
+                            <div><small>إجمالي التكلفة</small><strong>{{ total_cost_price|intcomma }}</strong></div>
+                            <div><small>سعر البيع النهائي</small><strong>{% if sale %}{{ sale.sale_price|intcomma }}{% else %}-{% endif %}</strong></div>
+                            <div><small>المبلغ المدفوع</small><strong>{% if sale %}{{ sale.amount_paid|intcomma }}{% else %}-{% endif %}</strong></div>
+                            <div><small>المبلغ المتبقي</small><strong>{% if sale %}{{ sale.remaining_amount|intcomma }}{% else %}-{% endif %}</strong></div>
+                            <div><small>اسم العميل</small><strong>{% if sale %}{{ sale.customer.name }}{% else %}-{% endif %}</strong></div>
+                            <div><small>هاتف العميل</small><strong>{% if sale %}{{ sale.customer.phone }}{% else %}-{% endif %}</strong></div>
+                        </div>
+                    </div>
+                </div>
+
                 <h5 class="mt-4 mb-3">سجل الصيانة</h5>
-                <div class="table-responsive">
+                <div class="sold-maintenance-table-shell table-responsive">
                     <table class="table table-hover table-light align-middle">
                         <thead>
                             <tr>
@@ -79,6 +181,24 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+
+                <div class="sold-maintenance-mobile-list">
+                    {% for record in maintenance_records %}
+                    <div class="sold-car-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                            <strong>{{ record.get_maintenance_type_display }}</strong>
+                            <span class="badge text-bg-light">{{ record.amount|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="sold-car-mobile-grid">
+                            <div><small>التاريخ</small><strong>{{ record.operation_date|date:"Y-m-d" }}</strong></div>
+                            <div><small>الورشة/المورد</small><strong>{{ record.supplier_workshop }}</strong></div>
+                            <div><small>الموظف</small><strong>{% if record.added_by %}{{ record.added_by.username }}{% else %}-{% endif %}</strong></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="sold-car-mobile-card text-center text-muted">لا توجد مصروفات صيانة مسجلة.</div>
+                    {% endfor %}
                 </div>
 
             </div>

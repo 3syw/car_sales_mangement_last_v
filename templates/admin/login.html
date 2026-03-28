@@ -127,7 +127,7 @@
     }
 
     .admin-login-subtitle {
-        font-size: 0.9rem;
+        font-size: clamp(0.88rem, 0.7vw + 0.72rem, 0.98rem);
         color: #ccc;
         text-align: center;
         margin-bottom: 1.45rem;
@@ -183,6 +183,7 @@
 
     .btn-login-gold {
         width: 100%;
+        min-height: 50px;
         padding: 0.78rem;
         border: 0;
         border-radius: 10px;
@@ -203,6 +204,7 @@
     .admin-login-card .btn-outline-secondary,
     .admin-login-card .btn-outline-warning {
         border-radius: 10px;
+        min-height: 46px;
         background: rgba(255, 255, 255, 0.04);
         color: #ededed;
         border-color: rgba(255, 255, 255, 0.24);
@@ -213,6 +215,32 @@
         color: #fff;
         border-color: rgba(212, 175, 55, 0.72);
         background: rgba(212, 175, 55, 0.2);
+    }
+
+    @media (max-width: 767.98px) {
+        .admin-login-wrap {
+            align-items: stretch;
+            padding: 1rem 0.65rem 1.35rem;
+        }
+
+        .admin-login-card {
+            max-width: 100%;
+            border-radius: 1.15rem;
+        }
+
+        .admin-login-card .card-body {
+            padding: 1.6rem 1.15rem;
+        }
+
+        .admin-login-title {
+            font-size: clamp(1.45rem, 4vw, 1.75rem);
+        }
+
+        .admin-login-card input[type=text],
+        .admin-login-card input[type=password] {
+            padding: 0.78rem 0.82rem;
+            font-size: 0.97rem;
+        }
     }
 
     @media (max-width: 575.98px) {
@@ -231,6 +259,16 @@
         .page-back-row {
             top: 0.8rem;
             inset-inline-end: 0.8rem;
+        }
+
+        .admin-login-card form p {
+            margin-bottom: 0.8rem;
+        }
+    }
+
+    @media (max-width: 399.98px) {
+        .admin-login-card .card-body {
+            padding: 1.2rem 0.9rem;
         }
     }
 </style>

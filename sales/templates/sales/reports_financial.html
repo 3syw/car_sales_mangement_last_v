@@ -5,6 +5,77 @@
 {{ block.super }}
 {% include 'sales/includes/lux_content_styles.html' %}
 <style>
+    .reports-fin-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .reports-fin-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .reports-fin-filter-card {
+        border-radius: 1.4rem;
+        border: 1px solid rgba(201, 164, 106, 0.18);
+        box-shadow: 0 20px 44px rgba(15, 23, 42, 0.1);
+    }
+
+    .reports-fin-kpis {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .reports-fin-kpi-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(201, 164, 106, 0.22);
+        color: var(--text-main);
+        font-weight: 700;
+    }
+
+    .reports-fin-mobile-sales {
+        display: none;
+    }
+
+    .reports-fin-mobile-card {
+        border-radius: 1rem;
+        border: 1px solid rgba(201, 164, 106, 0.18);
+        background: rgba(255, 255, 255, 0.04);
+        padding: 1rem;
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .reports-fin-mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.9rem;
+    }
+
+    .reports-fin-mobile-grid div {
+        border-radius: 0.9rem;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(201, 164, 106, 0.12);
+    }
+
+    .reports-fin-mobile-grid small {
+        display: block;
+        color: var(--text-soft);
+        margin-bottom: 0.2rem;
+    }
+
     .reports-fin-lux .card.bg-primary,
     .reports-fin-lux .card.bg-dark,
     .reports-fin-lux .card.bg-success,
@@ -48,25 +119,69 @@
         border-radius: 12px;
         padding: 0.35rem;
     }
+
+    @media (max-width: 767.98px) {
+        .reports-fin-toolbar {
+            align-items: stretch;
+        }
+
+        .reports-fin-actions {
+            width: 100%;
+        }
+
+        .reports-fin-actions a {
+            flex: 1 1 0;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .reports-fin-kpis {
+            gap: 0.55rem;
+        }
+
+        .reports-fin-kpi-chip {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .reports-fin-mobile-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .reports-fin-sales-table {
+            display: none;
+        }
+
+        .reports-fin-mobile-sales {
+            display: grid;
+            gap: 0.9rem;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="lux-page reports-fin-lux">
 <div class="row mb-4">
-    <div class="col-12 d-flex justify-content-between align-items-center">
+    <div class="col-12 reports-fin-toolbar">
         <div>
             <h2 class="lux-title h3"><i class="fas fa-chart-line"></i> التقرير المالي الشامل</h2>
             <p class="lux-subtitle">مُلخص الأداء المالي والربحية للمعرض</p>
         </div>
-        <div class="d-flex gap-2">
+        <div class="reports-fin-actions">
             <a href="{% url 'cash_flow_projection' %}" class="lux-outline-btn lux-outline-btn-sm">التدفق النقدي المتوقع</a>
             <a href="{% url 'reports' %}" class="lux-outline-btn lux-outline-btn-sm">عودة</a>
         </div>
     </div>
 </div>
 
-<div class="card mb-4 p-3">
+<div class="reports-fin-kpis">
+    <span class="reports-fin-kpi-chip"><i class="fas fa-calendar-alt"></i> {{ start_date|default:'بداية مفتوحة' }} إلى {{ end_date|default:'حتى اليوم' }}</span>
+    <span class="reports-fin-kpi-chip"><i class="fas fa-chart-area"></i> {{ sold_count }} عملية بيع ضمن التقرير</span>
+    <span class="reports-fin-kpi-chip"><i class="fas fa-coins"></i> العملة المرجعية: {{ report_currency }}</span>
+</div>
+
+<div class="card reports-fin-filter-card mb-4 p-3">
     <form method="GET" class="row g-3 align-items-end">
         <div class="col-md-3">
             <label class="form-label small fw-bold">نمط الفترة:</label>
@@ -337,6 +452,7 @@
         </div>
 
         <h5 class="mb-3">تفاصيل أرباح المبيعات</h5>
+        <div class="reports-fin-sales-table table-responsive">
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
@@ -371,6 +487,51 @@
                 {% endfor %}
             </tbody>
         </table>
+        </div>
+
+        <div class="reports-fin-mobile-sales">
+            {% for sale in sales_list %}
+            <div class="reports-fin-mobile-card">
+                <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                    <div>
+                        <strong class="d-block">{{ sale.car.brand }} ({{ sale.car.vin }})</strong>
+                        <small class="text-muted">سعر البيع: {{ sale.sale_price_sr|intcomma }} SR</small>
+                    </div>
+                    <span class="badge {% if sale.accrual_profit_sr >= 0 %}text-bg-success{% else %}text-bg-danger{% endif %}">
+                        {{ sale.accrual_profit_sr|intcomma }} SR
+                    </span>
+                </div>
+                <div class="reports-fin-mobile-grid">
+                    <div>
+                        <small>التكلفة الأساسية</small>
+                        <strong>{{ sale.base_cost_sr|intcomma }} SR</strong>
+                    </div>
+                    <div>
+                        <small>التكاليف الإضافية</small>
+                        <strong>{{ sale.additional_cost_sr|intcomma }} SR</strong>
+                    </div>
+                    <div>
+                        <small>الصيانة</small>
+                        <strong>{{ sale.maintenance_total_sr|intcomma }} SR</strong>
+                    </div>
+                    <div>
+                        <small>إجمالي التكلفة</small>
+                        <strong>{{ sale.cost_price_sr|intcomma }} SR</strong>
+                    </div>
+                    <div>
+                        <small>المحصل نقدًا</small>
+                        <strong>{{ sale.amount_paid_sr|intcomma }} SR</strong>
+                    </div>
+                    <div>
+                        <small>الربح النقدي</small>
+                        <strong class="{% if sale.cash_realized_profit_sr >= 0 %}text-success{% else %}text-danger{% endif %}">{{ sale.cash_realized_profit_sr|intcomma }} SR</strong>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="reports-fin-mobile-card text-center text-muted">لا توجد مبيعات ضمن الفترة المحددة.</div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 

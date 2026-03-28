@@ -393,6 +393,34 @@
             margin-right: 0;
         }
     }
+
+    @media (max-width: 575.98px) {
+        .car-add-page #content-main {
+            padding: 0.9rem;
+            border-radius: 14px;
+        }
+
+        .car-add-page .car-add-back-row {
+            margin-bottom: 0.65rem;
+        }
+
+        .car-add-page fieldset.module.aligned {
+            padding: 0.95rem 0.8rem !important;
+            border-radius: 14px;
+        }
+
+        .car-add-page #car_form input[type="text"],
+        .car-add-page #car_form input:not([type]),
+        .car-add-page #car_form input[type="number"],
+        .car-add-page #car_form input[type="email"],
+        .car-add-page #car_form input[type="url"],
+        .car-add-page #car_form input[type="tel"],
+        .car-add-page #car_form select,
+        .car-add-page #car_form textarea {
+            min-height: 42px;
+            font-size: 0.95rem;
+        }
+    }
 </style>
 {% endif %}
 {% endblock %}

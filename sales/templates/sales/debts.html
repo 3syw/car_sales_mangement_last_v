@@ -4,6 +4,68 @@
 {% block extrastyle %}
 {{ block.super }}
 {% include 'sales/includes/lux_content_styles.html' %}
+<style>
+    .debts-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .debts-kpi {
+        padding: 1rem 1.1rem;
+        border-radius: 1.25rem;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 248, 235, 0.86));
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    .debts-mobile-list {
+        display: none;
+    }
+
+    .debt-mobile-card {
+        padding: 1rem;
+        border-radius: 1.1rem;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+    }
+
+    .debt-mobile-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.45rem 0;
+        border-bottom: 1px dashed rgba(15, 23, 42, 0.08);
+    }
+
+    .debt-mobile-row:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .debt-mobile-row strong:last-child {
+        text-align: left;
+    }
+
+    @media (max-width: 991.98px) {
+        .debts-summary-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .debts-table-shell {
+            display: none;
+        }
+
+        .debts-mobile-list {
+            display: grid;
+            gap: 0.9rem;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -29,8 +91,23 @@
         </div>
     </div>
 
+    <div class="debts-summary-grid">
+        <div class="debts-kpi">
+            <small class="lux-muted d-block mb-1">إجمالي الحالات</small>
+            <strong class="h4 mb-0 d-block">{{ pending_sales|length }}</strong>
+        </div>
+        <div class="debts-kpi">
+            <small class="lux-muted d-block mb-1">إجمالي المديونية</small>
+            <strong class="h4 mb-0 d-block">{{ total_debts|intcomma }} SR</strong>
+        </div>
+        <div class="debts-kpi">
+            <small class="lux-muted d-block mb-1">الإجراء السريع</small>
+            <strong class="mb-0 d-block">تابع تقادم الديون وحدد العملاء الأكثر إلحاحًا.</strong>
+        </div>
+    </div>
+
     <div class="card p-3">
-        <div class="card-body p-0">
+        <div class="card-body p-0 debts-table-shell table-responsive">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
@@ -67,6 +144,39 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+        <div class="debts-mobile-list">
+            {% for sale in pending_sales %}
+            <div class="debt-mobile-card">
+                <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                    <div>
+                        <strong class="d-block">{{ sale.customer.name }}</strong>
+                        <small class="lux-muted">{{ sale.customer.phone }}</small>
+                    </div>
+                    <span class="badge bg-warning text-dark">تحت السداد</span>
+                </div>
+                <div class="debt-mobile-row">
+                    <span class="lux-muted">السيارة</span>
+                    <strong>{{ sale.car.brand }} {{ sale.car.model_name }}</strong>
+                </div>
+                <div class="debt-mobile-row">
+                    <span class="lux-muted">الاستحقاق</span>
+                    <strong>{{ sale.debt_due_date|date:'Y-m-d'|default:'-' }}</strong>
+                </div>
+                <div class="debt-mobile-row">
+                    <span class="lux-muted">المدفوع</span>
+                    <strong class="text-success">{{ sale.amount_paid|intcomma }}</strong>
+                </div>
+                <div class="debt-mobile-row">
+                    <span class="lux-muted">المتبقي</span>
+                    <strong class="text-danger">{{ sale.remaining_amount|intcomma }}</strong>
+                </div>
+                <a href="{% url 'add_debt_payment' sale.id %}" class="lux-outline-btn w-100 text-center mt-3">إضافة سداد</a>
+            </div>
+            {% empty %}
+            <div class="debt-mobile-card text-center">الحمد لله، لا توجد ديون معلقة حالياً.</div>
+            {% endfor %}
         </div>
     </div>
 </div>

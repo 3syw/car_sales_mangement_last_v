@@ -363,6 +363,10 @@ def _require_tenant_alias_or_raise(message='لا توجد بيئة معرض مف
         raise PermissionDenied(message)
     return tenant_alias
 
+
+def welcome(request):
+    return render(request, 'sales/welcome.html')
+
 def home(request):
     stats = {
         'available_cars': 0,

@@ -1,10 +1,65 @@
 {% extends 'sales/base.html' %}
 
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .sale-form-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+
+    .sale-form-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .sale-form-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.72rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(201, 164, 106, 0.18);
+        font-weight: 700;
+    }
+
+    @media (max-width: 767.98px) {
+        .sale-form-chip {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .sale-form-actions .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 {% include 'sales/includes/operation_modal_styles.html' %}
 
 <div class="card p-4">
-    <h3>إتمام البيع - {{ car.brand }} {{ car.model_name }}</h3>
+    <div class="sale-form-hero">
+        <div>
+            <h3 class="mb-1">إتمام البيع - {{ car.brand }} {{ car.model_name }}</h3>
+            <small class="text-muted">استكمال بيانات المشتري والسداد وربط العملية ماليًا.</small>
+        </div>
+    </div>
+
+    <div class="sale-form-chips">
+        <span class="sale-form-chip"><i class="fas fa-car-side"></i> {{ car.brand }} {{ car.model_name }}</span>
+        <span class="sale-form-chip"><i class="fas fa-hashtag"></i> {{ car.vin }}</span>
+        <span class="sale-form-chip"><i class="fas fa-tag"></i> {{ car.selling_price }} {{ car.currency }}</span>
+    </div>
+
     <form method="post" enctype="multipart/form-data" class="mt-3" id="process-sale-form">
         {% csrf_token %}
         <input type="hidden" name="car_id" value="{{ car.id }}">
@@ -60,7 +115,9 @@
         </div>
         {% endif %}
 
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#saleConfirmModal">تسجيل البيع</button>
+        <div class="sale-form-actions">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#saleConfirmModal">تسجيل البيع</button>
+        </div>
     </form>
 </div>
 

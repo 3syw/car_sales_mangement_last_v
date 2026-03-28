@@ -1,5 +1,79 @@
 {% extends "sales/base.html" %}
 
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .available-cars-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .available-cars-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.72rem 1rem;
+        border-radius: 999px;
+        background: rgba(212, 175, 55, 0.12);
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .available-cars-mobile-list {
+        display: none;
+    }
+
+    .available-car-mobile-card {
+        padding: 1rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+    }
+
+    .available-car-mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.8rem;
+    }
+
+    .available-car-mobile-grid div {
+        padding: 0.7rem 0.8rem;
+        border-radius: 0.85rem;
+        background: rgba(15, 23, 42, 0.04);
+    }
+
+    .available-car-mobile-grid small {
+        display: block;
+        color: #64748b;
+        margin-bottom: 0.15rem;
+    }
+
+    @media (max-width: 767.98px) {
+        .available-cars-chip {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .available-cars-table-shell {
+            display: none;
+        }
+
+        .available-cars-mobile-list {
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .available-car-mobile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-12">
@@ -13,7 +87,12 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
+                <div class="available-cars-summary">
+                    <span class="available-cars-chip"><i class="fas fa-car"></i> المتاح حاليًا: {{ cars|length }}</span>
+                    <span class="available-cars-chip"><i class="fas fa-bolt"></i> تنفيذ البيع مباشرة من نفس الصفحة</span>
+                </div>
+
+                <div class="available-cars-table-shell table-responsive">
                     <table class="table table-hover table-light align-middle">
                         <thead>
                             <tr>
@@ -57,6 +136,30 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+
+                <div class="available-cars-mobile-list">
+                    {% for car in cars %}
+                    <div class="available-car-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                            <div>
+                                <strong class="d-block">{{ car.brand }} {{ car.model_name }}</strong>
+                                <small class="text-muted">{{ car.vin }}</small>
+                            </div>
+                            <span class="badge text-bg-light">#{{ car.id }}</span>
+                        </div>
+                        <div class="available-car-mobile-grid">
+                            <div><small>سنة الصنع</small><strong>{{ car.year }}</strong></div>
+                            <div><small>سعر البيع</small><strong>{{ car.selling_price }} {{ car.currency }}</strong></div>
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap mt-3">
+                            <a class="btn btn-sm btn-success" href="{% url 'process_sale' %}?car_id={{ car.id }}">إتمام البيع</a>
+                            <a class="btn btn-sm btn-outline-primary" href="{% url 'admin:sales_car_change' car.id %}" style="color: var(--gold) !important; font-weight:700; border-color: rgba(212,175,55,0.35);">تحرير</a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="available-car-mobile-card text-center text-muted">لا توجد سيارات متاحة حالياً.</div>
+                    {% endfor %}
                 </div>
 
             </div>

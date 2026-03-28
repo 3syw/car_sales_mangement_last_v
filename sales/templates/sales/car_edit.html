@@ -1,6 +1,44 @@
 {% extends 'sales/base.html' %}
 {% load humanize static %}
 
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .car-edit-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .car-edit-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .car-edit-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.72rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(201, 164, 106, 0.18);
+        font-weight: 700;
+    }
+
+    @media (max-width: 767.98px) {
+        .car-edit-chip {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 {% include 'sales/includes/operation_modal_styles.html' %}
 
@@ -12,6 +50,15 @@
                 {% if car %}تعديل بيانات السيارة: {{ car.brand }} {{ car.model_name }}{% else %}إضافة سيارة جديدة{% endif %}
             </div>
             <div class="card-body">
+                <div class="car-edit-chips">
+                    {% if car %}
+                    <span class="car-edit-chip"><i class="fas fa-car-side"></i> {{ car.brand }} {{ car.model_name }}</span>
+                    <span class="car-edit-chip"><i class="fas fa-hashtag"></i> {{ car.vin }}</span>
+                    {% else %}
+                    <span class="car-edit-chip"><i class="fas fa-plus-circle"></i> تسجيل سيارة جديدة</span>
+                    {% endif %}
+                </div>
+
                 <form method="POST" enctype="multipart/form-data" id="car-edit-form">
                     {% csrf_token %}
                     <div class="row mb-3">

@@ -77,7 +77,7 @@
 
     .auth-subtitle {
         text-align: center;
-        font-size: 14px;
+        font-size: clamp(0.88rem, 0.7vw + 0.72rem, 0.98rem);
         color: #a0aec0;
         margin-bottom: 1.25rem;
     }
@@ -109,6 +109,7 @@
 
     .auth-card input {
         width: 100%;
+        min-height: 46px;
         border: 1px solid rgba(255, 255, 255, 0.14) !important;
         background: rgba(0, 0, 0, 0.25) !important;
         color: #f5f5f5 !important;
@@ -159,6 +160,7 @@
 
     .btn-register-primary {
         width: 100%;
+        min-height: 50px;
         border: none;
         border-radius: 8px;
         padding: 0.74rem;
@@ -177,6 +179,7 @@
 
     .btn-register-secondary {
         width: 100%;
+        min-height: 46px;
         border-radius: 8px;
         border: 1px solid #ccc;
         color: #fff;
@@ -190,6 +193,29 @@
         background: rgba(255, 255, 255, 0.12);
     }
 
+    @media (max-width: 767.98px) {
+        .auth-wrap {
+            align-items: stretch;
+            padding: 1.15rem 0.55rem 1.4rem;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 100%;
+            max-height: none;
+            border-radius: 16px;
+            padding: 1.4rem 1.05rem;
+        }
+
+        .auth-title {
+            font-size: clamp(1.45rem, 4vw, 1.72rem);
+        }
+
+        .auth-card label {
+            font-size: 13px;
+        }
+    }
+
     @media (max-width: 575.98px) {
         .auth-wrap {
             padding: 1rem 0.35rem;
@@ -199,6 +225,16 @@
             max-height: calc(100vh - 2rem);
             padding: 1.25rem 1rem;
             border-radius: 16px;
+        }
+
+        .auth-field {
+            margin-bottom: 0.72rem;
+        }
+    }
+
+    @media (max-width: 399.98px) {
+        .auth-card {
+            padding: 1.05rem 0.85rem;
         }
     }
 </style>

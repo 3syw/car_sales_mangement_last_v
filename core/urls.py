@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
-from sales.views import home, dashboard, export_sales_excel, export_financial_excel, export_timeline_excel, financial_report_charts_data, car_list, car_edit, car_detail, process_sale, financial_reports, car_profit_report, showroom_performance_report, inventory_turnover_report, stale_cars_report, audit_logs_report, export_audit_logs_excel, export_audit_logs_csv, financial_reports_detail, vouchers_reports, vouchers_list, receipt_voucher, payment_voucher, operating_expenses_voucher, general_expenses_management, digital_archive, inventory_reconciliation, debts_list, debt_aging_report, add_debt_payment, timeline_view, user_logout, register, user_login, admin_user_filters, system_users, available_cars_table, sold_cars_cards, sold_car_details, permissions_management, delete_system_user, platform_owner_login, platform_switch_tenant, platform_exit_impersonation, central_audit_monitor, daily_closing_control, cash_flow_projection, bank_reconciliation, financial_consistency_checker, chart_of_accounts, trial_balance_report, financial_containers_management, fiscal_period_closing_control, google_auth_start, google_auth_callback
+from sales.views import welcome, home, dashboard, export_sales_excel, export_financial_excel, export_timeline_excel, financial_report_charts_data, car_list, car_edit, car_detail, process_sale, financial_reports, car_profit_report, showroom_performance_report, inventory_turnover_report, stale_cars_report, audit_logs_report, export_audit_logs_excel, export_audit_logs_csv, financial_reports_detail, vouchers_reports, vouchers_list, receipt_voucher, payment_voucher, operating_expenses_voucher, general_expenses_management, digital_archive, inventory_reconciliation, debts_list, debt_aging_report, add_debt_payment, timeline_view, user_logout, register, user_login, admin_user_filters, system_users, available_cars_table, sold_cars_cards, sold_car_details, permissions_management, delete_system_user, platform_owner_login, platform_switch_tenant, platform_exit_impersonation, central_audit_monitor, daily_closing_control, cash_flow_projection, bank_reconciliation, financial_consistency_checker, chart_of_accounts, trial_balance_report, financial_containers_management, fiscal_period_closing_control, google_auth_start, google_auth_callback
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('healthz/', lambda request: HttpResponse('ok', content_type='text/plain'), name='healthz'),
+    path('', welcome, name='welcome'),
     path('login/', user_login, name='login'),
     path('admin/login/', user_login, name='admin_login'),
     path('auth/google/start/', google_auth_start, name='google_auth_start'),
@@ -42,7 +43,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('sales.api_urls')),
     path('api/v1/', include(('sales.api_urls', 'sales'), namespace='api-v1')),
-    path('', home, name='home'), # الصفحة الرئيسية التعريفية
+    path('home/', home, name='home'), # الصفحة الرئيسية بعد تسجيل الدخول
     path('dashboard/', dashboard, name='dashboard'),
     path('export-excel/', export_sales_excel, name='export_excel'),
     path('cars/', car_list, name='car_list'), # رابط قائمة السيارات

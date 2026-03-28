@@ -4,6 +4,93 @@
 {% block extrastyle %}
 {{ block.super }}
 {% include 'sales/includes/lux_content_styles.html' %}
+<style>
+    .bank-toolbar-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .bank-summary-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .bank-summary-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .bank-mobile-list {
+        display: none;
+    }
+
+    .bank-mobile-card {
+        padding: 1rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+    }
+
+    .bank-mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.8rem;
+    }
+
+    .bank-mobile-grid div {
+        padding: 0.7rem 0.8rem;
+        border-radius: 0.85rem;
+        background: rgba(15, 23, 42, 0.04);
+    }
+
+    .bank-mobile-grid small {
+        display: block;
+        color: #64748b;
+        margin-bottom: 0.15rem;
+    }
+
+    @media (max-width: 767.98px) {
+        .bank-toolbar-actions {
+            justify-content: stretch;
+        }
+
+        .bank-toolbar-actions a {
+            flex: 1 1 0;
+            text-align: center;
+        }
+
+        .bank-summary-chip {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .bank-table-shell {
+            display: none;
+        }
+
+        .bank-mobile-list {
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .bank-mobile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -15,8 +102,10 @@
                 <p class="lux-subtitle">ارفع ملف Excel من البنك لمطابقته مع سندات النظام واكتشاف الحركات غير المسجلة أو غير المطابقة.</p>
             </div>
             <div class="col-md-4 text-md-end">
-                <a href="{% url 'bank_reconciliation' %}?download_template=1" class="lux-outline-btn me-1">تحميل قالب Excel</a>
-                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+                <div class="bank-toolbar-actions">
+                    <a href="{% url 'bank_reconciliation' %}?download_template=1" class="lux-outline-btn me-1">تحميل قالب Excel</a>
+                    <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+                </div>
             </div>
         </div>
     </div>
@@ -51,6 +140,12 @@
     </div>
 
     {% if result %}
+    <div class="bank-summary-chips">
+        <span class="bank-summary-chip"><i class="fas fa-check-circle"></i> مطابق: {{ result.matched_count }}</span>
+        <span class="bank-summary-chip"><i class="fas fa-exclamation-circle"></i> فائض البنك: {{ result.statement_only_count }}</span>
+        <span class="bank-summary-chip"><i class="fas fa-file-invoice"></i> فائض النظام: {{ result.system_only_count }}</span>
+    </div>
+
     <div class="row g-3 mb-3">
         <div class="col-md-2">
             <div class="card p-3 h-100 text-center">
@@ -121,7 +216,7 @@
     <div class="card p-3 mb-3">
         <div class="card-body p-0">
             <h5 class="lux-label mb-3">قيود موجودة في كشف البنك وغير مطابقة بالنظام</h5>
-            <div class="table-responsive">
+            <div class="bank-table-shell table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
@@ -149,13 +244,32 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="bank-mobile-list">
+                {% for row in result.statement_only_rows %}
+                <div class="bank-mobile-card">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                        <strong>السطر {{ row.line_no }}</strong>
+                        <span class="badge text-bg-danger">غير مطابق</span>
+                    </div>
+                    <div class="bank-mobile-grid">
+                        <div><small>المرجع</small><strong>{{ row.voucher_number|default:'-' }}</strong></div>
+                        <div><small>التاريخ</small><strong>{{ row.transaction_date|date:'Y-m-d'|default:'-' }}</strong></div>
+                        <div><small>المبلغ</small><strong>{{ row.amount|intcomma }} {{ row.currency }}</strong></div>
+                        <div><small>البيان</small><strong>{{ row.description|default:'-' }}</strong></div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bank-mobile-card text-center">لا توجد قيود فائضة من البنك.</div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
     <div class="card p-3">
         <div class="card-body p-0">
             <h5 class="lux-label mb-3">قيود موجودة في النظام وغير مطابقة بالكشف</h5>
-            <div class="table-responsive">
+            <div class="bank-table-shell table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
@@ -182,6 +296,25 @@
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+
+            <div class="bank-mobile-list">
+                {% for voucher in result.system_only_rows %}
+                <div class="bank-mobile-card">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                        <strong>{{ voucher.voucher_number }}</strong>
+                        <span class="badge text-bg-warning">داخل النظام فقط</span>
+                    </div>
+                    <div class="bank-mobile-grid">
+                        <div><small>النوع</small><strong>{{ voucher.get_voucher_type_display }}</strong></div>
+                        <div><small>التاريخ</small><strong>{{ voucher.voucher_date|date:'Y-m-d' }}</strong></div>
+                        <div><small>المبلغ</small><strong>{{ voucher.amount|intcomma }} {{ voucher.currency }}</strong></div>
+                        <div><small>البيان</small><strong>{{ voucher.reason|default:'-' }}</strong></div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bank-mobile-card text-center">لا توجد قيود فائضة في النظام.</div>
+                {% endfor %}
             </div>
         </div>
     </div>

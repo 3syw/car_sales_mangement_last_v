@@ -1,9 +1,66 @@
 {% extends 'sales/base.html' %}
 {% load humanize %}
 
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .vouchers-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .vouchers-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .vouchers-summary-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .voucher-card-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 0.85rem;
+    }
+
+    .voucher-card-meta span {
+        padding: 0.45rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(201, 164, 106, 0.14);
+    }
+
+    @media (max-width: 767.98px) {
+        .vouchers-toolbar {
+            align-items: stretch;
+        }
+
+        .vouchers-summary-chip {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row mb-4 mt-3 align-items-center">
-    <div class="col-12 d-flex justify-content-between align-items-center">
+    <div class="col-12 vouchers-toolbar">
         <h3 class="fw-bold text-primary mb-0">عرض السندات</h3>
         <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -19,6 +76,11 @@
             </ul>
         </div>
     </div>
+</div>
+
+<div class="vouchers-summary">
+    <span class="vouchers-summary-chip"><i class="fas fa-file-invoice"></i> الفلتر الحالي: {{ selected_type_label }}</span>
+    <span class="vouchers-summary-chip"><i class="fas fa-list"></i> عدد السندات الظاهرة: {{ vouchers|length }}</span>
 </div>
 
 <div class="row g-3">
@@ -41,6 +103,10 @@
                     </div>
                     <div class="col-md-3">
                         <div>{{ voucher.reason }}</div>
+                        <div class="voucher-card-meta">
+                            <span>{{ voucher.voucher_date|date:"Y-m-d" }}</span>
+                            <span>{{ voucher.amount|intcomma }} {{ voucher.currency }}</span>
+                        </div>
                         {% if voucher.financial_container %}
                         <small class="text-muted d-block">الوعاء: {{ voucher.financial_container.name }} ({{ voucher.financial_container.get_container_type_display }})</small>
                         {% endif %}

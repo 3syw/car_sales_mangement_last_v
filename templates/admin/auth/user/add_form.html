@@ -254,6 +254,62 @@
         margin-left: 0.25rem;
         color: #3b2419;
     }
+
+    @media (max-width: 767.98px) {
+        #content {
+            padding-top: 18px;
+        }
+
+        #content-main {
+            min-width: 0;
+            max-width: 100%;
+            margin: 1rem auto 1.35rem;
+            padding: 1.35rem 1rem;
+            border-radius: 16px;
+        }
+
+        #content-main h1,
+        #content-main h2,
+        #content-main h3,
+        #content-main legend {
+            font-size: 1.24rem;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        #content-main {
+            padding: 1.05rem 0.85rem;
+            border-radius: 14px;
+        }
+
+        .submit-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .submit-row input[type=submit],
+        .submit-row input[type=button],
+        .submit-row .default,
+        .submit-row a,
+        .submit-row button.cancel-link {
+            width: 100%;
+        }
+
+        #content-main input[type="text"],
+        #content-main input[type="password"],
+        #content-main input[type="email"],
+        #content-main input[type="number"],
+        #content-main input[type="url"],
+        #content-main input[type="tel"],
+        #content-main select,
+        #content-main textarea,
+        #id_username,
+        #id_password1,
+        #id_password2 {
+            min-height: 46px !important;
+            font-size: 0.95rem !important;
+        }
+    }
 </style>
 {% endblock %}
 

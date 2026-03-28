@@ -4,6 +4,32 @@
 {% block extrastyle %}
 {{ block.super }}
 {% include 'sales/includes/lux_content_styles.html' %}
+<style>
+    .debt-payment-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .debt-payment-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.72rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(201, 164, 106, 0.18);
+        font-weight: 700;
+    }
+
+    @media (max-width: 767.98px) {
+        .debt-payment-chip {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -22,6 +48,11 @@
                     <div class="mb-3">
                         <h5 class="lux-label mb-1">{{ sale.customer.name }}</h5>
                         <small class="lux-muted">المبلغ المتبقي عليه: <span class="fw-bold text-danger">{{ current_remaining|intcomma }}</span></small>
+                    </div>
+
+                    <div class="debt-payment-chips">
+                        <span class="debt-payment-chip"><i class="fas fa-user"></i> {{ sale.customer.phone }}</span>
+                        <span class="debt-payment-chip"><i class="fas fa-car"></i> {{ sale.car.brand }} {{ sale.car.model_name }}</span>
                     </div>
 
                     <form method="post" id="debt-payment-form">
