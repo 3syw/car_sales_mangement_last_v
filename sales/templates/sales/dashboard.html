@@ -1,0 +1,276 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .dashboard-lux {
+        position: relative;
+        z-index: 1;
+        padding-top: 0.8rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .dashboard-lux .dashboard-shell {
+        border-radius: 24px;
+        border: 1px solid rgba(201, 164, 106, 0.34);
+        background: linear-gradient(155deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.30));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.30);
+        padding: clamp(1rem, 2vw, 1.7rem);
+    }
+
+    .dashboard-lux .dashboard-title {
+        color: var(--champagne-light);
+        font-weight: 800;
+        letter-spacing: 0.25px;
+        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.24);
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-lux .dashboard-subtitle {
+        color: #f2eee8;
+        font-size: 14px;
+        line-height: 1.9;
+        margin-bottom: 0;
+    }
+
+    .dashboard-lux .dashboard-action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        border-radius: 999px;
+        border: 1px solid rgba(201, 164, 106, 0.58);
+        color: var(--champagne-light);
+        background: transparent;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    }
+
+    .dashboard-lux .dashboard-action-btn:hover {
+        border-color: transparent;
+        background: linear-gradient(45deg, var(--champagne-dark), var(--champagne-light));
+        color: #322317;
+    }
+
+    .dashboard-lux .dashboard-stat-card,
+    .dashboard-lux .dashboard-panel {
+        border-radius: 20px;
+        border: 1px solid rgba(201, 164, 106, 0.27);
+        background: linear-gradient(165deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.30));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .dashboard-lux .dashboard-stat-card {
+        height: 100%;
+        padding: 1.2rem;
+    }
+
+    .dashboard-lux .dashboard-stat-card:hover,
+    .dashboard-lux .dashboard-panel:hover {
+        transform: translateY(-5px);
+        border-color: rgba(201, 164, 106, 0.62);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.34), 0 0 18px rgba(201, 164, 106, 0.22);
+    }
+
+    .dashboard-lux .dashboard-stat-icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 0.7rem;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--champagne-light);
+        font-size: 1.28rem;
+        border: 1px solid rgba(201, 164, 106, 0.40);
+        background: rgba(201, 164, 106, 0.08);
+        position: relative;
+    }
+
+    .dashboard-lux .dashboard-stat-icon::before {
+        content: '';
+        position: absolute;
+        inset: 10px;
+        border-radius: 50%;
+        background: rgba(201, 164, 106, 0.24);
+        filter: blur(10px);
+        z-index: -1;
+    }
+
+    .dashboard-lux .dashboard-stat-label {
+        color: var(--champagne-light);
+        font-size: 1rem;
+        font-weight: 700;
+        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.20);
+        margin-bottom: 0.35rem;
+    }
+
+    .dashboard-lux .dashboard-stat-value {
+        color: #f6f2ea;
+        font-size: 1.42rem;
+        font-weight: 800;
+        text-shadow: 0 0 14px rgba(255, 255, 255, 0.16);
+        margin-bottom: 0;
+    }
+
+    .dashboard-lux .dashboard-stat-note {
+        color: #e8decb;
+        opacity: 0.92;
+        font-size: 0.82rem;
+    }
+
+    .dashboard-lux .dashboard-panel {
+        padding: 1.1rem;
+    }
+
+    .dashboard-lux .dashboard-panel-header {
+        color: var(--champagne-light);
+        font-size: 1.02rem;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.20);
+    }
+
+    .dashboard-lux .dashboard-panel-header i {
+        margin-left: 0.35rem;
+    }
+
+    .dashboard-lux .dashboard-series-item {
+        border-radius: 14px;
+        border: 1px solid rgba(201, 164, 106, 0.26);
+        background: rgba(255, 255, 255, 0.04);
+        padding: 0.55rem;
+        text-align: center;
+    }
+
+    .dashboard-lux .dashboard-series-item .label {
+        color: #e8decb;
+        font-size: 0.8rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .dashboard-lux .dashboard-series-item .value {
+        color: #f6f2ea;
+        font-weight: 700;
+        font-size: 0.92rem;
+    }
+
+    .dashboard-lux .dashboard-note {
+        border-radius: 12px;
+        border: 1px solid rgba(201, 164, 106, 0.25);
+        background: rgba(255, 255, 255, 0.04);
+        color: #f2eee8;
+        padding: 0.72rem 0.82rem;
+        margin-bottom: 0.58rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 0.8rem;
+        align-items: flex-start;
+    }
+
+    .dashboard-lux .dashboard-note-time {
+        color: #e8decb;
+        opacity: 0.88;
+        font-size: 0.78rem;
+        white-space: nowrap;
+    }
+
+    .dashboard-lux .dashboard-empty {
+        color: #f2eee8;
+        opacity: 0.88;
+        text-align: center;
+        margin: 0.2rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+{% if request.GET.sale_created == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='saleSuccessModal' title='تمت العملية' message='تم تسجيل البيع بنجاح.' ok_url=dashboard_ok_url %}
+{% endif %}
+
+<div class="dashboard-lux">
+    <div class="dashboard-shell mt-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8 text-center text-lg-end">
+                <h1 class="dashboard-title">عام</h1>
+                <p class="dashboard-subtitle">نظرة شاملة على وضع المعرض الحالي من حيث المخزون، الإيرادات، الصيانة، والتنبيهات الأخيرة.</p>
+            </div>
+            <div class="col-lg-4 text-center text-lg-start">
+                <a href="{% url 'export_excel' %}" class="dashboard-action-btn"><i class="fas fa-file-excel"></i> تحميل تقرير Excel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center g-4 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-stat-card">
+                <span class="dashboard-stat-icon"><i class="fas fa-car"></i></span>
+                <h5 class="dashboard-stat-label">السيارات المتاحة</h5>
+                <h2 class="dashboard-stat-value">{{ available_cars }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-stat-card">
+                <span class="dashboard-stat-icon"><i class="fas fa-money-bill-wave"></i></span>
+                <h5 class="dashboard-stat-label">إجمالي الدخل</h5>
+                <h2 class="dashboard-stat-value">{{ total_revenue|intcomma }} SR</h2>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-stat-card">
+                <span class="dashboard-stat-icon"><i class="fas fa-screwdriver-wrench"></i></span>
+                <h5 class="dashboard-stat-label">مصروفات الصيانة</h5>
+                <h2 class="dashboard-stat-value">{{ maintenance_current_month|intcomma }} SR</h2>
+                <small class="dashboard-stat-note d-block">الشهر الحالي</small>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-stat-card">
+                <span class="dashboard-stat-icon"><i class="fas fa-chart-line"></i></span>
+                <h5 class="dashboard-stat-label">متوسط الصيانة</h5>
+                <h2 class="dashboard-stat-value">{{ maintenance_previous_avg|intcomma }} SR</h2>
+                <small class="dashboard-stat-note d-block">متوسط الأشهر السابقة</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-panel mb-4">
+        <div class="dashboard-panel-header"><i class="fas fa-chart-column"></i> مقارنة مصروفات الصيانة الشهرية</div>
+        <div class="row g-2">
+            {% for item in maintenance_monthly_series %}
+            <div class="col-md-2 col-6">
+                <div class="dashboard-series-item">
+                    <div class="label">{{ item.label }}</div>
+                    <div class="value">{{ item.value|intcomma }} SR</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="dashboard-panel">
+        <div class="dashboard-panel-header"><i class="fas fa-bell"></i> التنبيهات الأخيرة</div>
+        {% for note in notifications %}
+        <div class="dashboard-note">
+            <span>{{ note.message }}</span>
+            <small class="dashboard-note-time">{{ note.created_at|timesince }}</small>
+        </div>
+        {% empty %}
+        <p class="dashboard-empty">لا توجد أخبار جديدة اليوم.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة السيارات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'sales/css/brand-theme.css' %}">
+    {% block extrastyle %}{% endblock %}
+    {% block extrahead %}{% endblock %}
+    <style>
+        :root {
+            --charcoal: #0F141C;
+            --charcoal-soft: #171E29;
+            --charcoal-muted: #202A38;
+            --surface-glass: rgba(255, 255, 255, 0.08);
+            --surface-glass-strong: rgba(255, 255, 255, 0.12);
+            --text-main: #F2EEE8;
+            --text-soft: #D4CEC5;
+            --champagne: #C9A46A;
+            --champagne-light: #DBC090;
+            --champagne-dark: #A9854F;
+        }
+
+        body {
+            background-color: var(--charcoal) !important;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            padding-top: 92px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        body.page-ready {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.page-exit {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        body.no-page-transition {
+            transition: none !important;
+        }
+
+        .navbar,
+        .bg-dark,
+        .bg-primary {
+            background: rgba(16, 22, 31, 0.72) !important;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            position: relative;
+            z-index: 1;
+            border-bottom: 1px solid rgba(201, 164, 106, 0.45);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .navbar::before,
+        .bg-dark::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 150%, rgba(201, 164, 106, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 80% -50%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+            z-index: -1;
+            border-radius: inherit;
+        }
+
+        .chrome-brand {
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(180deg, #f8f9fa 0%, #d6dae0 36%, #98a0a9 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .navbar .nav-link,
+        .navbar .navbar-brand {
+            color: #f6f1e9 !important;
+        }
+
+        .navbar .nav-link:hover {
+            color: var(--champagne-light) !important;
+        }
+
+        .navbar .nav-link.active {
+            color: var(--champagne) !important;
+            font-weight: 700;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(201, 164, 106, 0.56) !important;
+            box-shadow: none !important;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 .2rem rgba(201, 164, 106, 0.18) !important;
+        }
+
+        @media (max-width: 991.98px) {
+            .navbar .navbar-nav {
+                gap: 0.35rem;
+                margin-top: 0.75rem;
+            }
+
+            .navbar .nav-link {
+                padding: 0.45rem 0;
+            }
+        }
+
+        .nav-icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(201, 164, 106, 0.56);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--champagne-light) !important;
+            background: rgba(255, 255, 255, 0.06);
+            transition: all 0.25s ease;
+        }
+
+        .nav-icon-circle:hover {
+            color: #fff !important;
+            background: rgba(201, 164, 106, 0.24);
+            box-shadow: 0 0 16px rgba(201, 164, 106, 0.35);
+        }
+
+        .text-primary {
+            color: var(--champagne) !important;
+        }
+
+        .text-info {
+            color: var(--text-soft) !important;
+        }
+
+        .text-warning {
+            color: var(--champagne) !important;
+        }
+
+        .text-muted,
+        .text-secondary {
+            color: var(--text-soft) !important;
+        }
+
+        .text-dark {
+            color: var(--text-main) !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--champagne-dark), var(--champagne));
+            border: 1px solid var(--champagne-dark);
+            color: #fff;
+            box-shadow: 0 6px 14px rgba(201, 164, 106, 0.24);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--champagne), var(--champagne-light));
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(201, 164, 106, 0.36);
+        }
+
+        .btn-outline-primary {
+            color: var(--champagne-light);
+            border-color: rgba(201, 164, 106, 0.68);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: rgba(201, 164, 106, 0.24);
+            color: #fff;
+        }
+
+        .btn-outline-secondary {
+            color: var(--text-soft);
+            border-color: rgba(255, 255, 255, 0.28);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.14);
+            color: #fff;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.bg-success {
+            background-color: var(--champagne) !important;
+            color: #fff !important;
+        }
+
+        .badge.bg-danger {
+            background-color: #8A433A !important;
+        }
+
+        .badge.bg-warning {
+            background-color: var(--champagne-light) !important;
+            color: #fff !important;
+        }
+
+        .card {
+            border: 1px solid rgba(201, 164, 106, 0.35);
+            border-radius: 20px;
+            transition: all 0.3s ease-in-out;
+            background: var(--surface-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 20px rgba(201, 164, 106, 0.24), 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+            border-color: var(--champagne-light);
+        }
+
+        .card i,
+        .glass-btn i {
+            transition: color 0.26s ease;
+        }
+
+        .card:hover i,
+        .glass-btn:hover i {
+            color: var(--champagne) !important;
+        }
+
+        .table {
+            color: var(--text-main);
+            --bs-table-bg: rgba(255, 255, 255, 0.03);
+            --bs-table-color: var(--text-main);
+        }
+
+        .table-light {
+            --bs-table-bg: rgba(255, 255, 255, 0.08);
+            --bs-table-color: var(--champagne-light);
+            border-color: rgba(201, 164, 106, 0.30);
+        }
+
+        .table-hover>tbody>tr:hover>* {
+            --bs-table-accent-bg: rgba(201, 164, 106, 0.10);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .fw-bold {
+            font-weight: 700 !important;
+        }
+
+        p,
+        small,
+        .form-label,
+        .text-muted {
+            font-weight: 300;
+        }
+
+        .form-control,
+        .form-select,
+        textarea {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border: 1px solid rgba(201, 164, 106, 0.35) !important;
+            color: var(--text-main) !important;
+        }
+
+        .form-control::placeholder {
+            color: #b9b2a8;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus {
+            border-color: var(--champagne) !important;
+            box-shadow: 0 0 0 .2rem rgba(201, 164, 106, 0.18) !important;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: fadeInUp 0.55s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        * {
+            transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -2;
+            background: radial-gradient(circle at 30% 20%, #1C2430 0%, var(--charcoal) 62%, #0B1017 100%);
+        }
+
+        a {
+            color: var(--champagne-light);
+        }
+
+        a:hover {
+            color: var(--champagne);
+        }
+
+        .submit-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .submit-row input[type=submit] {
+            background-color: var(--champagne);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-row input[type=submit]:hover {
+            background-color: var(--champagne-dark);
+        }
+
+        .submit-row .deletelink {
+            background-color: transparent;
+            color: var(--text-soft);
+            border: 1px solid rgba(255, 255, 255, 0.32);
+            border-radius: 8px;
+            padding: 0.4rem 1.2rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .submit-row .deletelink:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .page-back-row {
+            display: flex;
+            justify-content: flex-start;
+            margin: 1rem 0 0.75rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+
+    {% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top py-2">
+        <div class="container">
+            {% with current=request.resolver_match.url_name %}
+            <a class="navbar-brand chrome-brand" href="{% url 'dashboard' %}"></a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <div class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
+                    {% if user.is_authenticated %}
+                    <a class="nav-link {% if current == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><i class="bi bi-compass"></i> عام</a>
+                    {% endif %}
+                    <a class="nav-link {% if current == 'home' %}active{% endif %}" href="{% url 'home' %}"><i class="bi bi-house"></i> الرئيسية</a>
+                    {% if user.is_authenticated %}
+                        {% if request.session.platform_owner_authenticated %}
+                        <a class="nav-link {% if current == 'platform_switch_tenant' %}active{% endif %}" href="{% url 'platform_switch_tenant' %}"><i class="bi bi-diagram-3"></i> خيارات المنصة</a>
+                        {% endif %}
+                        <a class="nav-link {% if current == 'car_list' %}active{% endif %}" href="{% url 'car_list' %}"><i class="bi bi-car-front"></i> المعرض</a>
+                        {% if user.is_superuser %}
+                        <a class="nav-link {% if current == 'reports' or current == 'audit_logs_report' or current == 'central_audit_monitor' or current == 'reports_financial' or current == 'reports_vouchers' or current == 'vouchers_list' %}active{% endif %}" href="{% url 'reports' %}"><i class="bi bi-bar-chart-line"></i> التقارير</a>
+                        <a class="nav-link {% if current == 'general_expenses_management' %}active{% endif %}" href="{% url 'general_expenses_management' %}"><i class="bi bi-file-invoice-dollar"></i> الإدارة المالية</a>
+                        {% endif %}
+                        <a class="nav-link {% if current == 'debts_list' %}active{% endif %}" href="{% url 'debts_list' %}"><i class="bi bi-wallet2"></i> الديون</a>
+                        {% if user.is_staff %}
+                        <a class="nav-link {% if current == 'digital_archive' %}active{% endif %}" href="{% url 'digital_archive' %}"><i class="bi bi-folder2-open"></i> الأرشيف الرقمي</a>
+                        <a class="nav-link {% if current == 'inventory_reconciliation' %}active{% endif %}" href="{% url 'inventory_reconciliation' %}"><i class="bi bi-clipboard-check"></i> جرد المخزون</a>
+                        {% endif %}
+                        <a class="nav-link {% if current == 'timeline' %}active{% endif %}" href="{% url 'timeline' %}"><i class="bi bi-clock-history"></i> الجدول الزمني</a>
+                        {% if user.is_superuser %}
+                        <a class="nav-link {% if current == 'permissions_management' %}active{% endif %}" href="{% url 'permissions_management' %}"><i class="bi bi-shield-lock"></i> إدارة الصلاحيات</a>
+                        {% endif %}
+                        {% if user.is_staff %}
+                        <a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> الإدارة</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+                    {% if user.is_authenticated %}
+                        <a class="nav-icon-circle" href="{% url 'timeline' %}" title="الإشعارات"><i class="bi bi-bell"></i></a>
+                        {% if user.is_staff %}
+                        <a class="nav-icon-circle" href="{% url 'admin:index' %}" title="الملف الشخصي"><i class="bi bi-person"></i></a>
+                        {% endif %}
+                        <a class="nav-link text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i></a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'login' %}"><i class="bi bi-person"></i> دخول</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endwith %}
+        </div>
+    </nav>
+    {% endblock %}
+
+    <div class="container">
+        {% if request.resolver_match.url_name != 'home' %}
+        <div class="page-back-row">
+            <button type="button" class="btn btn-outline-secondary" data-no-transition="true" onclick="navigateBack()">
+                <i class="bi bi-arrow-right"></i>
+                رجوع
+            </button>
+        </div>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        const BACK_NAV_FLAG = 'suppress_page_transition_once';
+
+        function navigateBack() {
+            sessionStorage.setItem(BACK_NAV_FLAG, '1');
+            document.body.classList.add('no-page-transition');
+            if (window.history.length > 1) {
+                window.history.back();
+                return;
+            }
+            window.location.href = "{% url 'home' %}";
+        }
+
+        function ensurePageVisible() {
+            document.body.classList.remove('page-exit');
+            document.body.classList.add('page-ready');
+        }
+
+        function shouldSuppressTransition() {
+            const navEntry = performance.getEntriesByType('navigation')[0];
+            const isHistoryNavigation = navEntry && navEntry.type === 'back_forward';
+            const flaggedByBackButton = sessionStorage.getItem(BACK_NAV_FLAG) === '1';
+            return isHistoryNavigation || flaggedByBackButton;
+        }
+
+        function consumeBackNavFlag() {
+            sessionStorage.removeItem(BACK_NAV_FLAG);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (shouldSuppressTransition()) {
+                document.body.classList.add('no-page-transition');
+                consumeBackNavFlag();
+            }
+            ensurePageVisible();
+
+            const cards = document.querySelectorAll('.card, .glass-btn');
+            cards.forEach((item, index) => {
+                item.classList.add('fade-in-up');
+                item.style.animationDelay = `${(index % 12) * 0.07}s`;
+            });
+
+            document.querySelectorAll('a[href]').forEach((link) => {
+                const href = link.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.target === '_blank' || link.dataset.noTransition === 'true') {
+                    return;
+                }
+                link.addEventListener('click', (event) => {
+                    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+                        return;
+                    }
+                    if (link.host !== window.location.host) {
+                        return;
+                    }
+                    if (link.pathname === window.location.pathname && link.search === window.location.search && link.hash === window.location.hash) {
+                        return;
+                    }
+                    event.preventDefault();
+                    document.body.classList.remove('page-ready');
+                    document.body.classList.add('page-exit');
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 180);
+                });
+            });
+        });
+
+        window.addEventListener('pageshow', () => {
+            if (shouldSuppressTransition()) {
+                document.body.classList.add('no-page-transition');
+                consumeBackNavFlag();
+            } else {
+                document.body.classList.remove('no-page-transition');
+            }
+            ensurePageVisible();
+        });
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": ["#C9A46A", "#ffffff", "#DBC090"]
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.42,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#C9A46A",
+                    "opacity": 0.35,
+                    "width": 1.1,
+                    "shadow": {
+                        "enable": true,
+                        "color": "#C9A46A",
+                        "blur": 4
+                    }
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1.8,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": true,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "window",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 200,
+                        "line_linked": {
+                            "opacity": 0.8
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+
+</html>

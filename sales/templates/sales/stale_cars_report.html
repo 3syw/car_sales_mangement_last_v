@@ -1,0 +1,85 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-clock"></i> تقرير السيارات الراكدة</h3>
+                <p class="lux-subtitle">متابعة السيارات التي تجاوزت فترات الركود (30، 60، 90 يوم) بدون بيع.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">30 يوم فأكثر</small>
+                <h4 class="lux-value mb-0">{{ stale_30 }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">60 يوم فأكثر</small>
+                <h4 class="lux-value mb-0">{{ stale_60 }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">90 يوم فأكثر</small>
+                <h4 class="lux-value mb-0">{{ stale_90 }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>السيارة</th>
+                        <th>رقم الشاسيه</th>
+                        <th>تاريخ الإضافة</th>
+                        <th>عمر الركود</th>
+                        <th>الشريحة</th>
+                        <th>إجمالي التكلفة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td>{{ row.car.brand }} {{ row.car.model_name }}</td>
+                        <td>{{ row.car.vin }}</td>
+                        <td>{{ row.car.created_at|date:'Y-m-d' }}</td>
+                        <td>{{ row.age_days }} يوم</td>
+                        <td>
+                            {% if row.aging_bucket == '90+' %}
+                            <span class="badge bg-danger">90+</span>
+                            {% elif row.aging_bucket == '60+' %}
+                            <span class="badge bg-warning text-dark">60+</span>
+                            {% else %}
+                            <span class="badge bg-secondary">30+</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ row.total_cost|intcomma }} {{ row.car.currency }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">لا توجد سيارات راكدة ضمن الشرائح المحددة.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

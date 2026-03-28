@@ -1,0 +1,22 @@
+{% extends "sales/base.html" %}
+{% load i18n %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block navbar %}{{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% block branding %}
+    <div id="site-name"><a href="{% url 'admin:index' %}">{% trans "لوحة إدارة Django" %}</a></div>
+    {% if user.is_anonymous %}
+      {% include "admin/color_theme_toggle.html" %}
+    {% endif %}
+    {% endblock %}
+
+    {% block nav-global %}{% endblock %}
+
+    {# insert the content from the child template here #}
+    {{ block.super }}
+</div>
+{% endblock %}

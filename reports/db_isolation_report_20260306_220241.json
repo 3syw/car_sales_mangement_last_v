@@ -1,0 +1,155 @@
+{
+  "generated_at": "2026-03-06T22:02:41.803178",
+  "default_db_path": "C:\\Users\\ComputerWorld\\car_sales_system\\db.sqlite3",
+  "tenant_db_directory": "C:\\Users\\ComputerWorld\\car_sales_system\\tenant_dbs",
+  "active_platform_tenants": 23,
+  "default_auth_user_count": 4,
+  "before_cleanup": [
+    {
+      "model": "AuditLog",
+      "table": "sales_auditlog",
+      "row_count": 0
+    },
+    {
+      "model": "Car",
+      "table": "sales_car",
+      "row_count": 0
+    },
+    {
+      "model": "CarDocument",
+      "table": "sales_cardocument",
+      "row_count": 0
+    },
+    {
+      "model": "CarMaintenance",
+      "table": "sales_carmaintenance",
+      "row_count": 0
+    },
+    {
+      "model": "Customer",
+      "table": "sales_customer",
+      "row_count": 0
+    },
+    {
+      "model": "DebtPayment",
+      "table": "sales_debtpayment",
+      "row_count": 0
+    },
+    {
+      "model": "Expense",
+      "table": "sales_expense",
+      "row_count": 0
+    },
+    {
+      "model": "FinanceVoucher",
+      "table": "sales_financevoucher",
+      "row_count": 0
+    },
+    {
+      "model": "GeneralExpense",
+      "table": "sales_generalexpense",
+      "row_count": 0
+    },
+    {
+      "model": "InterfaceAccess",
+      "table": "sales_interfaceaccess",
+      "row_count": 0
+    },
+    {
+      "model": "Notification",
+      "table": "sales_notification",
+      "row_count": 0
+    },
+    {
+      "model": "OperationLog",
+      "table": "sales_operationlog",
+      "row_count": 4
+    },
+    {
+      "model": "Sale",
+      "table": "sales_sale",
+      "row_count": 0
+    }
+  ],
+  "after_cleanup": [
+    {
+      "model": "AuditLog",
+      "table": "sales_auditlog",
+      "row_count": 0
+    },
+    {
+      "model": "Car",
+      "table": "sales_car",
+      "row_count": 0
+    },
+    {
+      "model": "CarDocument",
+      "table": "sales_cardocument",
+      "row_count": 0
+    },
+    {
+      "model": "CarMaintenance",
+      "table": "sales_carmaintenance",
+      "row_count": 0
+    },
+    {
+      "model": "Customer",
+      "table": "sales_customer",
+      "row_count": 0
+    },
+    {
+      "model": "DebtPayment",
+      "table": "sales_debtpayment",
+      "row_count": 0
+    },
+    {
+      "model": "Expense",
+      "table": "sales_expense",
+      "row_count": 0
+    },
+    {
+      "model": "FinanceVoucher",
+      "table": "sales_financevoucher",
+      "row_count": 0
+    },
+    {
+      "model": "GeneralExpense",
+      "table": "sales_generalexpense",
+      "row_count": 0
+    },
+    {
+      "model": "InterfaceAccess",
+      "table": "sales_interfaceaccess",
+      "row_count": 0
+    },
+    {
+      "model": "Notification",
+      "table": "sales_notification",
+      "row_count": 0
+    },
+    {
+      "model": "OperationLog",
+      "table": "sales_operationlog",
+      "row_count": 0
+    },
+    {
+      "model": "Sale",
+      "table": "sales_sale",
+      "row_count": 0
+    }
+  ],
+  "cleanup": {
+    "requested": true,
+    "performed": true,
+    "backup_file": "C:\\Users\\ComputerWorld\\car_sales_system\\backups\\default\\default_pre_isolation_cleanup_20260306_220241.sqlite3",
+    "deleted_tables": [
+      {
+        "model": "OperationLog",
+        "table": "sales_operationlog",
+        "rows_before_delete": 4
+      }
+    ],
+    "rows_before_cleanup": 4,
+    "rows_after_cleanup": 0
+  }
+}

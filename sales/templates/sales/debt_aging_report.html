@@ -1,0 +1,86 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-hourglass-half"></i> تقرير تقادم الديون</h3>
+                <p class="lux-subtitle">تصنيف الذمم المدينة حسب عمر الدين لمساعدة الإدارة في متابعة الديون عالية المخاطر.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'debts_list' %}" class="lux-outline-btn">عودة لسجل الديون</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+        <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <h6 class="lux-label mb-1">إجمالي المديونية (محول إلى SR)</h6>
+                <small class="lux-muted">حتى تاريخ {{ as_of_date|date:'Y-m-d' }}</small>
+            </div>
+            <h3 class="lux-value mb-0">{{ total_outstanding_sr|intcomma }} SR</h3>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        {% for bucket in aging_buckets %}
+        <div class="col-md-3">
+            <div class="card p-3 h-100">
+                <div class="card-body">
+                    <small class="lux-muted d-block mb-1">{{ bucket.label }}</small>
+                    <h5 class="mb-1">{{ bucket.amount_sr|intcomma }} SR</h5>
+                    <small class="lux-muted">عدد الحالات: {{ bucket.count }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="card p-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>العميل</th>
+                            <th>السيارة</th>
+                            <th>تاريخ البيع</th>
+                            <th>تاريخ الاستحقاق</th>
+                            <th>عمر الدين</th>
+                            <th>شريحة التقادم</th>
+                            <th>المتبقي (عملة العملية)</th>
+                            <th>المتبقي (SR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            <td>{{ row.sale.customer.name }}</td>
+                            <td>{{ row.sale.car.brand }} {{ row.sale.car.model_name }} ({{ row.sale.car.vin }})</td>
+                            <td>{{ row.sale.sale_date|date:'Y-m-d' }}</td>
+                            <td>{{ row.due_date|date:'Y-m-d' }}</td>
+                            <td>{{ row.age_text }}</td>
+                            <td>{{ row.bucket_label }}</td>
+                            <td>{{ row.remaining_amount|intcomma }} {{ row.sale.car.currency }}</td>
+                            <td class="fw-bold">{{ row.remaining_amount_sr|intcomma }} SR</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4">لا توجد ذمم مدينة حالياً.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

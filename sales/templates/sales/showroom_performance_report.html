@@ -1,0 +1,95 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-chart-bar"></i> تقرير أداء المعرض</h3>
+                <p class="lux-subtitle">مؤشرات تشغيلية ومالية مجمعة لقياس أداء المبيعات والربحية وسرعة دوران المخزون.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">إجمالي المبيعات (SR)</small>
+                <h4 class="lux-value mb-0">{{ total_sales_sr|intcomma }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">عدد السيارات المباعة</small>
+                <h4 class="lux-value mb-0">{{ sold_count }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">متوسط الربح لكل سيارة (SR)</small>
+                <h4 class="lux-value mb-0">{{ average_profit_sr|intcomma }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">متوسط مدة البقاء (يوم)</small>
+                <h4 class="lux-value mb-0">{{ average_days_in_inventory|floatformat:1 }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">السيارات المتاحة حاليًا</small>
+                <h4 class="lux-value mb-0">{{ available_count }}</h4>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">مؤشر دوران المخزون</small>
+                <h4 class="lux-value mb-0">{{ turnover_ratio|floatformat:2 }}</h4>
+                <small class="text-muted">كلما ارتفع الرقم دل ذلك على سرعة أفضل في تحويل المخزون إلى مبيعات.</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <tbody>
+                    <tr>
+                        <th style="width: 320px;">إجمالي المبيعات</th>
+                        <td>{{ total_sales_sr|intcomma }} SR</td>
+                    </tr>
+                    <tr>
+                        <th>عدد السيارات المباعة</th>
+                        <td>{{ sold_count }}</td>
+                    </tr>
+                    <tr>
+                        <th>متوسط الربح لكل سيارة</th>
+                        <td>{{ average_profit_sr|intcomma }} SR</td>
+                    </tr>
+                    <tr>
+                        <th>متوسط مدة بقاء السيارة في المخزون</th>
+                        <td>{{ average_days_in_inventory|floatformat:1 }} يوم</td>
+                    </tr>
+                    <tr>
+                        <th>تاريخ احتساب التقرير</th>
+                        <td>{{ performance.as_of_date|date:'Y-m-d' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

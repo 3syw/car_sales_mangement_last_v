@@ -1,0 +1,182 @@
+{% extends 'sales/base.html' %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+{% if request.GET.closed == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='fiscalCloseModal' title='تم الإغلاق' message='تم إغلاق الفترة الشهرية بنجاح.' ok_url=fiscal_closing_ok_url %}
+{% endif %}
+{% if request.GET.unlock_requested == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='unlockRequestModal' title='تم الإرسال' message='تم إرسال طلب فك الإغلاق للمراجعة.' ok_url=fiscal_closing_ok_url %}
+{% endif %}
+{% if request.GET.unlock_reviewed == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='unlockReviewedModal' title='تمت المراجعة' message='تم تحديث حالة طلب فك الإغلاق.' ok_url=fiscal_closing_ok_url %}
+{% endif %}
+
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-lock"></i> الإغلاق الشهري وفك الإغلاق</h3>
+                <p class="lux-subtitle">إقفال الفترات الشهرية ماليًا ومنع تعديل العمليات داخلها إلا عبر طلب فك إغلاق موثق.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-lg-6">
+            <div class="card p-3 h-100">
+                <h5 class="lux-label mb-3">إغلاق شهر مكتمل</h5>
+                <form method="post" class="row g-3 align-items-end">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="close_month">
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ close_form.reference_date.id_for_label }}">{{ close_form.reference_date.label }}</label>
+                        {{ close_form.reference_date }}
+                        {% if close_form.reference_date.errors %}
+                        <div class="text-danger small mt-1">{{ close_form.reference_date.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ close_form.notes.id_for_label }}">{{ close_form.notes.label }}</label>
+                        {{ close_form.notes }}
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <button type="submit" class="btn btn-primary rounded-pill">إغلاق الشهر</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card p-3 h-100">
+                <h5 class="lux-label mb-3">طلب فك إغلاق</h5>
+                <form method="post" class="row g-3 align-items-end">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="request_unlock">
+                    <div class="col-md-12">
+                        <label class="form-label" for="{{ unlock_form.closing.id_for_label }}">{{ unlock_form.closing.label }}</label>
+                        {{ unlock_form.closing }}
+                        {% if unlock_form.closing.errors %}
+                        <div class="text-danger small mt-1">{{ unlock_form.closing.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="{{ unlock_form.reason.id_for_label }}">{{ unlock_form.reason.label }}</label>
+                        {{ unlock_form.reason }}
+                        {% if unlock_form.reason.errors %}
+                        <div class="text-danger small mt-1">{{ unlock_form.reason.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-5 d-grid">
+                        <button type="submit" class="btn btn-warning rounded-pill">إرسال الطلب</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+        <h5 class="lux-label mb-3">الفترات الشهرية</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>نوع الإغلاق</th>
+                        <th>بداية الفترة</th>
+                        <th>نهاية الفترة</th>
+                        <th>الحالة</th>
+                        <th>بواسطة</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for closing in closings %}
+                    <tr>
+                        <td>{{ closing.get_period_type_display }}</td>
+                        <td>{{ closing.period_start|date:'Y-m-d' }}</td>
+                        <td>{{ closing.period_end|date:'Y-m-d' }}</td>
+                        <td>{% if closing.is_locked %}<span class="badge bg-danger">مغلق</span>{% else %}<span class="badge bg-success">مفتوح بعد فك الإغلاق</span>{% endif %}</td>
+                        <td>{% if closing.closed_by %}{{ closing.closed_by.username }}{% else %}-{% endif %}</td>
+                        <td>{{ closing.notes|default:'-' }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">لا توجد فترات شهرية مغلقة بعد.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <h5 class="lux-label mb-3">طلبات فك الإغلاق</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>الفترة</th>
+                        <th>السبب</th>
+                        <th>الحالة</th>
+                        <th>مقدم الطلب</th>
+                        <th>المراجعة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in unlock_requests %}
+                    <tr>
+                        <td>{{ item.closing.period_start|date:'Y-m-d' }} -> {{ item.closing.period_end|date:'Y-m-d' }}</td>
+                        <td>{{ item.reason }}</td>
+                        <td>
+                            {% if item.status == 'pending' %}
+                                <span class="badge bg-warning text-dark">قيد المراجعة</span>
+                            {% elif item.status == 'approved' %}
+                                <span class="badge bg-success">مقبول</span>
+                            {% else %}
+                                <span class="badge bg-danger">مرفوض</span>
+                            {% endif %}
+                        </td>
+                        <td>{% if item.requested_by %}{{ item.requested_by.username }}{% else %}-{% endif %}</td>
+                        <td>
+                            {% if item.status == 'pending' and user.is_superuser %}
+                            <form method="post" class="d-flex flex-column gap-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="review_unlock">
+                                <input type="hidden" name="unlock_request_id" value="{{ item.id }}">
+                                <textarea class="form-control form-control-sm" name="review_notes" rows="2" placeholder="ملاحظة المراجعة (اختياري)"></textarea>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-success" name="decision" value="approve" type="submit">موافقة</button>
+                                    <button class="btn btn-sm btn-outline-danger" name="decision" value="reject" type="submit">رفض</button>
+                                </div>
+                            </form>
+                            {% else %}
+                                {% if item.reviewed_by %}
+                                    {{ item.reviewed_by.username }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                                {% if item.review_notes %}
+                                    <div class="small text-muted mt-1">{{ item.review_notes }}</div>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4">لا توجد طلبات فك إغلاق.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

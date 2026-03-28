@@ -1,0 +1,88 @@
+{% extends "sales/base.html" %}
+{% load humanize %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0 text-primary">تفاصيل السيارة المباعة</h3>
+                    <a href="{% url 'sold_cars_cards' %}" class="btn btn-sm btn-outline-secondary">العودة للسيارات المباعة</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-light align-middle">
+                        <tbody>
+                            <tr><th>المعرف</th><td>{{ car.id }}</td></tr>
+                            <tr><th>الصورة</th><td>{% if car.image %}<img src="{{ car.image.url }}" alt="{{ car.brand }}" style="width:120px; height:80px; object-fit:cover; border-radius:8px; border:1px solid rgba(212,175,55,0.35);">{% else %}<span class="text-muted">لا توجد</span>{% endif %}</td></tr>
+                            <tr><th>الماركة</th><td>{{ car.brand }}</td></tr>
+                            <tr><th>الموديل</th><td>{{ car.model_name }}</td></tr>
+                            <tr><th>رقم الشاسيه</th><td>{{ car.vin }}</td></tr>
+                            <tr><th>سنة الصنع</th><td>{{ car.year }}</td></tr>
+                            <tr><th>سعر التكلفة الأساسي</th><td>{{ car.cost_price|intcomma }}</td></tr>
+                            <tr><th>رسوم الجمارك</th><td>{{ car.customs_cost|intcomma }}</td></tr>
+                            <tr><th>تكاليف النقل</th><td>{{ car.transport_cost|intcomma }}</td></tr>
+                            <tr><th>العمولة</th><td>{{ car.commission_cost|intcomma }}</td></tr>
+                            <tr><th>إجمالي مصروفات الصيانة</th><td>{{ maintenance_total|intcomma }}</td></tr>
+                            <tr><th>إجمالي التكلفة الفعلية</th><td>{{ total_cost_price|intcomma }}</td></tr>
+                            <tr><th>سعر البيع المعروض</th><td>{{ car.selling_price|intcomma }}</td></tr>
+                            <tr><th>العملة</th><td>{{ car.currency }}</td></tr>
+                            <tr><th>الحالة</th><td>مباعة</td></tr>
+                            <tr><th>تاريخ الإضافة</th><td>{{ car.created_at|date:"Y-m-d H:i" }}</td></tr>
+                            <tr><th>سعر البيع النهائي</th><td>{% if sale %}{{ sale.sale_price|intcomma }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>اسم العميل</th><td>{% if sale %}{{ sale.customer.name }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>هاتف العميل</th><td>{% if sale %}{{ sale.customer.phone }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>تاريخ البيع</th><td>{% if sale %}{{ sale.sale_date|date:"Y-m-d H:i" }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>المبلغ المدفوع</th><td>{% if sale %}{{ sale.amount_paid|intcomma }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>المبلغ المتبقي</th><td>{% if sale %}{{ sale.remaining_amount|intcomma }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>صافي الربح الفعلي</th><td>{% if real_profit is not None %}{{ real_profit|intcomma }}{% else %}-{% endif %}</td></tr>
+                            <tr>
+                                <th>عقد البيع الموقّع</th>
+                                <td>
+                                    {% if sale and sale.sale_contract_image %}
+                                    <a href="{{ sale.sale_contract_image.url }}" target="_blank" class="btn btn-sm btn-outline-primary">عرض العقد</a>
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h5 class="mt-4 mb-3">سجل الصيانة</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover table-light align-middle">
+                        <thead>
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>النوع</th>
+                                <th>المبلغ</th>
+                                <th>الورشة/المورد</th>
+                                <th>الموظف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in maintenance_records %}
+                            <tr>
+                                <td>{{ record.operation_date|date:"Y-m-d" }}</td>
+                                <td>{{ record.get_maintenance_type_display }}</td>
+                                <td>{{ record.amount|intcomma }} {{ car.currency }}</td>
+                                <td>{{ record.supplier_workshop }}</td>
+                                <td>{% if record.added_by %}{{ record.added_by.username }}{% else %}-{% endif %}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">لا توجد مصروفات صيانة مسجلة.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

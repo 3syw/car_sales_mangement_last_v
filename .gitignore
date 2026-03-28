@@ -1,0 +1,8 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+desktop-client/node_modules/
+desktop-client/dist/
+desktop-client/release/
+desktop-client/.env

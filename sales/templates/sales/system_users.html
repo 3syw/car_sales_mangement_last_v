@@ -1,0 +1,65 @@
+{% extends "sales/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0 text-primary">قائمة المستخدمين</h3>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'admin:auth_user_changelist' %}" class="btn btn-sm btn-outline-secondary">لوحة الإدارة</a>
+                        <a href="{% url 'admin:auth_user_changelist' %}" class="btn btn-sm btn-outline-light" style="color:var(--gold); font-weight:700; border:1px solid rgba(212,175,55,0.25);">تعديل</a>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-light align-middle">
+                        <thead>
+                            <tr>
+                                <th>المعرف</th>
+                                <th>اسم المستخدم</th>
+                                <th>الاسم الكامل</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>صلاحية</th>
+                                <th>مدخل</th>
+                                <th>آخر دخول</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.get_full_name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    {% if user.is_superuser %}
+                                        مشرف عام
+                                    {% elif user.is_staff %}
+                                        موظف
+                                    {% else %}
+                                        مستخدم
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.date_joined|date:"Y-m-d H:i" }}</td>
+                                <td>{% if user.last_login %}{{ user.last_login|date:"Y-m-d H:i" }}{% else %}-{% endif %}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-primary" href="{% url 'admin:auth_user_change' user.id %}" style="color: var(--gold) !important; font-weight:700; border-color: rgba(212,175,55,0.35);">تحرير</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">لا يوجد مستخدمين لعرضهم.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

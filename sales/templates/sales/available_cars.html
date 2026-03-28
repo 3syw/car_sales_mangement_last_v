@@ -1,0 +1,66 @@
+{% extends "sales/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0 text-primary">السيارات المتاحة</h3>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'admin:sales_car_changelist' %}" class="btn btn-sm btn-outline-secondary">لوحة السيارات</a>
+                        <a href="{% url 'admin:sales_car_add' %}" class="btn btn-sm btn-outline-light" style="color:var(--gold); font-weight:700; border:1px solid rgba(212,175,55,0.25);">إضافة سيارة</a>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-light align-middle">
+                        <thead>
+                            <tr>
+                                <th>المعرف</th>
+                                <th>الصورة</th>
+                                <th>الماركة</th>
+                                <th>الموديل</th>
+                                <th>رقم الشاسيه</th>
+                                <th>سنة الصنع</th>
+                                <th>سعر البيع</th>
+                                <th>العملة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for car in cars %}
+                            <tr>
+                                <td>{{ car.id }}</td>
+                                <td>
+                                    {% if car.image %}
+                                        <img src="{{ car.image.url }}" alt="{{ car.brand }}" style="width:64px; height:44px; object-fit:cover; border-radius:6px; border:1px solid rgba(212,175,55,0.35);">
+                                    {% else %}
+                                        <span class="text-muted">لا توجد</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ car.brand }}</td>
+                                <td>{{ car.model_name }}</td>
+                                <td>{{ car.vin }}</td>
+                                <td>{{ car.year }}</td>
+                                <td>{{ car.selling_price }}</td>
+                                <td>{{ car.currency }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-success" href="{% url 'process_sale' %}?car_id={{ car.id }}">إتمام البيع</a>
+                                    <a class="btn btn-sm btn-outline-primary" href="{% url 'admin:sales_car_change' car.id %}" style="color: var(--gold) !important; font-weight:700; border-color: rgba(212,175,55,0.35);">تحرير</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center text-muted">لا توجد سيارات متاحة حالياً.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

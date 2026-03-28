@@ -1,0 +1,103 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-sync-alt"></i> تقرير دوران المخزون</h3>
+                <p class="lux-subtitle">قياس سرعة دوران السيارات من المخزون عبر فترات زمنية مختلفة مع عرض آخر الحركات.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">المباع الكلي</small>
+                <h4 class="lux-value mb-0">{{ total_sold_count }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">المتاح حاليًا</small>
+                <h4 class="lux-value mb-0">{{ available_count }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">مؤشر الدوران</small>
+                <h4 class="lux-value mb-0">{{ turnover_ratio|floatformat:2 }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">تاريخ القياس</small>
+                <h4 class="lux-value mb-0">{{ today|date:'Y-m-d' }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">مبيعات آخر 30 يوم</small>
+                <h5 class="mb-0">{{ sold_30_days }}</h5>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">مبيعات آخر 60 يوم</small>
+                <h5 class="mb-0">{{ sold_60_days }}</h5>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">مبيعات آخر 90 يوم</small>
+                <h5 class="mb-0">{{ sold_90_days }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <h6 class="mb-3">آخر حركات المخزون</h6>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>السيارة</th>
+                        <th>نوع الحركة</th>
+                        <th>التكلفة</th>
+                        <th>المرجع</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for movement in movements %}
+                    <tr>
+                        <td>{{ movement.transaction_date|date:'Y-m-d' }}</td>
+                        <td>{{ movement.car.brand }} {{ movement.car.model_name }} ({{ movement.car.vin }})</td>
+                        <td>{{ movement.get_transaction_type_display }}</td>
+                        <td>{{ movement.cost|intcomma }} {{ movement.car.currency }}</td>
+                        <td>{{ movement.reference_type }} {{ movement.reference_id }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4">لا توجد حركات مخزون مسجلة.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

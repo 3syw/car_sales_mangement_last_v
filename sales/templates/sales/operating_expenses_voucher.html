@@ -1,0 +1,92 @@
+{% extends 'sales/base.html' %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+
+{% if request.GET.saved == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='operatingSuccessModal' title='تم الحفظ' message='تم حفظ بيانات السند بنجاح.' ok_url=operating_ok_url %}
+{% endif %}
+
+<div class="row justify-content-center mt-3">
+    <div class="col-lg-10 col-xl-9">
+        <div class="card p-4 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <h3 class="fw-bold text-primary mb-0">مصروفات تشغيلية</h3>
+                    <a href="{% url 'reports_vouchers' %}" class="btn btn-sm btn-outline-secondary">عودة</a>
+                </div>
+
+                <form method="post" id="operating-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger">{{ form.errors }}</div>
+                    {% endif %}
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_voucher_number">{{ form.voucher_number.label }}</label>
+                            {{ form.voucher_number }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_voucher_date">{{ form.voucher_date.label }}</label>
+                            {{ form.voucher_date }}
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_expense_name">{{ form.expense_name.label }}</label>
+                            {{ form.expense_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_expense_amount">{{ form.expense_amount.label }}</label>
+                            <div class="row g-2">
+                                <div class="col-8">
+                                    {{ form.expense_amount }}
+                                </div>
+                                <div class="col-4">
+                                    {{ form.expense_currency }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4" style="max-width: 360px;">
+                        <label class="form-label" for="id_allowance_reason">{{ form.allowance_reason.label }}</label>
+                        {{ form.allowance_reason }}
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-5">
+                            <label class="form-label" for="id_financial_container">{{ form.financial_container.label }}</label>
+                            {{ form.financial_container }}
+                            {% if form.financial_container.errors %}
+                            <div class="text-danger small mt-1">{{ form.financial_container.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="id_linked_car">{{ form.linked_car.label }}</label>
+                            {{ form.linked_car }}
+                            {% if form.linked_car.errors %}
+                            <div class="text-danger small mt-1">{{ form.linked_car.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="id_supporting_document">{{ form.supporting_document.label }}</label>
+                            {{ form.supporting_document }}
+                            {% if form.supporting_document.errors %}
+                            <div class="text-danger small mt-1">{{ form.supporting_document.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#operatingConfirmModal">حفظ السند</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'sales/includes/confirm_action_modal.html' with modal_id='operatingConfirmModal' title='تأكيد العملية' message='هل انت متاكد من العمليه؟' confirm_button_id='confirm-operating-btn' form_id='operating-form' %}
+{% endblock %}

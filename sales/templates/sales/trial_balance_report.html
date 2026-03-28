@@ -1,0 +1,99 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-balance-scale"></i> ميزان المراجعة</h3>
+                <p class="lux-subtitle">تجميع أرصدة الحسابات من القيود اليومية حتى تاريخ محدد للتأكد من توازن النظام.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label" for="as_of_date">حتى تاريخ</label>
+                <input id="as_of_date" type="date" name="as_of_date" class="form-control" value="{{ as_of_date|date:'Y-m-d' }}">
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-primary rounded-pill">تحديث التقرير</button>
+            </div>
+            <div class="col-md-7 text-md-end">
+                {% if is_balanced %}
+                <span class="badge bg-success fs-6">الميزان متوازن</span>
+                {% else %}
+                <span class="badge bg-danger fs-6">يوجد فرق: {{ difference|intcomma }}</span>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">إجمالي المدين</small>
+                <h4 class="lux-value mb-0">{{ total_debit|intcomma }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">إجمالي الدائن</small>
+                <h4 class="lux-value mb-0">{{ total_credit|intcomma }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">الفرق</small>
+                <h4 class="mb-0 {% if difference == 0 %}text-success{% else %}text-danger{% endif %}">{{ difference|intcomma }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>الكود</th>
+                        <th>الحساب</th>
+                        <th>النوع</th>
+                        <th>مدين</th>
+                        <th>دائن</th>
+                        <th>الرصيد</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td>{{ row.account_code }}</td>
+                        <td>{{ row.account_name }}</td>
+                        <td>{{ row.account_type }}</td>
+                        <td>{{ row.debit|intcomma }}</td>
+                        <td>{{ row.credit|intcomma }}</td>
+                        <td>
+                            {{ row.balance|intcomma }}
+                            <span class="small text-muted">({{ row.balance_side }})</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">لا توجد قيود ضمن الفترة المحددة.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

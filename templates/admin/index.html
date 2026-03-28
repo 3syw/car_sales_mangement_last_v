@@ -1,0 +1,53 @@
+{% extends 'sales/base.html' %}
+{% load i18n %}
+
+{% block title %}لوحة التحكم | معرض السيارات الذكي{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4 mt-4">
+    <div class="col-12">
+        <h1 class="display-5 text-primary fw-bold">لوحة تحكم المشرف</h1>
+        <p class="text-muted">أدوات سريعة للوصول إلى أجزاء الإدارة داخل النظام.</p>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="/admin/auth/user/" class="text-decoration-none">
+            <div class="card p-4 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users-cog fa-2x text-primary mb-3"></i>
+                    <h5 class="fw-bold">المستخدمون</h5>
+                    <small class="text-muted d-block">إضافة وتعديل صلاحيات وحسابات المستخدمين</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <a href="/admin/sales/car/" class="text-decoration-none">
+            <div class="card p-4 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-car fa-2x text-info mb-3"></i>
+                    <h5 class="fw-bold">السيارات</h5>
+                    <small class="text-muted d-block">إدارة السجلات والصور والأسعار</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <a href="/admin/sales/sale/" class="text-decoration-none">
+            <div class="card p-4 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-invoice-dollar fa-2x text-warning mb-3"></i>
+                    <h5 class="fw-bold">المبيعات</h5>
+                    <small class="text-muted d-block">سجلات البيع وإيصالات العملاء</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

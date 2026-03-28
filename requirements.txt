@@ -1,0 +1,15 @@
+Django>=6.0,<7.0
+djangorestframework>=3.16,<4.0
+djangorestframework-simplejwt>=5.5,<6.0
+channels>=4.2,<5.0
+channels-redis>=4.2,<5.0
+celery>=5.4,<6.0
+redis>=5.0,<6.0
+Pillow
+openpyxl
+gunicorn==20.1.0
+psycopg2-binary==2.9.9; python_version < "3.13"
+psycopg[binary]>=3.2,<4.0; python_version >= "3.13"
+dj-database-url==2.1.0
+whitenoise==6.6.0
+# add other dependencies your project needs

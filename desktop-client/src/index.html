@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Sales Desktop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <header class="desktop-navbar">
+        <div class="nav-inner">
+            <div class="brand-wrap">
+                <div class="brand-title">نظام إدارة السيارات</div>
+                <div class="brand-subtitle">نسخة سطح المكتب المتزامنة مع لوحة الويب</div>
+            </div>
+            <div class="nav-status-chip">
+                <span id="connectionDot" class="dot idle"></span>
+                <span id="connectionText">غير متصل</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="workspace-panel">
+        <section class="dashboard-shell auth-shell">
+            <div class="section-heading">
+                <div>
+                    <h2>الدخول إلى بيئة المعرض</h2>
+                    <p class="section-subtitle">استخدم نفس بيانات منصة الويب للوصول المباشر إلى البيانات.</p>
+                </div>
+                <div class="app-version">v<span id="appVersion"></span></div>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <label>
+                    <span>رابط الخادم</span>
+                    <input id="serverUrl" name="serverUrl" type="url" placeholder="http://127.0.0.1:8000" required>
+                </label>
+                <label>
+                    <span>معرف المعرض</span>
+                    <input id="tenantId" name="tenantId" type="text" placeholder="backupdemo" required>
+                </label>
+                <label>
+                    <span>مفتاح المعرض</span>
+                    <input id="tenantKey" name="tenantKey" type="password" placeholder="Tenant access key" required>
+                </label>
+                <label>
+                    <span>اسم المستخدم</span>
+                    <input id="username" name="username" type="text" placeholder="admin" required>
+                </label>
+                <label>
+                    <span>كلمة المرور</span>
+                    <input id="password" name="password" type="password" placeholder="••••••••" required>
+                </label>
+
+                <div class="login-actions">
+                    <button type="submit" id="loginButton" class="primary-button">تسجيل الدخول</button>
+                    <button type="button" id="logoutButton" class="secondary-button">تسجيل الخروج</button>
+                </div>
+            </form>
+
+            <div id="loginMessage" class="message-strip muted">أدخل بيانات الخادم والمعرض لبدء الجلسة.</div>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="dashboard-stat-card">
+                <span class="dashboard-stat-label">المبيعات المسجلة</span>
+                <strong id="soldCount" class="dashboard-stat-value">0</strong>
+                <small class="dashboard-stat-note">من ملخص الخادم</small>
+            </article>
+            <article class="dashboard-stat-card">
+                <span class="dashboard-stat-label">السيارات المتاحة</span>
+                <strong id="availableCount" class="dashboard-stat-value">0</strong>
+                <small class="dashboard-stat-note">جرد مباشر</small>
+            </article>
+            <article class="dashboard-stat-card">
+                <span class="dashboard-stat-label">متوسط أيام المخزون</span>
+                <strong id="inventoryDays" class="dashboard-stat-value">0</strong>
+                <small class="dashboard-stat-note">مؤشر الأداء</small>
+            </article>
+            <article class="dashboard-stat-card">
+                <span class="dashboard-stat-label">السيارات الراكدة +90</span>
+                <strong id="staleNinety" class="dashboard-stat-value">0</strong>
+                <small class="dashboard-stat-note">تنبيه تشغيلي</small>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <article class="dashboard-panel data-panel">
+                <div class="section-heading compact">
+                    <div>
+                        <h3>السيارات المتاحة</h3>
+                        <p class="section-subtitle">سحب مباشر من طبقة الـAPI</p>
+                    </div>
+                    <button id="refreshButton" class="secondary-button small">تحديث</button>
+                </div>
+                <div id="carsList" class="list-shell empty-state">لا توجد بيانات بعد.</div>
+            </article>
+
+            <article class="dashboard-panel data-panel">
+                <div class="section-heading compact">
+                    <div>
+                        <h3>آخر عمليات البيع</h3>
+                        <p class="section-subtitle">المعاملات الحديثة في المعرض</p>
+                    </div>
+                </div>
+                <div id="salesList" class="list-shell empty-state">لا توجد بيانات بعد.</div>
+            </article>
+
+            <article class="dashboard-panel data-panel">
+                <div class="section-heading compact">
+                    <div>
+                        <h3>أحدث السندات والدفعات</h3>
+                        <p class="section-subtitle">حركة مالية مرتبطة بالعمليات</p>
+                    </div>
+                </div>
+                <div id="financeList" class="list-shell empty-state">لا توجد بيانات بعد.</div>
+            </article>
+
+            <article class="dashboard-panel live-panel">
+                <div class="section-heading compact">
+                    <div>
+                        <h3>التحديثات اللحظية</h3>
+                        <p class="section-subtitle">أحداث مباشرة من WebSocket</p>
+                    </div>
+                </div>
+                <div id="liveFeed" class="live-feed empty-state">بانتظار الأحداث من الخادم.</div>
+            </article>
+        </section>
+    </div>
+
+    <script src="./renderer.js"></script>
+</body>
+</html>

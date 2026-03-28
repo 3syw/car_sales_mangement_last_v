@@ -1,0 +1,76 @@
+{% extends 'sales/base.html' %}
+
+{% block title %}التحويل إلى معرض{% endblock %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-12 col-lg-8">
+        <div class="card shadow-sm border-0 rounded-4 mb-3">
+            <div class="card-body p-4">
+                <h3 class="text-primary fw-bold mb-3">التحويل الفني إلى معرض</h3>
+                <p class="text-muted mb-3">أدخل معرف المعرض أو اختر من القائمة ثم اضغط تحويل.</p>
+                <form method="post" class="mb-3" id="switch-tenant-form">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="row g-2 align-items-end">
+                        <div class="col-12 col-md-8">
+                            {{ form.tenant_id.label_tag }}
+                            {{ form.tenant_id }}
+                            {{ form.tenant_id.errors }}
+                        </div>
+                        <div class="col-12 col-md-4 d-grid">
+                            <button type="button" class="btn btn-warning fw-bold" data-bs-toggle="modal" data-bs-target="#switchConfirmModal">تحويل</button>
+                        </div>
+                    </div>
+                </form>
+
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exitConfirmModal">الرجوع لحساب المنصة</button>
+                <form method="post" id="exit-platform-form" action="{% url 'platform_exit_impersonation' %}" class="d-none">
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-3">
+                <h5 class="fw-bold mb-3">المعارض النشطة</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>اسم المعرض</th>
+                                <th>المعرف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tenant in tenants %}
+                            <tr>
+                                <td>{{ tenant.name }}</td>
+                                <td>{{ tenant.tenant_id }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">لا توجد معارض نشطة.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'sales/includes/confirm_action_modal.html' with modal_id='switchConfirmModal' title='تأكيد التحويل' message='هل انت متاكد من العمليه؟' confirm_button_id='confirm-switch-btn' form_id='switch-tenant-form' %}
+{% include 'sales/includes/confirm_action_modal.html' with modal_id='exitConfirmModal' title='تأكيد الرجوع' message='هل انت متاكد من العمليه؟' confirm_button_id='confirm-exit-btn' form_id='exit-platform-form' %}
+
+{% if request.GET.switched == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='switchSuccessModal' title='تم التحويل' message='تمت العملية بنجاح.' ok_url=switch_success_ok_url %}
+{% endif %}
+
+{% if request.GET.exited == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='exitSuccessModal' title='تم الرجوع' message='تمت العملية بنجاح.' ok_url=exit_success_ok_url %}
+{% endif %}
+{% endblock %}

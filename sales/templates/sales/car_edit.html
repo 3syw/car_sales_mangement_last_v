@@ -1,0 +1,108 @@
+{% extends 'sales/base.html' %}
+{% load humanize static %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white fw-bold">
+                <i class="fas fa-edit text-primary"></i>
+                {% if car %}تعديل بيانات السيارة: {{ car.brand }} {{ car.model_name }}{% else %}إضافة سيارة جديدة{% endif %}
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="car-edit-form">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.brand.label }}</label>
+                            {{ form.brand }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.model_name.label }}</label>
+                            {{ form.model_name }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.vin.label }}</label>
+                            {{ form.vin }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.year.label }}</label>
+                            {{ form.year }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.insurance_expiry.label }}</label>
+                            {{ form.insurance_expiry }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.registration_expiry.label }}</label>
+                            {{ form.registration_expiry }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label">{{ form.cost_price.label }}</label>
+                            {{ form.cost_price }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">{{ form.customs_cost.label }}</label>
+                            {{ form.customs_cost }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">{{ form.transport_cost.label }}</label>
+                            {{ form.transport_cost }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">{{ form.commission_cost.label }}</label>
+                            {{ form.commission_cost }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.selling_price.label }}</label>
+                            {{ form.selling_price }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.currency.label }}</label>
+                            {{ form.currency }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.image.label }}</label>
+                        {{ form.image }}
+                        {% if car and car.image %}
+                        <div class="mt-2">
+                            <img src="{{ car.image.url }}" alt="الصورة الحالية" class="img-thumbnail"
+                                style="height: 100px;">
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        {{ form.is_sold }}
+                        <label class="form-check-label">{{ form.is_sold.label }}</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'car_list' %}" class="btn btn-secondary">إلغاء والعودة</a>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#carEditConfirmModal"><i class="fas fa-save"></i> حفظ التعديلات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'sales/includes/confirm_action_modal.html' with modal_id='carEditConfirmModal' title='تأكيد الحفظ' message='هل انت متاكد من العمليه؟' confirm_button_id='confirm-car-edit-btn' form_id='car-edit-form' %}
+<script src="{% static 'sales/js/car_brand_model_admin.js' %}"></script>
+{% endblock %}

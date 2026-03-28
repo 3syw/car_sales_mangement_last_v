@@ -1,0 +1,286 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&display=swap');
+
+    body {
+        font-family: 'Cairo', var(--bs-body-font-family, sans-serif);
+        background-color: #2b1f1a;
+        background-image:
+            linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 42%),
+            repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 1px, rgba(255, 255, 255, 0) 1px, rgba(255, 255, 255, 0) 18px);
+        background-size: cover;
+        min-height: 100vh;
+    }
+
+    #container {
+        display: flex;
+        justify-content: center;
+    }
+
+    #content {
+        padding-top: 32px;
+        width: 100%;
+    }
+
+    #content-main {
+        width: 100%;
+        max-width: 580px;
+        min-width: 500px;
+        margin: 1.5rem auto 2rem;
+        background: rgba(249, 246, 242, 0.94);
+        border-radius: 20px;
+        border: 1px solid rgba(201, 164, 106, 0.28);
+        box-shadow: 0 18px 48px rgba(43, 31, 26, 0.24);
+        padding: 2.25rem 2.4rem;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .breadcrumbs a { color: #d4af37 !important; }
+    .breadcrumbs {
+        background: transparent !important;
+        padding: 0;
+        max-width: 640px;
+        margin: 0 auto;
+        color: #e5d8c5;
+    }
+
+    #content-main h1,
+    #content-main h2,
+    #content-main h3,
+    #content-main legend {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 1.25rem;
+        color: #3b2419;
+        text-align: center;
+        letter-spacing: 0.01em;
+    }
+
+    #content-main fieldset { margin-bottom: 1.5rem; }
+
+    #content-main .form-row {
+        margin-bottom: 1.55rem;
+        padding: 0.1rem 0;
+        border: 0;
+    }
+
+    #content-main .aligned label {
+        float: none;
+        width: auto;
+        margin: 0 0 0.35rem 0;
+        color: #3b2419;
+        font-weight: 800;
+        font-size: 1rem;
+    }
+
+    #content-main input[type="text"],
+    #content-main input[type="password"],
+    #content-main input[type="email"],
+    #content-main input[type="number"],
+    #content-main input[type="url"],
+    #content-main input[type="tel"],
+    #content-main select,
+    #content-main textarea {
+        width: 100%;
+        min-height: 48px;
+        padding: 0.75rem 0.95rem;
+        padding-right: 15px;
+        font-size: 0.98rem;
+        border: none;
+        border-bottom: 2px solid rgba(201, 164, 106, 0.65);
+        border-radius: 15px;
+        background: #f4f1ed;
+        color: #2b1f1a;
+        box-shadow: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    #content-main input:focus,
+    #content-main textarea:focus,
+    #content-main select:focus {
+        outline: none;
+        background: #ffffff;
+        border-bottom-color: #d8b36c;
+        box-shadow: 0 6px 16px rgba(201, 164, 106, 0.25);
+    }
+
+    #content-main .vTextField,
+    #content-main .vLargeTextField,
+    #content-main .vIntegerField,
+    #content-main .vURLField,
+    #content-main .vEmailField { max-width: 100%; }
+    #content-main textarea { min-height: 90px; }
+
+    #content-main .help,
+    #content-main .helptext,
+    #content-main .description {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: #7a6f69;
+        margin-top: 0.35rem;
+    }
+
+    #content-main .errorlist {
+        font-size: 0.9rem;
+        color: #b94b4b;
+        margin: 0.4rem 0 0.7rem;
+    }
+
+    .submit-row {
+        display: flex;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .submit-row input[type=submit],
+    .submit-row input[type=button],
+    .submit-row .default {
+        background: linear-gradient(135deg, #d4af37, #b88a2d);
+        color: #1f150f;
+        border: 0;
+        border-radius: 12px;
+        padding: 0.85rem 1.45rem;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 12px 24px rgba(212, 175, 55, 0.25);
+        transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        width: 100%;
+        text-align: center;
+    }
+
+    .submit-row input[type=submit]:hover,
+    .submit-row input[type=button]:hover,
+    .submit-row .default:hover {
+        filter: brightness(1.05);
+        box-shadow: 0 14px 28px rgba(212, 175, 55, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .submit-row a,
+    .submit-row button.cancel-link {
+        background: transparent;
+        color: #3b2419;
+        border: 1px solid rgba(59, 36, 25, 0.4);
+        border-radius: 12px;
+        padding: 0.65rem 1.2rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    }
+
+    .submit-row a:hover,
+    .submit-row button.cancel-link:hover {
+        border-color: rgba(59, 36, 25, 0.65);
+        color: #1f150f;
+        transform: translateY(-1px);
+    }
+
+    /* Icons beside specific labels */
+    label[for="id_username"]::before {
+        content: "\1F464  ";
+        color: #3b2419;
+        font-size: 1.05rem;
+    }
+
+    label[for="id_password1"]::before,
+    label[for="id_password2"]::before {
+        content: "\1F512  ";
+        color: #3b2419;
+        font-size: 1.05rem;
+    }
+
+    /* Username field height + help positioning */
+    .form-row.field-username {
+        display: block !important;
+        width: 100% !important;
+    }
+    .form-row.field-username label {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.35rem;
+    }
+    .form-row.field-username input,
+    .form-row.field-username input.vTextField,
+    .form-row.field-username input[type="text"],
+    #id_username,
+    #id_password1,
+    #id_password2 {
+        width: 100% !important;
+        min-height: 48px !important;
+        padding: 0.75rem 0.95rem !important;
+        padding-right: 15px !important;
+        font-size: 0.98rem !important;
+        border: none !important;
+        border-bottom: 2px solid rgba(201, 164, 106, 0.65) !important;
+        border-radius: 15px !important;
+        background: #f4f1ed !important;
+        color: #2b1f1a !important;
+        box-sizing: border-box;
+    }
+    .form-row.field-username .help,
+    .form-row.field-username .helptext,
+    #id_username ~ .help,
+    #id_username ~ .helptext {
+        display: block !important;
+        margin-top: 0.25rem !important;
+        clear: both;
+    }
+
+    /* Radio fields horizontal for auth choice */
+    .form-row.field-is_staff .radiolist,
+    .form-row.field-is_superuser .radiolist,
+    .form-row.field-is_active .radiolist,
+    .form-row.field-is_staff ul,
+    .form-row.field-is_superuser ul,
+    .form-row.field-is_active ul {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    /* Tighten legend/icon spacing for auth section */
+    .inline-group .module h2::before {
+        content: "\1F512  ";
+        margin-left: 0.25rem;
+        color: #3b2419;
+    }
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const usernameInput = document.getElementById('id_username');
+    if (!usernameInput) return;
+
+    // Enforce English-only username pattern and give a clear hint.
+    usernameInput.setAttribute('pattern', '[A-Za-z0-9._-]+');
+    usernameInput.setAttribute('title', 'استخدم أحرف إنجليزية وأرقام فقط مع _ أو . أو -');
+    usernameInput.setAttribute('placeholder', 'example.user');
+    usernameInput.setAttribute('inputmode', 'latin');
+    usernameInput.setAttribute('dir', 'ltr');
+
+    // Add inline help text if missing.
+    const existingHelp = usernameInput.parentElement.querySelector('.help');
+    if (!existingHelp) {
+        const help = document.createElement('div');
+        help.className = 'help';
+        help.textContent = 'اسم المستخدم يجب أن يكون بالأحرف الإنجليزية فقط وغير مستخدم من قبل.';
+        usernameInput.parentElement.appendChild(help);
+    }
+
+    // Keep Django admin natural row flow to avoid layout collapse.
+});
+</script>
+{% endblock %}

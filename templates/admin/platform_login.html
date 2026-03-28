@@ -1,0 +1,22 @@
+{% extends 'sales/base.html' %}
+
+{% block title %}دخول منصة الإدارة الفوقية{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-12 col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4">
+                <h3 class="text-primary fw-bold mb-3 text-center">منصة الإدارة الفوقية</h3>
+                <p class="text-muted text-center mb-4">دخول فني لصاحب المنصة للتحويل إلى أي معرض دون كلمة مرور المدير.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-warning w-100 fw-bold">تسجيل دخول المنصة</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

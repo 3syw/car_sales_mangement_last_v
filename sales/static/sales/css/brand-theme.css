@@ -1,0 +1,27 @@
+:root {
+    --brand-primary: #6b4423;
+    --brand-primary-strong: #4a2f18;
+    --brand-accent: #c8a75d;
+    --brand-accent-soft: #dbc090;
+    --brand-surface: #f8f3eb;
+    --brand-ink: #24180d;
+    --brand-ink-soft: #6a5a48;
+    --brand-shadow: rgba(36, 24, 13, 0.14);
+    --brand-font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    font-family: var(--brand-font-family);
+}
+
+.brand-surface {
+    background: linear-gradient(180deg, #fffaf2 0%, var(--brand-surface) 100%);
+}
+
+.brand-text {
+    color: var(--brand-ink);
+}
+
+.brand-accent {
+    color: var(--brand-accent);
+}

@@ -1,0 +1,68 @@
+{% extends 'sales/base.html' %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+
+<div class="card p-4">
+    <h3>إتمام البيع - {{ car.brand }} {{ car.model_name }}</h3>
+    <form method="post" enctype="multipart/form-data" class="mt-3" id="process-sale-form">
+        {% csrf_token %}
+        <input type="hidden" name="car_id" value="{{ car.id }}">
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">{{ form.customer_name.label }}</label>
+                {{ form.customer_name }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ form.customer_phone.label }}</label>
+                {{ form.customer_phone }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ form.customer_national_id.label }}</label>
+                {{ form.customer_national_id }}
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">{{ form.sale_price.label }}</label>
+                {{ form.sale_price }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ form.amount_paid.label }}</label>
+                {{ form.amount_paid }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ form.debt_due_date.label }}</label>
+                {{ form.debt_due_date }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ form.sale_contract_image.label }}</label>
+                {{ form.sale_contract_image }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ form.currency_rate.label }}</label>
+                {{ form.currency_rate }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ form.financial_container.label }}</label>
+                {{ form.financial_container }}
+            </div>
+            <div class="col-12">
+                <label class="form-label">{{ form.payment_schedule.label }}</label>
+                {{ form.payment_schedule }}
+                <small class="text-muted d-block mt-1">مثال: [{"due_date":"2026-04-15","amount":10000},{"due_date":"2026-05-15","amount":15000}]</small>
+            </div>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger mt-3 mb-0">
+            {{ form.errors }}
+        </div>
+        {% endif %}
+
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#saleConfirmModal">تسجيل البيع</button>
+    </form>
+</div>
+
+{% include 'sales/includes/confirm_action_modal.html' with modal_id='saleConfirmModal' title='تأكيد العملية' message='هل انت متاكد من العمليه؟' confirm_button_id='confirm-sale-btn' form_id='process-sale-form' %}
+{% endblock %}

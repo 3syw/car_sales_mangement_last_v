@@ -1,0 +1,175 @@
+{
+  "generated_at": "2026-03-06T22:57:18.039669",
+  "default_db_path": "C:\\Users\\ComputerWorld\\car_sales_system\\db.sqlite3",
+  "tenant_db_directory": "C:\\Users\\ComputerWorld\\car_sales_system\\tenant_dbs",
+  "active_platform_tenants": 23,
+  "default_auth_user_count": 4,
+  "before_cleanup": [
+    {
+      "model": "AuditLog",
+      "table": "sales_auditlog",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Car",
+      "table": "sales_car",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarDocument",
+      "table": "sales_cardocument",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarMaintenance",
+      "table": "sales_carmaintenance",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Customer",
+      "table": "sales_customer",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "DebtPayment",
+      "table": "sales_debtpayment",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Expense",
+      "table": "sales_expense",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "FinanceVoucher",
+      "table": "sales_financevoucher",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "GeneralExpense",
+      "table": "sales_generalexpense",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "InterfaceAccess",
+      "table": "sales_interfaceaccess",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Notification",
+      "table": "sales_notification",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "OperationLog",
+      "table": "sales_operationlog",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Sale",
+      "table": "sales_sale",
+      "row_count": 0,
+      "table_exists": true
+    }
+  ],
+  "after_cleanup": [
+    {
+      "model": "AuditLog",
+      "table": "sales_auditlog",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Car",
+      "table": "sales_car",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarDocument",
+      "table": "sales_cardocument",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarMaintenance",
+      "table": "sales_carmaintenance",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Customer",
+      "table": "sales_customer",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "DebtPayment",
+      "table": "sales_debtpayment",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Expense",
+      "table": "sales_expense",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "FinanceVoucher",
+      "table": "sales_financevoucher",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "GeneralExpense",
+      "table": "sales_generalexpense",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "InterfaceAccess",
+      "table": "sales_interfaceaccess",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Notification",
+      "table": "sales_notification",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "OperationLog",
+      "table": "sales_operationlog",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Sale",
+      "table": "sales_sale",
+      "row_count": 0,
+      "table_exists": true
+    }
+  ],
+  "cleanup": {
+    "requested": false,
+    "performed": false,
+    "backup_file": null,
+    "deleted_tables": [],
+    "rows_before_cleanup": 0,
+    "rows_after_cleanup": 0
+  }
+}

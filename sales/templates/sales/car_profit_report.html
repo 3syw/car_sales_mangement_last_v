@@ -1,0 +1,87 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-car-side"></i> تقرير أرباح السيارات</h3>
+                <p class="lux-subtitle">تحليل الربح الفعلي لكل سيارة وفق المعادلة: سعر البيع - التكلفة الكلية.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">عدد السيارات المباعة</small>
+                <h4 class="lux-value mb-0">{{ sold_count }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">إجمالي البيع (SR)</small>
+                <h4 class="lux-value mb-0">{{ total_sale_sr|intcomma }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">إجمالي التكلفة (SR)</small>
+                <h4 class="lux-value mb-0">{{ total_cost_sr|intcomma }}</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">إجمالي الربح (SR)</small>
+                <h4 class="mb-0 {% if total_profit_sr >= 0 %}text-success{% else %}text-danger{% endif %}">{{ total_profit_sr|intcomma }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>السيارة</th>
+                        <th>العميل</th>
+                        <th>تاريخ البيع</th>
+                        <th>سعر الشراء</th>
+                        <th>إجمالي التكلفة</th>
+                        <th>سعر البيع</th>
+                        <th>الربح الفعلي</th>
+                        <th>الربح (SR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td>{{ row.sale.car.brand }} {{ row.sale.car.model_name }} ({{ row.sale.car.vin }})</td>
+                        <td>{{ row.sale.customer.name }}</td>
+                        <td>{{ row.sale.sale_date|date:'Y-m-d' }}</td>
+                        <td>{{ row.purchase_cost|intcomma }} {{ row.sale.car.currency }}</td>
+                        <td>{{ row.total_cost|intcomma }} {{ row.sale.car.currency }}</td>
+                        <td>{{ row.sale_price|intcomma }} {{ row.sale.car.currency }}</td>
+                        <td class="{% if row.actual_profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ row.actual_profit|intcomma }} {{ row.sale.car.currency }}</td>
+                        <td class="{% if row.actual_profit_sr >= 0 %}text-success{% else %}text-danger{% endif %}">{{ row.actual_profit_sr|intcomma }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-4">لا توجد مبيعات مسجلة حتى الآن.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

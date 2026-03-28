@@ -1,0 +1,476 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .car-detail-page .breadcrumb-item,
+    .car-detail-page .breadcrumb-item.active {
+        color: var(--text-soft);
+    }
+
+    .car-detail-page .car-image-card,
+    .car-detail-page .car-summary-card {
+        border-radius: 24px;
+    }
+
+    .car-detail-page .car-image-card img {
+        max-height: 500px;
+        object-fit: cover;
+    }
+
+    .car-detail-page .car-summary-card {
+        background: linear-gradient(150deg, rgba(24, 31, 43, 0.90), rgba(15, 20, 28, 0.82));
+        border: 1px solid rgba(201, 164, 106, 0.38);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
+    }
+
+    .car-detail-page .car-summary-card .card-body {
+        padding: 1.7rem;
+    }
+
+    .car-detail-page .car-title {
+        font-size: clamp(2rem, 3.1vw, 2.45rem);
+        line-height: 1.1;
+        margin-bottom: 0.35rem;
+        color: var(--text-main);
+    }
+
+    .car-detail-page .car-subtitle {
+        color: var(--text-soft) !important;
+        font-weight: 600;
+        letter-spacing: 0.1px;
+    }
+
+    .car-detail-page .car-divider {
+        border-color: rgba(201, 164, 106, 0.30);
+        opacity: 1;
+    }
+
+    .car-detail-page .car-price-label {
+        color: var(--text-soft);
+        margin-bottom: 0.2rem;
+    }
+
+    .car-detail-page .car-price-amount {
+        color: var(--champagne-light);
+        font-size: clamp(1.95rem, 2.6vw, 2.3rem);
+        letter-spacing: 0.2px;
+    }
+
+    .car-detail-page .car-price-amount small {
+        color: var(--champagne);
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .car-detail-page .car-meta-panel {
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(201, 164, 106, 0.24);
+        border-radius: 14px;
+        padding: 0.95rem;
+    }
+
+    .car-detail-page .car-meta-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.55rem;
+        color: var(--text-main);
+    }
+
+    .car-detail-page .car-meta-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .car-detail-page .car-meta-label {
+        color: var(--text-soft);
+    }
+
+    .car-detail-page .car-meta-value {
+        font-weight: 700;
+        text-align: left;
+    }
+
+    .car-detail-page .car-vin {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .car-detail-page .car-edit-btn {
+        min-height: 48px;
+        font-weight: 700;
+        letter-spacing: 0.15px;
+        border-color: rgba(201, 164, 106, 0.56);
+        color: var(--champagne-light);
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .car-detail-page .car-edit-btn:hover {
+        background: rgba(201, 164, 106, 0.22);
+        color: #fff;
+    }
+
+    @media (max-width: 767.98px) {
+        .car-detail-page .car-summary-card .card-body {
+            padding: 1.2rem;
+        }
+
+        .car-detail-page .car-meta-row {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+
+<div class="car-detail-page">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'car_list' %}">المعرض</a></li>
+            <li class="breadcrumb-item active">{{ car.brand }} {{ car.model_name }}</li>
+        </ol>
+    </nav>
+
+    {% if request.GET.maintenance_saved == '1' %}
+    <div class="alert alert-success">تم حفظ مصروف الصيانة وترحيله محاسبياً بنجاح.</div>
+    {% endif %}
+
+    {% if request.GET.maintenance_error == 'sold' %}
+    <div class="alert alert-warning">لا يمكن إضافة مصروفات صيانة لسيارة حالتها مباعة.</div>
+    {% endif %}
+
+    {% if request.GET.document_saved == '1' %}
+    <div class="alert alert-success">تم رفع المستند وحفظه في الأرشيف الرقمي للسيارة.</div>
+    {% endif %}
+
+    <div class="row pt-2">
+        <div class="col-md-7 mb-4">
+            <div class="card shadow-sm overflow-hidden car-image-card">
+                {% if car.image %}
+                    <img src="{{ car.image.url }}" class="img-fluid w-100" alt="{{ car.brand }} {{ car.model_name }}">
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+                        <i class="fas fa-car fa-10x text-secondary opacity-25"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card h-100 car-summary-card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="badge {% if car.is_sold %}bg-danger{% else %}bg-success{% endif %} mb-2">
+                            {% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}
+                        </span>
+                        <h1 class="fw-bold car-title">{{ car.brand }}</h1>
+                        <h4 class="car-subtitle">{{ car.model_name }} - {{ car.year }}</h4>
+                    </div>
+
+                    <hr class="car-divider">
+
+                    <div class="my-4">
+                        <p class="car-price-label">السعر المطلوب</p>
+                        <h2 class="fw-bold car-price-amount">{{ car.selling_price|intcomma }} <small>{{ car.currency }}</small></h2>
+                    </div>
+
+                    <div class="car-meta-panel mb-4">
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">رقم الشاسيه:</span>
+                            <span class="car-meta-value car-vin">{{ car.vin }}</span>
+                        </div>
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">التكلفة الأساسية:</span>
+                            <span class="car-meta-value">{{ car.cost_price|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">رسوم الجمارك:</span>
+                            <span class="car-meta-value">{{ car.customs_cost|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">تكاليف النقل:</span>
+                            <span class="car-meta-value">{{ car.transport_cost|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">العمولة:</span>
+                            <span class="car-meta-value">{{ car.commission_cost|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">إجمالي الصيانة:</span>
+                            <span class="car-meta-value">{{ maintenance_total|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">إجمالي التكلفة:</span>
+                            <span class="car-meta-value">{{ total_cost_price|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">الربح المتوقع:</span>
+                            <span class="car-meta-value {% if expected_profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ expected_profit|intcomma }} {{ car.currency }}</span>
+                        </div>
+                        <div class="car-meta-row">
+                            <span class="car-meta-label">تاريخ الإضافة:</span>
+                            <span class="car-meta-value">{{ car.created_at|date:"Y-m-d" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        {% if not car.is_sold %}
+                        <a href="{% url 'process_sale' %}?car_id={{ car.id }}" class="btn btn-success rounded-pill mb-2">
+                            <i class="bi bi-cash-stack"></i>
+                            إتمام البيع
+                        </a>
+                        {% endif %}
+                        <a href="/admin/sales/car/{{ car.id }}/change/" class="btn rounded-pill car-edit-btn">
+                            <i class="bi bi-pencil-square"></i>
+                            تعديل بيانات السيارة
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mt-3">
+        <div class="card-body">
+            <ul class="nav nav-tabs mb-4" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if selected_tab != 'maintenance' and selected_tab != 'documents' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-basic-tab" type="button" role="tab">البيانات الأساسية</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if selected_tab == 'maintenance' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-maintenance-tab" type="button" role="tab">سجل الصيانة</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if selected_tab == 'documents' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-documents-tab" type="button" role="tab">الأرشيف الرقمي</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+            <div class="tab-pane fade {% if selected_tab != 'maintenance' and selected_tab != 'documents' %}show active{% endif %}" id="car-basic-tab" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <tbody>
+                            <tr><th style="width: 220px;">المعرف</th><td>{{ car.id }}</td></tr>
+                            <tr><th>الماركة</th><td>{{ car.brand }}</td></tr>
+                            <tr><th>الموديل</th><td>{{ car.model_name }}</td></tr>
+                            <tr><th>رقم الشاسيه</th><td>{{ car.vin }}</td></tr>
+                            <tr><th>سنة الصنع</th><td>{{ car.year }}</td></tr>
+                            <tr><th>انتهاء التأمين</th><td>{% if car.insurance_expiry %}{{ car.insurance_expiry|date:'Y-m-d' }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>انتهاء الاستمارة</th><td>{% if car.registration_expiry %}{{ car.registration_expiry|date:'Y-m-d' }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>سعر التكلفة الأساسي</th><td>{{ car.cost_price|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>رسوم الجمارك</th><td>{{ car.customs_cost|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>تكاليف النقل</th><td>{{ car.transport_cost|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>العمولة</th><td>{{ car.commission_cost|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>إجمالي الصيانة</th><td>{{ maintenance_total|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>إجمالي التكلفة</th><td>{{ total_cost_price|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>سعر البيع</th><td>{{ car.selling_price|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>الحالة</th><td>{% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane fade {% if selected_tab == 'maintenance' %}show active{% endif %}" id="car-maintenance-tab" role="tabpanel">
+                <div class="table-responsive mb-3">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>نوع الصيانة</th>
+                                <th>المبلغ</th>
+                                <th>الورشة/المورد</th>
+                                <th>طريقة الدفع</th>
+                                <th>أضافه</th>
+                                <th>الفاتورة</th>
+                                <th>القيد المحاسبي</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in maintenance_records %}
+                            <tr>
+                                <td>{{ record.operation_date|date:"Y-m-d" }}</td>
+                                <td>{{ record.get_maintenance_type_display }}</td>
+                                <td>{{ record.amount|intcomma }} {{ car.currency }}</td>
+                                <td>{{ record.supplier_workshop }}</td>
+                                <td>{{ record.get_payment_method_display }}</td>
+                                <td>{% if record.added_by %}{{ record.added_by.username }}{% else %}-{% endif %}</td>
+                                <td>
+                                    {% if record.invoice_image %}
+                                    <a href="{{ record.invoice_image.url }}" class="btn btn-sm btn-outline-secondary" target="_blank">عرض</a>
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if record.journal_voucher %}
+                                        <div class="small fw-bold">{{ record.journal_voucher.voucher_number }}</div>
+                                        <div class="small text-muted">مدين: {{ record.journal_voucher.get_debit_account_display }}</div>
+                                        <div class="small text-muted">دائن: {{ record.journal_voucher.get_credit_account_display }}</div>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">لا توجد عمليات صيانة مسجلة لهذه السيارة.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="fw-bold">إجمالي الصيانة: {{ maintenance_total|intcomma }} {{ car.currency }}</div>
+                    {% if can_add_maintenance and not car.is_sold %}
+                    <button class="btn btn-primary rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#maintenanceAddForm" aria-expanded="false" aria-controls="maintenanceAddForm">
+                        + إضافة مصروف صيانة
+                    </button>
+                    {% endif %}
+                </div>
+
+                {% if car.is_sold %}
+                <div class="alert alert-warning">هذه السيارة مباعة، وتم إغلاق إضافة مصروفات الصيانة عليها.</div>
+                {% elif not can_add_maintenance %}
+                <div class="alert alert-info">يمكنك الاطلاع على سجل الصيانة فقط. لا تملك صلاحية إضافة مصروفات صيانة.</div>
+                {% endif %}
+
+                {% if can_add_maintenance and not car.is_sold %}
+                <div class="collapse {% if maintenance_form.errors %}show{% endif %}" id="maintenanceAddForm">
+                    <div class="card p-3 mt-2">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_action" value="maintenance">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">{{ maintenance_form.amount.label }}</label>
+                                    {{ maintenance_form.amount }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">{{ maintenance_form.maintenance_type.label }}</label>
+                                    {{ maintenance_form.maintenance_type }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">{{ maintenance_form.operation_date.label }}</label>
+                                    {{ maintenance_form.operation_date }}
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">{{ maintenance_form.supplier_workshop.label }}</label>
+                                    {{ maintenance_form.supplier_workshop }}
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">{{ maintenance_form.payment_method.label }}</label>
+                                    {{ maintenance_form.payment_method }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">{{ maintenance_form.invoice_image.label }}</label>
+                                    {{ maintenance_form.invoice_image }}
+                                </div>
+                            </div>
+
+                            {% if maintenance_form.errors %}
+                            <div class="alert alert-danger mt-3 mb-0">
+                                {{ maintenance_form.errors }}
+                            </div>
+                            {% endif %}
+
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-primary">حفظ وترحيل القيد المحاسبي</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="tab-pane fade {% if selected_tab == 'documents' %}show active{% endif %}" id="car-documents-tab" role="tabpanel">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div class="border rounded p-3 h-100">
+                            <div class="fw-bold mb-2">التأمين</div>
+                            {% if car.insurance_expiry %}
+                                <div>{{ car.insurance_expiry|date:'Y-m-d' }}</div>
+                                {% if insurance_days_left is not None %}
+                                <small class="text-muted">المتبقي: {{ insurance_days_left }} يوم</small>
+                                {% endif %}
+                            {% else %}
+                                <div class="text-muted">غير مسجل</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border rounded p-3 h-100">
+                            <div class="fw-bold mb-2">الاستمارة</div>
+                            {% if car.registration_expiry %}
+                                <div>{{ car.registration_expiry|date:'Y-m-d' }}</div>
+                                {% if registration_days_left is not None %}
+                                <small class="text-muted">المتبقي: {{ registration_days_left }} يوم</small>
+                                {% endif %}
+                            {% else %}
+                                <div class="text-muted">غير مسجل</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive mb-3">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>النوع</th>
+                                <th>الملف</th>
+                                <th>تاريخ الرفع</th>
+                                <th>أضيف بواسطة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in document_records %}
+                            <tr>
+                                <td>{{ document.get_document_type_display }}</td>
+                                <td><a href="{{ document.file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">عرض</a></td>
+                                <td>{{ document.upload_date|date:'Y-m-d H:i' }}</td>
+                                <td>{% if document.uploaded_by %}{{ document.uploaded_by.username }}{% else %}-{% endif %}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">لا توجد مستندات مرفوعة لهذه السيارة.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card p-3 mt-2">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_action" value="add_document">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label">{{ document_form.document_type.label }}</label>
+                                {{ document_form.document_type }}
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">{{ document_form.file.label }}</label>
+                                {{ document_form.file }}
+                            </div>
+                            <div class="col-md-3 d-grid">
+                                <button type="submit" class="btn btn-primary">رفع المستند</button>
+                            </div>
+                        </div>
+
+                        {% if document_form.errors %}
+                        <div class="alert alert-danger mt-3 mb-0">
+                            {{ document_form.errors }}
+                        </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

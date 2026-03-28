@@ -1,0 +1,85 @@
+{% extends 'sales/base.html' %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<style>
+    .filters-wrap {
+        min-height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .filters-card {
+        width: 100%;
+        max-width: 620px;
+        background: rgba(173, 216, 230, 0.15);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(173, 216, 230, 0.35);
+        box-shadow: 0 8px 26px rgba(173, 216, 230, 0.18);
+        border-radius: 18px;
+    }
+
+    .filters-card label {
+        display: block;
+        margin-bottom: 6px;
+        color: #fdfbf7;
+        font-weight: 600;
+    }
+
+    .filters-card input,
+    .filters-card select {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.15);
+        color: #fdfbf7;
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 14px;
+    }
+
+    .filters-card option {
+        color: #222;
+    }
+</style>
+
+<div class="filters-wrap">
+    <div class="filters-card p-4">
+        <h3 class="text-center fw-bold text-primary mb-2">المرشحات والبحث</h3>
+        <p class="text-center text-muted mb-4">اختر المعايير ثم انتقل لعرض المستخدمين المفلترين</p>
+
+        <form method="get" action="/admin/auth/user/">
+            <label for="q">بحث (اسم/بريد)</label>
+            <input id="q" name="q" type="text" value="{{ q }}" placeholder="ابحث عن مستخدم...">
+
+            <label for="is_staff__exact">حالة الطاقم</label>
+            <select id="is_staff__exact" name="is_staff__exact">
+                <option value="" {% if is_staff == '' %}selected{% endif %}>الكل</option>
+                <option value="1" {% if is_staff == '1' %}selected{% endif %}>نعم</option>
+                <option value="0" {% if is_staff == '0' %}selected{% endif %}>لا</option>
+            </select>
+
+            <label for="is_superuser__exact">حالة المستخدم الفائق</label>
+            <select id="is_superuser__exact" name="is_superuser__exact">
+                <option value="" {% if is_superuser == '' %}selected{% endif %}>الكل</option>
+                <option value="1" {% if is_superuser == '1' %}selected{% endif %}>نعم</option>
+                <option value="0" {% if is_superuser == '0' %}selected{% endif %}>لا</option>
+            </select>
+
+            <label for="is_active__exact">الحالة</label>
+            <select id="is_active__exact" name="is_active__exact">
+                <option value="" {% if is_active == '' %}selected{% endif %}>الكل</option>
+                <option value="1" {% if is_active == '1' %}selected{% endif %}>نشط</option>
+                <option value="0" {% if is_active == '0' %}selected{% endif %}>غير نشط</option>
+            </select>
+
+            <div class="d-flex gap-2 mt-2">
+                <button type="submit" class="btn btn-primary w-100">تطبيق المرشحات</button>
+                <a href="/admin/auth/user/" class="btn btn-outline-light w-100">عرض المستخدمين</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

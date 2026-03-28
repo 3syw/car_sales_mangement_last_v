@@ -1,0 +1,77 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+{% if request.GET.car_updated == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='carUpdatedSuccessModal' title='تم الحفظ' message='تم تعديل بيانات السيارة بنجاح.' ok_url=car_list_ok_url %}
+{% endif %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="fas fa-th-large text-primary"></i> المعرض الرقمي</h3>
+    
+    <form method="GET" action="{% url 'car_list' %}" class="d-flex w-50">
+        <input type="text" name="search" class="form-control me-2 rounded-pill" 
+               placeholder="ابحث بالماركة، الموديل أو الشاسيه..." 
+               value="{{ query|default:'' }}">
+        <button class="btn btn-primary rounded-pill px-4" type="submit">بحث</button>
+    </form>
+    
+    {% if user.is_authenticated and user.is_staff %}
+    <a href="/admin/sales/car/add/" class="btn btn-success rounded-pill"><i class="fas fa-plus"></i> إضافة سيارة</a>
+    {% endif %}
+</div>
+
+<div class="row">
+    {% for car in cars %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm border-0 overflow-hidden" style="border-radius: 20px;">
+            
+            <div style="height: 200px; overflow: hidden; position: relative;">
+                {% if car.image %}
+                    <img src="{{ car.image.url }}" class="card-img-top w-100 h-100" style="object-fit: cover;" alt="{{ car.brand }}">
+                {% else %}
+                    <div class="bg-light w-100 h-100 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-car fa-4x text-secondary opacity-25"></i>
+                    </div>
+                {% endif %}
+                
+                <span class="position-absolute top-0 start-0 m-3 badge {% if car.is_sold %}bg-danger{% else %}bg-success{% endif %} rounded-pill p-2 px-3">
+                    {% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}
+                </span>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title fw-bold mb-0">{{ car.brand }}</h5>
+                    <span class="text-muted fw-bold">{{ car.year }}</span>
+                </div>
+                <p class="text-secondary mb-3">{{ car.model_name }}</p>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-fingerprint text-primary me-2 ms-2"></i>
+                    <small class="text-muted">الشاسيه: <code>{{ car.vin|truncatechars:10 }}</code></small>
+                </div>
+
+                <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                    <span class="fs-4 fw-bold text-dark">
+                        {{ car.selling_price|intcomma }} <small class="fs-6">{{ car.currency }}</small>
+                    </span>
+                    {% if user.is_authenticated %}
+                    <a href="/admin/sales/car/{{ car.id }}/change/" class="btn btn-outline-secondary btn-sm rounded-circle">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'car_detail' car.id %}" class="text-decoration-none btn btn-outline-primary btn-sm rounded-pill px-3">تفاصيل</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <i class="fas fa-car-crash fa-5x text-light mb-3"></i>
+        <h4 class="text-muted">لا توجد سيارات مطابقة لبحثك..</h4>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

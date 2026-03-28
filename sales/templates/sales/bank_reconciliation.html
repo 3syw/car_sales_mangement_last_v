@@ -1,0 +1,190 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-university"></i> مطابقة كشف الحساب البنكي</h3>
+                <p class="lux-subtitle">ارفع ملف Excel من البنك لمطابقته مع سندات النظام واكتشاف الحركات غير المسجلة أو غير المطابقة.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'bank_reconciliation' %}?download_template=1" class="lux-outline-btn me-1">تحميل قالب Excel</a>
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+        <form method="post" enctype="multipart/form-data" class="row g-3 align-items-end">
+            {% csrf_token %}
+            <div class="col-md-5">
+                <label class="form-label" for="{{ form.statement_file.id_for_label }}">{{ form.statement_file.label }}</label>
+                {{ form.statement_file }}
+                {% if form.statement_file.errors %}
+                <div class="text-danger small mt-1">{{ form.statement_file.errors|striptags }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}</label>
+                {{ form.start_date }}
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+                {{ form.end_date }}
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary rounded-pill">تشغيل المطابقة</button>
+            </div>
+            {% if form.non_field_errors %}
+            <div class="col-12">
+                <div class="alert alert-danger mb-0">{{ form.non_field_errors }}</div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="row g-3 mb-3">
+        <div class="col-md-2">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">سجلات البنك</small>
+                <h5 class="lux-value mb-0">{{ result.statement_rows_count }}</h5>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">سجلات النظام</small>
+                <h5 class="lux-value mb-0">{{ result.system_rows_count }}</h5>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">مطابق</small>
+                <h5 class="text-success mb-0">{{ result.matched_count }}</h5>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">في كشف البنك وغير موجود بالنظام</small>
+                <h5 class="text-danger mb-0">{{ result.statement_only_count }}</h5>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100 text-center">
+                <small class="lux-muted d-block">في النظام وغير موجود بالكشف</small>
+                <h5 class="text-warning mb-0">{{ result.system_only_count }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">إجمالي المطابق (SR)</small>
+                <h5 class="mb-0">{{ result.matched_total_sr|intcomma }} SR</h5>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">فائض كشف البنك (SR)</small>
+                <h5 class="text-danger mb-0">{{ result.statement_only_total_sr|intcomma }} SR</h5>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">فائض النظام (SR)</small>
+                <h5 class="text-warning mb-0">{{ result.system_only_total_sr|intcomma }} SR</h5>
+            </div>
+        </div>
+    </div>
+
+    {% if result.warnings %}
+    <div class="card p-3 mb-3">
+        <div class="card-body">
+            <h6 class="lux-label mb-2">تنبيهات المعالجة</h6>
+            {% for warning in result.warnings %}
+            <div class="lux-note">
+                <span>{{ warning }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card p-3 mb-3">
+        <div class="card-body p-0">
+            <h5 class="lux-label mb-3">قيود موجودة في كشف البنك وغير مطابقة بالنظام</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>السطر</th>
+                            <th>رقم السند/المرجع</th>
+                            <th>التاريخ</th>
+                            <th>المبلغ</th>
+                            <th>البيان</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in result.statement_only_rows %}
+                        <tr>
+                            <td>{{ row.line_no }}</td>
+                            <td>{{ row.voucher_number|default:'-' }}</td>
+                            <td>{{ row.transaction_date|date:'Y-m-d'|default:'-' }}</td>
+                            <td>{{ row.amount|intcomma }} {{ row.currency }}</td>
+                            <td>{{ row.description|default:'-' }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-3">لا توجد قيود فائضة من البنك.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="card-body p-0">
+            <h5 class="lux-label mb-3">قيود موجودة في النظام وغير مطابقة بالكشف</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>رقم السند</th>
+                            <th>النوع</th>
+                            <th>التاريخ</th>
+                            <th>المبلغ</th>
+                            <th>البيان</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for voucher in result.system_only_rows %}
+                        <tr>
+                            <td>{{ voucher.voucher_number }}</td>
+                            <td>{{ voucher.get_voucher_type_display }}</td>
+                            <td>{{ voucher.voucher_date|date:'Y-m-d' }}</td>
+                            <td>{{ voucher.amount|intcomma }} {{ voucher.currency }}</td>
+                            <td>{{ voucher.reason|default:'-' }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-3">لا توجد قيود فائضة في النظام.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

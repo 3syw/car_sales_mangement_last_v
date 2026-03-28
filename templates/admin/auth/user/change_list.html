@@ -1,0 +1,153 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .object-tools {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(260px, 1fr));
+        gap: 1.25rem;
+        margin: 3rem auto 1.5rem;
+        padding: 0;
+        max-width: 1100px;
+        width: 100%;
+    }
+
+    .object-tools li.quick-item {
+        list-style: none;
+        margin: 0;
+    }
+
+    .object-tools .quick-tool {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        min-height: 190px;
+        background: rgba(62, 39, 35, 0.85) !important;
+        border: 1px solid rgba(212, 175, 55, 0.35) !important;
+        border-radius: 14px;
+        color: #fdfbf7 !important;
+        font-weight: 700;
+        padding: 1.35rem 1rem;
+        text-decoration: none;
+        box-shadow: 0 6px 14px rgba(212, 175, 55, 0.15);
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .object-tools .quick-tool:hover {
+        transform: translateY(-3px);
+        border-color: var(--gold-light) !important;
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.25);
+        color: #fff !important;
+    }
+
+    .object-tools .quick-tool i {
+        font-size: 1.9rem;
+        color: var(--gold);
+    }
+
+    .object-tools .quick-title {
+        font-size: 1.18rem;
+        line-height: 1.2;
+    }
+
+    .object-tools .quick-desc {
+        font-size: 0.95rem;
+        color: #d8d8d8;
+        text-align: center;
+        line-height: 1.35;
+        font-weight: 500;
+    }
+
+    @media (max-width: 992px) {
+        .object-tools {
+            grid-template-columns: repeat(2, minmax(240px, 1fr));
+            max-width: 760px;
+        }
+        .object-tools .quick-tool {
+            min-height: 170px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .object-tools {
+            grid-template-columns: 1fr;
+            max-width: 420px;
+            margin-top: 1.5rem;
+        }
+        .object-tools .quick-tool {
+            min-height: 150px;
+        }
+    }
+
+    .object-tools .quick-tool .plus-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--gold);
+        color: var(--brown-dark);
+        font-size: 1.1rem;
+        line-height: 1;
+        font-weight: 900;
+    }
+
+    #toolbar,
+    #changelist-search,
+    #changelist-filter,
+    #changelist {
+        display: none !important;
+    }
+    /* Hide any object-tools list items except our quick helpers (broader selectors) */
+    .object-tools li { display: none !important; }
+    .object-tools li.quick-item { display: list-item !important; }
+    .object-tools .quick-tool { display: flex !important; }
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    /* Ensure our hide/show rules apply after admin CSS */
+    .object-tools li { display: none !important; }
+    .object-tools li.quick-item { display: list-item !important; }
+    .object-tools .quick-tool { display: flex !important; }
+    #toolbar, #changelist-search, #changelist-filter, #changelist { display: none !important; }
+</style>
+{% endblock %}
+
+{% block object-tools-items %}
+<li class="quick-item">
+    <a href="{% url opts|admin_urlname:'add' %}{% if is_popup %}?_popup=1{% endif %}" class="quick-tool">
+        <i class="fas fa-user-plus"></i>
+        <span class="quick-title">إضافة مستخدم</span>
+        <span class="quick-desc">إنشاء حساب مستخدم جديد وتحديد صلاحياته.</span>
+        <span class="plus-icon">+</span>
+    </a>
+</li>
+<li class="quick-item">
+    <a href="{% url 'system_users' %}" class="quick-tool">
+        <i class="fas fa-users"></i>
+        <span class="quick-title">عرض المستخدمين</span>
+        <span class="quick-desc">فتح صفحة قائمة مستخدمي النظام.</span>
+    </a>
+</li>
+<li class="quick-item">
+    <a href="{% url 'admin_user_filters' %}" class="quick-tool">
+        <i class="fas fa-filter"></i>
+        <span class="quick-title">المرشحات والبحث</span>
+        <span class="quick-desc">تصفية النتائج والبحث السريع عن المستخدمين.</span>
+    </a>
+</li>
+{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block filters %}{% endblock %}

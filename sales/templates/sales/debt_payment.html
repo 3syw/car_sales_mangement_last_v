@@ -1,0 +1,101 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+
+<div class="lux-page">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+            <div class="card mb-4 mt-4 p-2">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="lux-title h4 mb-0">سند سداد</h3>
+                        <a href="{% url 'debts_list' %}" class="lux-outline-btn">العودة للديون</a>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="lux-label mb-1">{{ sale.customer.name }}</h5>
+                        <small class="lux-muted">المبلغ المتبقي عليه: <span class="fw-bold text-danger">{{ current_remaining|intcomma }}</span></small>
+                    </div>
+
+                    <form method="post" id="debt-payment-form">
+                        {% csrf_token %}
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="id_receipt_number">{{ form.receipt_number.label }}</label>
+                                {{ form.receipt_number }}
+                                {% if form.receipt_number.errors %}
+                                    <div class="text-danger small mt-1">{{ form.receipt_number.errors|striptags }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="id_payment_date">{{ form.payment_date.label }}</label>
+                                {{ form.payment_date }}
+                                {% if form.payment_date.errors %}
+                                    <div class="text-danger small mt-1">{{ form.payment_date.errors|striptags }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row g-3 align-items-end mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">المبلغ المتبقي الحالي</label>
+                                <input type="text" class="form-control" value="{{ current_remaining }}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="id_paid_amount">{{ form.paid_amount.label }}</label>
+                                {{ form.paid_amount }}
+                                {% if form.paid_amount.errors %}
+                                    <div class="text-danger small mt-1">{{ form.paid_amount.errors|striptags }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">المتبقي بعد السداد</label>
+                                <input type="text" id="remaining_after" class="form-control" value="{{ current_remaining }}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">السيارة</label>
+                            <input type="text" class="form-control" value="{{ sale.car.brand }} {{ sale.car.model_name }} - سنة {{ sale.car.year }}" readonly>
+                        </div>
+
+                        <button type="button" class="lux-outline-btn" data-bs-toggle="modal" data-bs-target="#debtConfirmModal">حفظ السداد</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'sales/includes/confirm_action_modal.html' with modal_id='debtConfirmModal' title='تأكيد العملية' message='هل انت متاكد من العمليه؟' confirm_button_id='confirm-debt-btn' form_id='debt-payment-form' %}
+
+<script>
+    (function () {
+        const paidInput = document.getElementById('id_paid_amount');
+        const afterInput = document.getElementById('remaining_after');
+        const currentRemaining = Number('{{ current_remaining|default:0 }}');
+
+        function updateRemaining() {
+            const paid = Number(paidInput?.value || 0);
+            const remaining = Math.max(currentRemaining - paid, 0);
+            if (afterInput) {
+                afterInput.value = Number.isFinite(remaining) ? remaining.toFixed(2) : currentRemaining.toFixed(2);
+            }
+        }
+
+        if (paidInput) {
+            paidInput.addEventListener('input', updateRemaining);
+            updateRemaining();
+        }
+
+    })();
+</script>
+{% endblock %}

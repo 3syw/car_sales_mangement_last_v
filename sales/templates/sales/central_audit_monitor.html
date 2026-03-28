@@ -1,0 +1,626 @@
+{% extends 'sales/base.html' %}
+
+{% block title %}مركز الرقابة والتدقيق المركزي{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .central-monitor-wrap {
+        margin-top: 1.1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .monitor-hero {
+        background: linear-gradient(145deg, rgba(17, 14, 11, 0.84), rgba(24, 19, 12, 0.7));
+        border: 1px solid rgba(212, 175, 55, 0.28);
+        border-radius: 1.1rem;
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.42);
+        backdrop-filter: blur(9px);
+        -webkit-backdrop-filter: blur(9px);
+    }
+
+    .status-badge-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.65rem;
+    }
+
+    .status-badge {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        border-radius: 0.8rem;
+        padding: 0.6rem 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(0, 0, 0, 0.28);
+    }
+
+    .status-badge small {
+        display: block;
+        font-size: 0.74rem;
+        color: rgba(255, 255, 255, 0.72);
+        line-height: 1.2;
+    }
+
+    .status-badge strong {
+        font-size: 0.88rem;
+        color: #f4ead2;
+    }
+
+    .status-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .status-badge.ok .status-icon {
+        color: #6de394;
+        box-shadow: 0 0 12px rgba(109, 227, 148, 0.32);
+        border-color: rgba(109, 227, 148, 0.55);
+    }
+
+    .status-badge.warn .status-icon {
+        color: #ffc666;
+        box-shadow: 0 0 12px rgba(255, 198, 102, 0.25);
+        border-color: rgba(255, 198, 102, 0.5);
+    }
+
+    .status-badge.down .status-icon {
+        color: #ff7676;
+        box-shadow: 0 0 12px rgba(255, 118, 118, 0.28);
+        border-color: rgba(255, 118, 118, 0.55);
+    }
+
+    .monitor-brand {
+        margin-top: 0.95rem;
+    }
+
+    .monitor-logo {
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        margin: 0 auto 0.65rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #d4af37;
+        border: 1px solid rgba(212, 175, 55, 0.55);
+        background: rgba(212, 175, 55, 0.08);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.23);
+    }
+
+    .monitor-brand h2 {
+        margin-bottom: 0.3rem;
+        color: #e8d7a9;
+        font-size: 1.45rem;
+        font-weight: 700;
+    }
+
+    .monitor-brand p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 0.88rem;
+    }
+
+    .monitor-card {
+        border-radius: 1rem;
+        background: rgba(13, 12, 10, 0.63);
+        border: 1px solid rgba(212, 175, 55, 0.24);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .monitor-card h5 {
+        color: #e5cf95;
+        margin-bottom: 0.3rem;
+    }
+
+    .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+        margin-top: 0.8rem;
+    }
+
+    .metric-box {
+        border-radius: 0.75rem;
+        padding: 0.65rem;
+        background: rgba(0, 0, 0, 0.26);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .metric-box .label {
+        display: block;
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 0.78rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .metric-box .value {
+        font-size: 1.16rem;
+        color: #f5ead0;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .metric-ok {
+        color: #7aee9f !important;
+    }
+
+    .metric-alert {
+        color: #ff8f8f !important;
+    }
+
+    .formula {
+        margin-top: 0.8rem;
+        padding: 0.6rem 0.7rem;
+        border-radius: 0.75rem;
+        border: 1px dashed rgba(212, 175, 55, 0.45);
+        background: rgba(0, 0, 0, 0.22);
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 0.84rem;
+        text-align: center;
+    }
+
+    .manual-search-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 0.7rem;
+        align-items: end;
+    }
+
+    .manual-search-form .form-label {
+        text-align: right;
+        color: #fff;
+        font-size: 0.83rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .manual-search-form .form-control {
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+        background: rgba(0, 0, 0, 0.3) !important;
+        color: #f5f5f5 !important;
+    }
+
+    .manual-search-form .form-control::placeholder {
+        color: rgba(180, 180, 180, 0.75);
+    }
+
+    .manual-search-form .form-control:focus {
+        border-color: #d4af37 !important;
+        box-shadow: 0 0 8px rgba(212, 175, 55, 0.3) !important;
+    }
+
+    .btn-monitor-gold {
+        border-radius: 10px;
+        border: none;
+        padding: 0.58rem 1rem;
+        background: #d4af37;
+        color: #1a1a1a;
+        font-weight: 700;
+        min-width: 120px;
+    }
+
+    .btn-monitor-gold:hover {
+        background: #e5c366;
+    }
+
+    .audit-table thead th {
+        border-bottom: 1px solid rgba(212, 175, 55, 0.45);
+        color: #e8d7af;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.22);
+    }
+
+    .audit-table tbody tr {
+        background: rgba(255, 255, 255, 0.01);
+    }
+
+    .audit-table tbody td {
+        border-top: 1px solid rgba(212, 175, 55, 0.16);
+        color: rgba(248, 248, 248, 0.9);
+        vertical-align: middle;
+    }
+
+    .audit-status {
+        border-radius: 999px;
+        padding: 0.24rem 0.58rem;
+        font-size: 0.74rem;
+        border: 1px solid transparent;
+        display: inline-block;
+    }
+
+    .audit-status-success {
+        color: #7ef0a5;
+        border-color: rgba(126, 240, 165, 0.55);
+        background: rgba(126, 240, 165, 0.1);
+    }
+
+    .audit-status-failed {
+        color: #ff9a9a;
+        border-color: rgba(255, 88, 88, 0.58);
+        background: rgba(255, 88, 88, 0.14);
+        box-shadow: 0 0 10px rgba(255, 88, 88, 0.2);
+    }
+
+    .error-sidebar {
+        position: sticky;
+        top: 112px;
+    }
+
+    .error-item {
+        border-radius: 0.78rem;
+        border: 1px solid rgba(255, 115, 115, 0.35);
+        background: rgba(255, 88, 88, 0.1);
+        padding: 0.65rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .error-item p {
+        margin-bottom: 0.55rem;
+        color: #ffd1d1;
+        font-size: 0.82rem;
+    }
+
+    .btn-error-outline {
+        border: 1px solid rgba(212, 175, 55, 0.7);
+        color: #f6e3b6;
+        background: transparent;
+        font-size: 0.78rem;
+    }
+
+    .btn-error-outline:hover {
+        color: #fff;
+        background: rgba(212, 175, 55, 0.2);
+    }
+
+    .hint-text {
+        color: rgba(255, 255, 255, 0.69);
+        font-size: 0.81rem;
+        margin-top: 0.45rem;
+    }
+
+    .heat-badge {
+        border-radius: 999px;
+        padding: 0.22rem 0.6rem;
+        font-size: 0.74rem;
+        border: 1px solid transparent;
+        display: inline-block;
+    }
+
+    .heat-high {
+        color: #ffb3b3;
+        border-color: rgba(255, 118, 118, 0.62);
+        background: rgba(255, 68, 68, 0.15);
+    }
+
+    .heat-medium {
+        color: #ffe1a8;
+        border-color: rgba(255, 198, 102, 0.58);
+        background: rgba(255, 198, 102, 0.16);
+    }
+
+    .heat-low {
+        color: #bff4cf;
+        border-color: rgba(126, 240, 165, 0.62);
+        background: rgba(126, 240, 165, 0.15);
+    }
+
+    .heat-na {
+        color: #d1d1d1;
+        border-color: rgba(210, 210, 210, 0.45);
+        background: rgba(210, 210, 210, 0.12);
+    }
+
+    @media (max-width: 991.98px) {
+        .manual-search-form {
+            grid-template-columns: 1fr;
+        }
+
+        .btn-monitor-gold {
+            width: 100%;
+        }
+
+        .error-sidebar {
+            position: static;
+            top: auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="central-monitor-wrap">
+    <section class="monitor-hero p-3 p-md-4">
+        <div class="status-badge-row">
+            {% for badge in status_badges %}
+            <div class="status-badge {{ badge.state }}">
+                <span class="status-icon"><i class="bi {{ badge.icon }}"></i></span>
+                <div>
+                    <small>{{ badge.title }}</small>
+                    <strong>{{ badge.value }}</strong>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="monitor-brand text-center">
+            <div class="monitor-logo"><i class="bi bi-shield-lock"></i></div>
+            <h2>نظام الرقابة والتدقيق المركزي</h2>
+            <p>مراقبة فورية لسلامة العزل بين المعارض، التدفقات المالية، وسجل العمليات الحرج.</p>
+            <p class="hint-text mt-2 mb-0">{{ scope_label }}</p>
+        </div>
+    </section>
+
+    <div class="row g-3 mt-1">
+        <div class="col-md-6 col-xl-4">
+            <div class="monitor-card p-3 h-100">
+                <h5>سلامة المستأجرين</h5>
+                <small class="text-muted">Tenant Health</small>
+                <div class="metric-grid">
+                    <div class="metric-box">
+                        <span class="label">الاتصالات النشطة</span>
+                        <span class="value">{{ active_connection_count }}</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="label">المعارض المتصلة</span>
+                        <span class="value">{{ connected_tenants_count }}</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="label">المعارض النشطة</span>
+                        <span class="value">{{ active_tenants_count }}</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="label">قواعد سليمة</span>
+                        <span class="value">{{ healthy_tenants_count }}</span>
+                    </div>
+                </div>
+                <p class="hint-text mb-0">
+                    فحوص العزل المكتشفة:
+                    {% if schema_isolation_issues_count == 0 %}
+                    <strong class="metric-ok">لا توجد مشاكل</strong>
+                    {% else %}
+                    <strong class="metric-alert">{{ schema_isolation_issues_count }} مشكلة</strong>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="monitor-card p-3 h-100">
+                <h5>سلامة العمليات المالية</h5>
+                <small class="text-muted">Financial Integrity</small>
+                <div class="metric-grid">
+                    <div class="metric-box">
+                        <span class="label">إجمالي المبيعات (SR)</span>
+                        <span class="value">{{ total_sales_sr|floatformat:2 }}</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="label">إجمالي المصروفات (SR)</span>
+                        <span class="value">{{ total_expenses_sr|floatformat:2 }}</span>
+                    </div>
+                    <div class="metric-box" style="grid-column: 1 / -1;">
+                        <span class="label">الرصيد الحالي (SR)</span>
+                        <span class="value {% if financial_integrity_ok %}metric-ok{% else %}metric-alert{% endif %}">
+                            {{ financial_balance_sr|floatformat:2 }}
+                        </span>
+                    </div>
+                </div>
+                <div class="formula">
+                    مجموع المبيعات - مجموع المصروفات = الرصيد الحالي
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-xl-4">
+            <div class="monitor-card p-3 h-100">
+                {% if can_view_global_scope %}
+                <h5>فحص العزل الهيكلي</h5>
+                <small class="text-muted">Schema Isolation Checks</small>
+                <div class="metric-grid">
+                    <div class="metric-box" style="grid-column: 1 / -1;">
+                        <span class="label">سجلات أعمال داخل قاعدة المنصة</span>
+                        <span class="value {% if default_business_rows == 0 %}metric-ok{% else %}metric-alert{% endif %}">
+                            {{ default_business_rows }}
+                        </span>
+                    </div>
+                </div>
+                <p class="hint-text mb-0">
+                    هذا المؤشر يجب أن يبقى <strong>0</strong> لضمان فصل بيانات كل معرض عن قاعدة المنصة.
+                </p>
+                {% else %}
+                <h5>عزل بيانات معرضك</h5>
+                <small class="text-muted">Tenant Scoped Visibility</small>
+                <div class="metric-grid">
+                    <div class="metric-box" style="grid-column: 1 / -1;">
+                        <span class="label">المعرض الحالي</span>
+                        <span class="value">{{ scope_showroom_id }}</span>
+                    </div>
+                    <div class="metric-box" style="grid-column: 1 / -1;">
+                        <span class="label">مشاكل العزل داخل معرضك</span>
+                        <span class="value {% if schema_isolation_issues_count == 0 %}metric-ok{% else %}metric-alert{% endif %}">
+                            {{ schema_isolation_issues_count }}
+                        </span>
+                    </div>
+                </div>
+                <p class="hint-text mb-0">
+                    لا يمكن من خلال هذا الحساب الاطلاع على بيانات المعارض الأخرى.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-1">
+        <div class="{% if technical_errors %}col-xl-8{% else %}col-12{% endif %}">
+            <div class="monitor-card p-3 mb-3">
+                <h5>فحص يدوي سريع</h5>
+                <small class="text-muted">Manual Check Fields</small>
+                <form method="get" class="manual-search-form mt-2">
+                    <div>
+                        <label class="form-label" for="vin_query">رقم الشاسيه (VIN)</label>
+                        <input id="vin_query" name="vin_query" type="text" class="form-control" placeholder="مثال: JTNB11HK0K3059999" value="{{ vin_query }}">
+                    </div>
+                    <div>
+                        <label class="form-label" for="voucher_query">رقم الفاتورة</label>
+                        <input id="voucher_query" name="voucher_query" type="text" class="form-control" placeholder="مثال: SDF-20260306-2200" value="{{ voucher_query }}">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn-monitor-gold">بحث المسار</button>
+                    </div>
+                </form>
+
+                {% if trace_has_query %}
+                <div class="table-responsive mt-3">
+                    <table class="table audit-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>الوقت</th>
+                                <th>المعرض</th>
+                                <th>نوع البحث</th>
+                                <th>نتيجة التتبع</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in trace_results %}
+                            <tr>
+                                <td>{{ item.timestamp|date:'Y-m-d H:i:s' }}</td>
+                                <td>{{ item.showroom_id }}</td>
+                                <td>{{ item.lookup_type }}</td>
+                                <td>{{ item.operation }}</td>
+                                <td>
+                                    <span class="audit-status {% if item.status == 'failed' %}audit-status-failed{% else %}audit-status-success{% endif %}">
+                                        {% if item.status == 'failed' %}Failed{% else %}Success{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-3">لا توجد نتائج مطابقة لهذا البحث.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="monitor-card p-3">
+                <h5>خريطة حرارة نشاط المعارض</h5>
+                <small class="text-muted">Tenant Activity Heatmap (30 يوم)</small>
+                <p class="hint-text mb-2">
+                    مرتفع: {{ heat_high_count }} | متوسط: {{ heat_medium_count }} | منخفض: {{ heat_low_count }}
+                </p>
+                <div class="table-responsive mt-2 mb-3">
+                    <table class="table audit-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>المعرض</th>
+                                <th>المستخدمون</th>
+                                <th>السيارات</th>
+                                <th>المباعة</th>
+                                <th>السندات</th>
+                                <th>عمليات 30 يوم</th>
+                                <th>استهلاك التخزين</th>
+                                <th>مؤشر النشاط</th>
+                                <th>الحرارة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in tenant_activity_rows %}
+                            <tr>
+                                <td>
+                                    <div class="fw-bold">{{ row.tenant_name }}</div>
+                                    <div class="small text-muted">{{ row.tenant_id }}</div>
+                                </td>
+                                <td>{{ row.users_count }}</td>
+                                <td>{{ row.cars_count }}</td>
+                                <td>{{ row.sold_cars_count }}</td>
+                                <td>{{ row.vouchers_count }}</td>
+                                <td>{{ row.operations_30d }}</td>
+                                <td>
+                                    {{ row.storage_used_mb|floatformat:1 }} / {{ row.storage_quota_mb }} MB
+                                    <div class="small text-muted">{{ row.storage_usage_pct|floatformat:1 }}%</div>
+                                </td>
+                                <td>{{ row.activity_score }} / 100</td>
+                                <td>
+                                    <span class="heat-badge {{ row.heat_class }}">{{ row.heat_label }}</span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center py-3">لا توجد بيانات نشاط متاحة حاليًا.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="monitor-card p-3">
+                <h5>سجل العمليات والتدقيق</h5>
+                <small class="text-muted">Activity & Audit Log</small>
+                <div class="table-responsive mt-2">
+                    <table class="table audit-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Showroom ID</th>
+                                <th>العملية</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in activity_events %}
+                            <tr>
+                                <td>{{ event.timestamp|date:'Y-m-d H:i:s' }}</td>
+                                <td>{{ event.showroom_id }}</td>
+                                <td>{{ event.operation }}</td>
+                                <td>
+                                    <span class="audit-status {% if event.status == 'failed' %}audit-status-failed{% else %}audit-status-success{% endif %}">
+                                        {% if event.status == 'failed' %}Failed{% else %}Success{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-3">لا توجد عمليات تدقيق متاحة حالياً.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% if technical_errors %}
+        <div class="col-xl-4">
+            <aside class="monitor-card p-3 error-sidebar">
+                <h5>مركز التنبيهات والأخطاء</h5>
+                <small class="text-muted d-block mb-2">يظهر هذا القسم فقط عند وجود خلل تقني</small>
+                {% for item in technical_errors %}
+                <div class="error-item">
+                    <p>{{ item }}</p>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'central_audit_monitor' %}?vin_query={{ vin_query|urlencode }}&voucher_query={{ voucher_query|urlencode }}" class="btn btn-sm btn-error-outline">إعادة المحاولة</a>
+                        {% if can_open_audit_report %}
+                        <a href="{% url 'audit_logs_report' %}" class="btn btn-sm btn-error-outline">فتح سجل التدقيق</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </aside>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,1503 @@
+{
+  "generated_at": "2026-03-07T02:32:14.060311",
+  "reports": [
+    {
+      "tenant_id": "alhashash-mm2",
+      "generated_at": "2026-03-06 23:32:13.867206+00:00",
+      "tenant_alias": "tenant_alhashash-mm2",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "audit-220352",
+      "generated_at": "2026-03-06 23:32:13.875819+00:00",
+      "tenant_alias": "tenant_audit-220352",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "audit-flow-scan",
+      "generated_at": "2026-03-06 23:32:13.885704+00:00",
+      "tenant_alias": "tenant_audit-flow-scan",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "audit2-220614",
+      "generated_at": "2026-03-06 23:32:13.894135+00:00",
+      "tenant_alias": "tenant_audit2-220614",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "audit3-220718",
+      "generated_at": "2026-03-06 23:32:13.902535+00:00",
+      "tenant_alias": "tenant_audit3-220718",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "backupdemo",
+      "generated_at": "2026-03-06 23:32:13.910970+00:00",
+      "tenant_alias": "tenant_backupdemo",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "bug-193114",
+      "generated_at": "2026-03-06 23:32:13.919575+00:00",
+      "tenant_alias": "tenant_bug-193114",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "debug-mm2",
+      "generated_at": "2026-03-06 23:32:13.928052+00:00",
+      "tenant_alias": "tenant_debug-mm2",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "debugtenant",
+      "generated_at": "2026-03-06 23:32:13.936827+00:00",
+      "tenant_alias": "tenant_debugtenant",
+      "is_clean": false,
+      "total_issues": 1,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 1,
+          "samples": [
+            "Toyota Camry (DBG12345678901234)"
+          ]
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "debugtenant2",
+      "generated_at": "2026-03-06 23:32:13.945392+00:00",
+      "tenant_alias": "tenant_debugtenant2",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "demo-191839",
+      "generated_at": "2026-03-06 23:32:13.953834+00:00",
+      "tenant_alias": "tenant_demo-191839",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "demo-192029",
+      "generated_at": "2026-03-06 23:32:13.962188+00:00",
+      "tenant_alias": "tenant_demo-192029",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "feat-000509",
+      "generated_at": "2026-03-06 23:32:13.970767+00:00",
+      "tenant_alias": "tenant_feat-000509",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "final-221058",
+      "generated_at": "2026-03-06 23:32:13.979651+00:00",
+      "tenant_alias": "tenant_final-221058",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "flow-194007",
+      "generated_at": "2026-03-06 23:32:13.988615+00:00",
+      "tenant_alias": "tenant_flow-194007",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "flow2-195045",
+      "generated_at": "2026-03-06 23:32:13.997100+00:00",
+      "tenant_alias": "tenant_flow2-195045",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "perm-232019",
+      "generated_at": "2026-03-06 23:32:14.005584+00:00",
+      "tenant_alias": "tenant_perm-232019",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "perm-232148",
+      "generated_at": "2026-03-06 23:32:14.013864+00:00",
+      "tenant_alias": "tenant_perm-232148",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "qa-193220",
+      "generated_at": "2026-03-06 23:32:14.022417+00:00",
+      "tenant_alias": "tenant_qa-193220",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "quota-000915",
+      "generated_at": "2026-03-06 23:32:14.030772+00:00",
+      "tenant_alias": "tenant_quota-000915",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "race-tenant",
+      "generated_at": "2026-03-06 23:32:14.039592+00:00",
+      "tenant_alias": "tenant_race-tenant",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "sup-231648",
+      "generated_at": "2026-03-06 23:32:14.048001+00:00",
+      "tenant_alias": "tenant_sup-231648",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    },
+    {
+      "tenant_id": "sup-231916",
+      "generated_at": "2026-03-06 23:32:14.056601+00:00",
+      "tenant_alias": "tenant_sup-231916",
+      "is_clean": true,
+      "total_issues": 0,
+      "issues": [
+        {
+          "key": "sold_without_sale",
+          "title": "سيارات حالتها مباعة دون سجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "unsold_with_sale",
+          "title": "سيارات غير مباعة لكنها مرتبطة بسجل بيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "sale_overpaid",
+          "title": "مبيعات المبلغ المدفوع فيها أكبر من سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "debt_without_voucher",
+          "title": "دفعات ديون بلا سند تسديد مقابل",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "settlement_without_debt",
+          "title": "سندات تسديد بدون دفعة دين مقابلة",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "maintenance_without_voucher",
+          "title": "مصروفات صيانة غير مربوطة بقيد محاسبي",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "orphan_maintenance_voucher",
+          "title": "قيود صيانة بلا سجل صيانة مرتبط",
+          "severity": "medium",
+          "count": 0,
+          "samples": []
+        },
+        {
+          "key": "over_collected_debt",
+          "title": "تحصيلات ديون تتجاوز سعر البيع",
+          "severity": "high",
+          "count": 0,
+          "samples": []
+        }
+      ]
+    }
+  ],
+  "total_issues": 1
+}

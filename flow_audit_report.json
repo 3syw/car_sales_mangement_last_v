@@ -1,0 +1,952 @@
+{
+  "tenant_id": "audit-flow-scan",
+  "tenant_alias": "tenant_audit-flow-scan",
+  "checks": [
+    {
+      "name": "tenant_login",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/dashboard/"
+      }
+    },
+    {
+      "name": "session_keys_after_login",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "tenant_id": "audit-flow-scan",
+        "tenant_db_alias": "tenant_audit-flow-scan"
+      }
+    },
+    {
+      "name": "GET /dashboard/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /cars/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /debts/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /timeline/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/financial/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/vouchers/list/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200,
+          302
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/car/add/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/permissions/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/auth/user/list/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/car/available/",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "admin_add_car_post",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/sales/car/"
+      }
+    },
+    {
+      "name": "admin_add_car_db_target",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "saved_in_tenant": true,
+        "saved_in_default": false
+      }
+    },
+    {
+      "name": "tenant_action_no_default_log_leak",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "before_default_logs": 462,
+        "after_default_logs": 462
+      }
+    },
+    {
+      "name": "resilience_missing_tenant_id",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/sales/car/",
+        "alias_kept": "tenant_audit-flow-scan"
+      }
+    },
+    {
+      "name": "resilience_missing_tenant_alias",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/sales/car/"
+      }
+    },
+    {
+      "name": "front_car_edit_post",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/cars/?car_updated=1"
+      }
+    },
+    {
+      "name": "maintenance_add_authorized",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/cars/19/?maintenance_saved=1&tab=maintenance",
+        "before_count": 4,
+        "after_count": 5
+      }
+    },
+    {
+      "name": "maintenance_add_on_sold_blocked",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/cars/20/?maintenance_error=sold&tab=maintenance"
+      }
+    },
+    {
+      "name": "logout_redirect",
+      "role": "super",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/login/"
+      }
+    },
+    {
+      "name": "tenant_login",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/dashboard/"
+      }
+    },
+    {
+      "name": "session_keys_after_login",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "tenant_id": "audit-flow-scan",
+        "tenant_db_alias": "tenant_audit-flow-scan"
+      }
+    },
+    {
+      "name": "GET /dashboard/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /cars/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /debts/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /timeline/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/financial/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/vouchers/list/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200,
+          302
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/car/add/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/permissions/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/auth/user/list/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/car/available/",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "admin_add_car_post",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/sales/car/"
+      }
+    },
+    {
+      "name": "admin_add_car_db_target",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "saved_in_tenant": true,
+        "saved_in_default": false
+      }
+    },
+    {
+      "name": "tenant_action_no_default_log_leak",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "before_default_logs": 462,
+        "after_default_logs": 462
+      }
+    },
+    {
+      "name": "resilience_missing_tenant_id",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/sales/car/",
+        "alias_kept": "tenant_audit-flow-scan"
+      }
+    },
+    {
+      "name": "resilience_missing_tenant_alias",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/sales/car/"
+      }
+    },
+    {
+      "name": "front_car_edit_post",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/cars/?car_updated=1"
+      }
+    },
+    {
+      "name": "logout_redirect",
+      "role": "staff",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/login/"
+      }
+    },
+    {
+      "name": "tenant_login",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/dashboard/"
+      }
+    },
+    {
+      "name": "session_keys_after_login",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "tenant_id": "audit-flow-scan",
+        "tenant_db_alias": "tenant_audit-flow-scan"
+      }
+    },
+    {
+      "name": "GET /dashboard/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /cars/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /debts/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /timeline/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/financial/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/vouchers/list/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/login/?next=/admin/",
+        "expected": [
+          302
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/car/add/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/login/?next=/admin/sales/car/add/",
+        "expected": [
+          302
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/permissions/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/auth/user/list/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/car/available/",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "nonstaff_admin_redirect_no_loop",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "first_status": 302,
+        "first_location": "/admin/login/?next=/admin/sales/car/add/",
+        "second_status": 302,
+        "second_location": "/"
+      }
+    },
+    {
+      "name": "front_car_edit_post",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/cars/?car_updated=1"
+      }
+    },
+    {
+      "name": "logout_redirect",
+      "role": "sales",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/login/"
+      }
+    },
+    {
+      "name": "tenant_login",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/dashboard/"
+      }
+    },
+    {
+      "name": "session_keys_after_login",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "tenant_id": "audit-flow-scan",
+        "tenant_db_alias": "tenant_audit-flow-scan"
+      }
+    },
+    {
+      "name": "GET /dashboard/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /cars/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /debts/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /timeline/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 200,
+        "location": null,
+        "expected": [
+          200
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/financial/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /reports/vouchers/list/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/login/?next=/admin/",
+        "expected": [
+          302
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/car/add/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/login/?next=/admin/sales/car/add/",
+        "expected": [
+          302
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/permissions/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/auth/user/list/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "GET /admin/sales/car/available/",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 403,
+        "location": null,
+        "expected": [
+          403
+        ]
+      }
+    },
+    {
+      "name": "nonstaff_admin_redirect_no_loop",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "first_status": 302,
+        "first_location": "/admin/login/?next=/admin/sales/car/add/",
+        "second_status": 302,
+        "second_location": "/"
+      }
+    },
+    {
+      "name": "front_car_edit_post",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/cars/?car_updated=1"
+      }
+    },
+    {
+      "name": "maintenance_add_authorized",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/cars/19/?maintenance_saved=1&tab=maintenance",
+        "before_count": 5,
+        "after_count": 6
+      }
+    },
+    {
+      "name": "maintenance_add_on_sold_blocked",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/cars/20/?maintenance_error=sold&tab=maintenance"
+      }
+    },
+    {
+      "name": "debt_payment_flow",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/debts/?debt_paid=1",
+        "voucher_created": true
+      }
+    },
+    {
+      "name": "logout_redirect",
+      "role": "accountant",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/login/"
+      }
+    },
+    {
+      "name": "platform_owner_login",
+      "role": "platform_owner",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/platform/switch-tenant/"
+      }
+    },
+    {
+      "name": "platform_switch_page",
+      "role": "platform_owner",
+      "ok": true,
+      "details": {
+        "status": 200
+      }
+    },
+    {
+      "name": "platform_switch_tenant",
+      "role": "platform_owner",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/platform/switch-tenant/?switched=1"
+      }
+    },
+    {
+      "name": "platform_impersonated_admin_access",
+      "role": "platform_owner",
+      "ok": true,
+      "details": {
+        "status": 200
+      }
+    },
+    {
+      "name": "platform_impersonated_add_car",
+      "role": "platform_owner",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/sales/car/"
+      }
+    },
+    {
+      "name": "platform_exit_impersonation",
+      "role": "platform_owner",
+      "ok": true,
+      "details": {
+        "status": 302,
+        "location": "/admin/platform/switch-tenant/?exited=1",
+        "tenant_id_after_exit": null,
+        "tenant_alias_after_exit": null
+      }
+    }
+  ],
+  "anomalies": [],
+  "summary": {
+    "total_checks": 87,
+    "passed": 87,
+    "failed": 0
+  }
+}

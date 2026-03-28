@@ -1,0 +1,43 @@
+{
+  "name": "car-sales-desktop",
+  "version": "0.1.0",
+  "description": "Desktop client for the multi-tenant car sales platform",
+  "main": "main.js",
+  "author": "ComputerWorld",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "node -e \"console.error('Desktop client is temporarily disabled. Current deployment mode is web-only.'); process.exit(1)\"",
+    "dev": "node -e \"console.error('Desktop client is temporarily disabled. Current deployment mode is web-only.'); process.exit(1)\"",
+    "pack": "node -e \"console.error('Desktop packaging is disabled in web-only phase.'); process.exit(1)\"",
+    "dist": "node -e \"console.error('Desktop packaging is disabled in web-only phase.'); process.exit(1)\""
+  },
+  "build": {
+    "appId": "com.computerworld.carsales.desktop",
+    "productName": "Car Sales Desktop",
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "CarSalesDesktop-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^37.2.6",
+    "electron-builder": "^25.1.8"
+  }
+}

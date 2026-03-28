@@ -1,0 +1,44 @@
+{% extends 'sales/base.html' %}
+
+{% block content %}
+<div class="row mb-4 mt-3">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h3 class="fw-bold text-primary mb-0">الجدول الزمني للعمليات</h3>
+        <div class="d-flex gap-2">
+            <a href="{% url 'export_timeline_excel' %}" class="btn btn-sm btn-outline-success">
+                <i class="fas fa-file-excel"></i> تصدير XL
+            </a>
+            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary">العودة للرئيسية</a>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>العملية</th>
+                        <th>الحساب</th>
+                        <th>التاريخ والوقت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.display_operation }}</td>
+                        <td>{% if log.user %}{{ log.user.username }}{% else %}غير معروف{% endif %}</td>
+                        <td>{{ log.created_at|date:"Y-m-d H:i:s" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4 text-muted">لا توجد عمليات مسجلة حالياً.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

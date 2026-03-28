@@ -1,0 +1,177 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-water"></i> تحليل التدفق النقدي المتوقع</h3>
+                <p class="lux-subtitle">تقدير التحصيلات القادمة بناءً على تواريخ استحقاق المديونيات لكل عملية بيع.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports_financial' %}" class="lux-outline-btn">عودة للتقرير المالي</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">نافذة التوقع</label>
+                <select name="horizon_days" class="form-select">
+                    <option value="14" {% if horizon_days == 14 %}selected{% endif %}>14 يوم</option>
+                    <option value="30" {% if horizon_days == 30 %}selected{% endif %}>30 يوم</option>
+                    <option value="56" {% if horizon_days == 56 %}selected{% endif %}>56 يوم</option>
+                    <option value="90" {% if horizon_days == 90 %}selected{% endif %}>90 يوم</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">اليوم المرجعي</label>
+                <input type="text" class="form-control" value="{{ today|date:'Y-m-d' }}" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">نهاية النافذة</label>
+                <input type="text" class="form-control" value="{{ horizon_date|date:'Y-m-d' }}" readonly>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary rounded-pill">تحديث التحليل</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">إجمالي الذمم المدينة</small>
+                <h5 class="lux-value mb-0">{{ total_outstanding_sr|intcomma }} SR</h5>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">متأخرات حالية</small>
+                <h5 class="text-danger mb-0">{{ overdue_total_sr|intcomma }} SR</h5>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">متوقع خلال 7 أيام</small>
+                <h5 class="text-success mb-0">{{ projected_within_7_sr|intcomma }} SR</h5>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">متوقع خلال 30 يوم</small>
+                <h5 class="text-primary mb-0">{{ projected_within_30_sr|intcomma }} SR</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+        <div class="card-body p-0">
+            <h5 class="lux-label mb-3">التوقع الأسبوعي للتحصيل (SR)</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>بداية الأسبوع</th>
+                            <th>التحصيل المتوقع</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in weekly_projection %}
+                        <tr>
+                            <td>{{ item.week_start|date:'Y-m-d' }}</td>
+                            <td class="fw-bold">{{ item.amount_sr|intcomma }} SR</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center py-3">لا توجد تحصيلات ضمن النافذة المحددة.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+        <div class="card-body p-0">
+            <h5 class="lux-label mb-3">التوقع الشهري للتحصيل (SR)</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>الشهر</th>
+                            <th>التحصيل المتوقع</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in monthly_projection %}
+                        <tr>
+                            <td>{{ item.month_label }}</td>
+                            <td class="fw-bold">{{ item.amount_sr|intcomma }} SR</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center py-3">لا توجد بيانات شهرية ضمن النافذة.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="card-body p-0">
+            <h5 class="lux-label mb-3">التفاصيل حسب العميل/السيارة</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>العميل</th>
+                            <th>السيارة</th>
+                            <th>تاريخ الاستحقاق</th>
+                            <th>تاريخ التوقع</th>
+                            <th>حالة الدين</th>
+                            <th>المتبقي (عملة العملية)</th>
+                            <th>المتبقي (SR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            <td>{{ row.sale.customer.name }}</td>
+                            <td>{{ row.sale.car.brand }} {{ row.sale.car.model_name }} ({{ row.sale.car.vin }})</td>
+                            <td>{{ row.due_date|date:'Y-m-d' }}</td>
+                            <td>{{ row.projected_date|date:'Y-m-d' }}</td>
+                            <td>
+                                {% if row.is_overdue %}
+                                <span class="badge bg-danger">متأخر</span>
+                                {% elif row.in_horizon %}
+                                <span class="badge bg-success">ضمن النافذة</span>
+                                {% else %}
+                                <span class="badge bg-secondary">خارج النافذة</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ row.remaining_amount|intcomma }} {{ row.sale.car.currency }}</td>
+                            <td class="fw-bold">{{ row.remaining_amount_sr|intcomma }} SR</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-3">لا توجد ديون متبقية.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

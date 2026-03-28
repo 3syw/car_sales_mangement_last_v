@@ -1,0 +1,73 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+{% if request.GET.debt_paid == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='debtSuccessModal' title='تمت العملية' message='تم حفظ السداد بنجاح.' ok_url=debts_ok_url %}
+{% endif %}
+
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-hand-holding-usd"></i> سجل المديونيات المعلقة</h3>
+                <p class="lux-subtitle">قائمة العملاء الذين لم يكملوا سداد مبالغ السيارات.</p>
+                <a href="{% url 'debt_aging_report' %}" class="lux-outline-btn lux-outline-btn-sm">عرض تقرير تقادم الديون</a>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <div class="card p-3 text-center">
+                    <small class="lux-muted d-block mb-1">إجمالي الديون في السوق</small>
+                    <h3 class="lux-value">{{ total_debts|intcomma }} SR</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>العميل</th>
+                        <th>السيارة</th>
+                        <th>تاريخ الاستحقاق</th>
+                        <th>إجمالي السعر</th>
+                        <th>المدفوع</th>
+                        <th>المتبقي</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in pending_sales %}
+                    <tr>
+                        <td><strong>{{ sale.customer.name }}</strong><br><small class="lux-muted">{{ sale.customer.phone }}</small></td>
+                        <td>{{ sale.car.brand }} {{ sale.car.model_name }}</td>
+                        <td>{{ sale.debt_due_date|date:'Y-m-d'|default:'-' }}</td>
+                        <td>{{ sale.sale_price|intcomma }}</td>
+                        <td class="text-success">{{ sale.amount_paid|intcomma }}</td>
+                        <td class="text-danger fw-bold">{{ sale.remaining_amount|intcomma }}</td>
+                        <td>
+                            <span class="badge bg-warning text-dark">تحت السداد</span>
+                        </td>
+                        <td>
+                            <a href="{% url 'add_debt_payment' sale.id %}" class="lux-outline-btn lux-outline-btn-sm">إضافة سداد</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-4">الحمد لله، لا توجد ديون معلقة حالياً! 🎉</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+{% if request.GET.saved == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='dailyClosingSuccessModal' title='تم الإغلاق' message='تم إغلاق اليومية بنجاح.' ok_url=daily_closing_ok_url %}
+{% endif %}
+
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-lock"></i> إغلاق اليومية</h3>
+                <p class="lux-subtitle">بعد إغلاق يومية التاريخ المحدد، يتم منع تعديل أو حذف أو إضافة القيود المالية المؤرخة في هذا اليوم وما قبله للحسابات غير الإدارية العليا.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                {% if user.is_superuser %}
+                <a href="{% url 'fiscal_period_closing' %}" class="lux-outline-btn me-1">الإغلاق الشهري</a>
+                {% endif %}
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <div class="card-body">
+                    <small class="lux-muted d-block mb-1">آخر يومية مغلقة</small>
+                    <h4 class="lux-value mb-0">
+                        {% if last_closing %}
+                            {{ last_closing.closing_date|date:'Y-m-d' }}
+                        {% else %}
+                            غير مغلق
+                        {% endif %}
+                    </h4>
+                    {% if last_closing %}
+                    <small class="lux-muted d-block mt-2">بواسطة: {% if last_closing.closed_by %}{{ last_closing.closed_by.username }}{% else %}-{% endif %}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <div class="card-body">
+                    <small class="lux-muted d-block mb-1">حالة يوم {{ today|date:'Y-m-d' }}</small>
+                    {% if is_today_closed %}
+                        <h4 class="text-success mb-0">مغلق</h4>
+                    {% else %}
+                        <h4 class="text-warning mb-0">مفتوح</h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <div class="card-body">
+                    <small class="lux-muted d-block mb-1">عدد الأيام المغلقة</small>
+                    <h4 class="lux-value mb-0">{{ closings_count }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+        <div class="card-body">
+            <form method="post" class="row g-3 align-items-end">
+                {% csrf_token %}
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.closing_date.id_for_label }}">تاريخ الإغلاق</label>
+                    {{ form.closing_date }}
+                    {% if form.closing_date.errors %}
+                    <div class="text-danger small mt-1">{{ form.closing_date.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.notes.id_for_label }}">ملاحظات</label>
+                    {{ form.notes }}
+                    {% if form.notes.errors %}
+                    <div class="text-danger small mt-1">{{ form.notes.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-2 d-grid">
+                    <button type="submit" class="btn btn-primary rounded-pill">إغلاق اليومية</button>
+                </div>
+                {% if form.non_field_errors %}
+                <div class="col-12">
+                    <div class="alert alert-danger mb-0">{{ form.non_field_errors }}</div>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>تاريخ اليومية</th>
+                            <th>تم الإغلاق بواسطة</th>
+                            <th>ملاحظات</th>
+                            <th>وقت الإغلاق</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for closing in closings %}
+                        <tr>
+                            <td>{{ closing.closing_date|date:'Y-m-d' }}</td>
+                            <td>{% if closing.closed_by %}{{ closing.closed_by.username }}{% else %}-{% endif %}</td>
+                            <td>{{ closing.notes|default:'-' }}</td>
+                            <td>{{ closing.created_at|date:'Y-m-d H:i' }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4">لا توجد إغلاقات يومية مسجلة حتى الآن.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

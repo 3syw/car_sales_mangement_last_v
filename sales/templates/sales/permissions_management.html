@@ -1,0 +1,183 @@
+{% extends "sales/base.html" %}
+
+{% block content %}
+{% include 'sales/includes/operation_modal_styles.html' %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h3 class="mb-0 text-primary">إدارة صلاحيات الواجهات</h3>
+                    <span class="text-muted">يمكنك تعديل وصول كل حساب إلى واجهات النظام</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-light align-middle text-center">
+                        <thead>
+                            <tr>
+                                <th>اسم المستخدم</th>
+                                <th>لوحة التحكم</th>
+                                <th>المعرض</th>
+                                <th>التقارير</th>
+                                <th>الديون</th>
+                                <th>الجدول الزمني</th>
+                                <th>حسابات المستخدمين</th>
+                                <th>إضافة مصروفات صيانة</th>
+                                <th>حفظ</th>
+                                <th>حذف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in users_with_access %}
+                            <tr>
+                                <td class="fw-bold">
+                                    {{ row.account.username }}
+                                    <form method="post" id="perm-form-{{ row.account.id }}" class="d-none">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{ row.account.id }}">
+                                    </form>
+                                </td>
+                                <td><input type="checkbox" class="form-check-input" form="perm-form-{{ row.account.id }}" name="can_access_dashboard" {% if row.access.can_access_dashboard %}checked{% endif %}></td>
+                                <td><input type="checkbox" class="form-check-input" form="perm-form-{{ row.account.id }}" name="can_access_cars" {% if row.access.can_access_cars %}checked{% endif %}></td>
+                                <td><input type="checkbox" class="form-check-input" form="perm-form-{{ row.account.id }}" name="can_access_reports" {% if row.access.can_access_reports %}checked{% endif %}></td>
+                                <td><input type="checkbox" class="form-check-input" form="perm-form-{{ row.account.id }}" name="can_access_debts" {% if row.access.can_access_debts %}checked{% endif %}></td>
+                                <td><input type="checkbox" class="form-check-input" form="perm-form-{{ row.account.id }}" name="can_access_timeline" {% if row.access.can_access_timeline %}checked{% endif %}></td>
+                                <td><input type="checkbox" class="form-check-input" form="perm-form-{{ row.account.id }}" name="can_access_system_users" {% if row.access.can_access_system_users %}checked{% endif %}></td>
+                                <td><input type="checkbox" class="form-check-input" form="perm-form-{{ row.account.id }}" name="can_add_maintenance_expenses" {% if row.access.can_add_maintenance_expenses %}checked{% endif %}></td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-primary js-open-save-modal"
+                                        data-form-id="perm-form-{{ row.account.id }}"
+                                        data-username="{{ row.account.username }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#saveConfirmModal">
+                                        حفظ
+                                    </button>
+                                </td>
+                                <td>
+                                    {% if row.can_delete %}
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-danger js-open-delete-modal"
+                                        data-user-id="{{ row.account.id }}"
+                                        data-username="{{ row.account.username }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteUserModal">
+                                        حذف الحساب
+                                    </button>
+                                    {% elif row.is_current_user %}
+                                    <span class="text-muted small">الحساب الحالي</span>
+                                    {% elif row.is_last_superuser %}
+                                    <span class="text-muted small">آخر سوبر أدمن</span>
+                                    {% else %}
+                                    <span class="text-muted small">غير متاح</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="10" class="text-center text-muted">لا يوجد حسابات لعرضها.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">تأكيد الحفظ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">هل انت متاكد من العمليه؟</p>
+                <small class="text-muted" id="save-user-modal-name"></small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">لا</button>
+                <button type="button" class="btn btn-primary" id="confirm-save-btn">نعم</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">تأكيد الحذف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">هل انت متاكد من العمليه؟</p>
+                <small class="text-muted" id="delete-user-modal-name"></small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">لا</button>
+                <form method="post" id="delete-user-form" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">نعم</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if request.GET.deleted == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='deleteSuccessModal' title='تم الحذف' message='تم حذف الحساب بنجاح.' ok_url=permissions_ok_url %}
+{% endif %}
+
+{% if request.GET.saved == '1' %}
+    {% include 'sales/includes/success_action_modal.html' with modal_id='saveSuccessModal' title='تم الحفظ' message='تم حفظ الصلاحيات بنجاح.' ok_url=permissions_ok_url %}
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const saveButtons = document.querySelectorAll('.js-open-save-modal');
+    const saveUserNameLabel = document.getElementById('save-user-modal-name');
+    const confirmSaveButton = document.getElementById('confirm-save-btn');
+    let selectedFormId = null;
+
+    saveButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            selectedFormId = button.getAttribute('data-form-id');
+            const username = button.getAttribute('data-username') || '';
+            saveUserNameLabel.textContent = username ? `الحساب: ${username}` : '';
+        });
+    });
+
+    if (confirmSaveButton) {
+        confirmSaveButton.addEventListener('click', () => {
+            if (!selectedFormId) {
+                return;
+            }
+            const targetForm = document.getElementById(selectedFormId);
+            if (targetForm) {
+                targetForm.submit();
+            }
+        });
+    }
+
+    const deleteButtons = document.querySelectorAll('.js-open-delete-modal');
+    const deleteForm = document.getElementById('delete-user-form');
+    const userNameLabel = document.getElementById('delete-user-modal-name');
+
+    deleteButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const userId = button.getAttribute('data-user-id');
+            const username = button.getAttribute('data-username') || '';
+            deleteForm.action = `/admin/sales/permissions/delete-user/${userId}/`;
+            userNameLabel.textContent = username ? `الحساب: ${username}` : '';
+        });
+    });
+
+});
+</script>
+{% endblock %}

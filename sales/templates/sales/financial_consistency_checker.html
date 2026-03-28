@@ -1,0 +1,96 @@
+{% extends 'sales/base.html' %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1"><i class="fas fa-balance-scale"></i> فحص التوازن المالي</h3>
+                <p class="lux-subtitle">تدقيق اتساق الجداول المالية لاكتشاف الحالات اليتيمة أو المتعارضة داخل بيئة المعرض.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة للتقارير</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">بيئة الفحص</small>
+                <h5 class="mb-0">{{ tenant_alias }}</h5>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">إجمالي الملاحظات</small>
+                <h5 class="mb-0">{{ report.total_issues }}</h5>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 h-100">
+                <small class="lux-muted d-block mb-1">حالة النظام</small>
+                {% if report.is_clean %}
+                <h5 class="text-success mb-0">سليم</h5>
+                {% else %}
+                <h5 class="text-danger mb-0">يحتاج مراجعة</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>الاختبار</th>
+                            <th>الخطورة</th>
+                            <th>عدد الحالات</th>
+                            <th>أمثلة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for issue in report.issues %}
+                        <tr>
+                            <td>{{ issue.title }}</td>
+                            <td>
+                                {% if issue.severity == 'high' %}
+                                <span class="badge bg-danger">مرتفعة</span>
+                                {% else %}
+                                <span class="badge bg-warning text-dark">متوسطة</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if issue.count > 0 %}
+                                <span class="badge bg-danger">{{ issue.count }}</span>
+                                {% else %}
+                                <span class="badge bg-success">0</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if issue.samples %}
+                                {% for sample in issue.samples %}
+                                <div class="lux-note">
+                                    <span>{{ sample }}</span>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <span class="text-muted">لا توجد أمثلة</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

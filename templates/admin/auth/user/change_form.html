@@ -1,0 +1,126 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{# override styling to better match site pages #}
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* wrap main content in card-like container */
+    #content-main {
+        background: rgba(255,255,255,0.95);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        max-width: 980px;
+        margin: 0 auto;
+    }
+
+    /* enlarge headers and adjust breadcrumb color */
+    .breadcrumbs a { color: var(--gold) !important; }
+    .breadcrumbs { background: transparent !important; padding: 0; }
+
+    #content-main h1,
+    #content-main h2,
+    #content-main h3,
+    #content-main legend {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--brown-dark);
+    }
+
+    #content-main fieldset {
+        margin-bottom: 1.5rem;
+    }
+
+    #content-main .form-row {
+        margin-bottom: 1rem;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    #content-main .form-row label {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.45rem;
+        color: var(--brown-dark);
+        display: block;
+    }
+
+    #content-main input[type="text"],
+    #content-main input[type="password"],
+    #content-main input[type="email"],
+    #content-main input[type="number"],
+    #content-main input[type="url"],
+    #content-main input[type="tel"],
+    #content-main select,
+    #content-main textarea {
+        width: 100%;
+        min-height: 44px;
+        padding: 0.55rem 0.75rem;
+        font-size: 0.98rem;
+        border-radius: 8px;
+        border: 1px solid #d8d8d8;
+        background: #fff;
+        color: #2b2b2b;
+    }
+
+    #content-main textarea {
+        min-height: 90px;
+    }
+
+    #content-main .help,
+    #content-main .helptext,
+    #content-main .description {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: #666;
+        margin-top: 0.35rem;
+    }
+
+    #content-main .errorlist {
+        font-size: 0.92rem;
+        margin: 0.4rem 0 0.7rem;
+    }
+
+    /* style the submit/cancel buttons like site buttons */
+    .submit-row {
+        display: flex;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .submit-row input[type=submit] {
+        background-color: var(--gold);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.4rem;
+        font-size: 0.96rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .submit-row input[type=submit]:hover {
+        background-color: var(--gold-dark);
+    }
+    /* make delete link look like a secondary button */
+    .submit-row .deletelink {
+        background-color: transparent;
+        color: var(--brown-dark);
+        border: 1px solid var(--brown-dark);
+        border-radius: 8px;
+        padding: 0.4rem 1.2rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .submit-row .deletelink:hover {
+        background-color: var(--brown-dark);
+        color: #fff;
+    }
+</style>
+{% endblock %}

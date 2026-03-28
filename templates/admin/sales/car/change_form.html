@@ -1,0 +1,440 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% if add %}
+<style>
+    .car-add-page .breadcrumbs {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .car-add-page .breadcrumbs a {
+        color: var(--champagne-light);
+    }
+
+    .car-add-page #content-main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 1.75rem;
+        border-radius: 24px;
+        border: 1px solid rgba(201, 164, 106, 0.42);
+        background: linear-gradient(145deg, rgba(23, 30, 41, 0.86), rgba(15, 20, 28, 0.78));
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .car-add-page .car-add-back-row {
+        max-width: 1120px;
+        margin: 0 auto 0.9rem;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .car-add-page .car-add-back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        text-decoration: none;
+        color: var(--champagne-light);
+        font-weight: 600;
+        letter-spacing: 0.1px;
+    }
+
+    .car-add-page .car-add-back-link:hover {
+        color: var(--champagne);
+    }
+
+    .car-add-page .car-add-columns {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 25px;
+        margin-bottom: 25px;
+    }
+
+    .car-add-page fieldset.module.aligned {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(201, 164, 106, 0.30);
+        border-radius: 18px;
+        padding: 1.2rem 1rem !important;
+        margin-bottom: 25px;
+    }
+
+    .car-add-page .fieldset-heading {
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: var(--champagne-light);
+        margin-bottom: 1rem;
+    }
+
+    .car-add-page fieldset.module.aligned .form-row {
+        margin: 0 0 25px;
+        padding: 0;
+        border: 0;
+        overflow: visible;
+    }
+
+    .car-add-page fieldset.module.aligned .form-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .car-add-page #car_form label {
+        color: var(--text-soft);
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+    }
+
+    .car-add-page #car_form .aligned label {
+        width: auto !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 0 0.4rem !important;
+        display: block !important;
+    }
+
+    .car-add-page #car_form .aligned label:after {
+        display: none !important;
+    }
+
+    .car-add-page #car_form .aligned .flex-container {
+        display: block !important;
+        align-items: initial !important;
+    }
+
+    .car-add-page #car_form .aligned .fieldBox {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .car-add-page #car_form .aligned label + p,
+    .car-add-page #car_form .aligned label + div.readonly,
+    .car-add-page #car_form .aligned .checkbox-row + div.help,
+    .car-add-page #car_form .aligned p.help,
+    .car-add-page #car_form .aligned div.help,
+    .car-add-page #car_form .aligned input + p.help,
+    .car-add-page #car_form .aligned input + div.help,
+    .car-add-page #car_form .aligned select + p.help,
+    .car-add-page #car_form .aligned select + div.help,
+    .car-add-page #car_form .aligned textarea + p.help,
+    .car-add-page #car_form .aligned textarea + div.help {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .car-add-page #car_form input[type="text"],
+    .car-add-page #car_form input:not([type]),
+    .car-add-page #car_form input[type="number"],
+    .car-add-page #car_form input[type="email"],
+    .car-add-page #car_form input[type="url"],
+    .car-add-page #car_form input[type="tel"],
+    .car-add-page #car_form select,
+    .car-add-page #car_form textarea {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 44px;
+        border: 0 !important;
+        border-bottom: 1px solid rgba(201, 164, 106, 0.52) !important;
+        border-radius: 0 !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+        color: var(--text-main) !important;
+        padding: 0.58rem 0.2rem !important;
+        box-shadow: none !important;
+    }
+
+    .car-add-page #car_form .vTextField,
+    .car-add-page #car_form .vURLField,
+    .car-add-page #car_form .vIntegerField,
+    .car-add-page #car_form .vBigIntegerField,
+    .car-add-page #car_form .vLargeTextField,
+    .car-add-page #car_form .vUUIDField,
+    .car-add-page #car_form .vSelectMedium {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .car-add-page #car_form input[type="text"]::placeholder,
+    .car-add-page #car_form input[type="number"]::placeholder,
+    .car-add-page #car_form textarea::placeholder {
+        color: var(--text-soft);
+        opacity: 0.72;
+        transition: opacity 0.2s ease;
+    }
+
+    .car-add-page #car_form input[type="text"]:focus::placeholder,
+    .car-add-page #car_form input[type="number"]:focus::placeholder,
+    .car-add-page #car_form textarea:focus::placeholder {
+        opacity: 0;
+    }
+
+    .car-add-page #car_form input[type="text"]:focus,
+    .car-add-page #car_form input[type="number"]:focus,
+    .car-add-page #car_form input[type="email"]:focus,
+    .car-add-page #car_form input[type="url"]:focus,
+    .car-add-page #car_form input[type="tel"]:focus,
+    .car-add-page #car_form select:focus,
+    .car-add-page #car_form textarea:focus {
+        border-color: transparent;
+        border-bottom-color: var(--champagne-light);
+        box-shadow: 0 2px 0 0 rgba(201, 164, 106, 0.30);
+        outline: none;
+    }
+
+    .car-add-page #id_vin {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        letter-spacing: 0.08em;
+        color: var(--text-main);
+        font-weight: 600;
+    }
+
+    .car-add-page .help,
+    .car-add-page .helptext {
+        color: var(--text-soft);
+        opacity: 0.86;
+        font-size: 0.88rem;
+    }
+
+    .car-add-page .car-elegant-select {
+        position: relative;
+    }
+
+    .car-add-page .car-elegant-select-panel {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(100% + 8px);
+        z-index: 50;
+        max-height: 220px;
+        overflow-y: auto;
+        border-radius: 12px;
+        border: 1px solid rgba(201, 164, 106, 0.42);
+        background: rgba(15, 20, 28, 0.98);
+        box-shadow: 0 16px 26px rgba(0, 0, 0, 0.38);
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .car-add-page .car-elegant-select-panel.is-open {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .car-add-page .car-elegant-option,
+    .car-add-page .car-elegant-empty {
+        display: block;
+        width: 100%;
+        border: 0;
+        text-align: right;
+        background: transparent;
+        color: var(--text-main);
+        padding: 0.6rem 0.75rem;
+        font-size: 0.95rem;
+    }
+
+    .car-add-page .car-elegant-option:hover {
+        background: rgba(201, 164, 106, 0.20);
+        color: var(--champagne-light);
+    }
+
+    .car-add-page .car-elegant-empty {
+        color: var(--text-soft);
+        opacity: 0.75;
+    }
+
+    .car-add-page .car-price-currency-row .form-multiline {
+        display: grid !important;
+        grid-template-columns: 120px minmax(0, 1fr);
+        gap: 0;
+        align-items: end;
+    }
+
+    .car-add-page .car-price-currency-row .fieldBox.field-cost_currency,
+    .car-add-page .car-price-currency-row .fieldBox.field-currency {
+        grid-column: 1;
+    }
+
+    .car-add-page .car-price-currency-row .fieldBox.field-cost_price,
+    .car-add-page .car-price-currency-row .fieldBox.field-selling_price {
+        grid-column: 2;
+    }
+
+    .car-add-page .car-price-currency-row .form-multiline > div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .car-add-page .car-price-currency-row .fieldBox.field-cost_currency select,
+    .car-add-page .car-price-currency-row .fieldBox.field-currency select {
+        min-height: 42px;
+        border: 1px solid rgba(201, 164, 106, 0.38);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.09);
+        padding: 0.45rem 0.5rem;
+    }
+
+    .car-add-page .car-price-currency-row .fieldBox.field-cost_price input,
+    .car-add-page .car-price-currency-row .fieldBox.field-selling_price input {
+        border-bottom: 1px solid rgba(201, 164, 106, 0.52);
+    }
+
+    .car-add-page .car-upload-dropzone {
+        position: relative;
+        min-height: 142px;
+        border: 1px dashed rgba(201, 164, 106, 0.52);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.4rem;
+        text-align: center;
+    }
+
+    .car-add-page .car-upload-dropzone.is-dragover {
+        border-color: var(--champagne-light);
+        background: rgba(201, 164, 106, 0.12);
+    }
+
+    .car-add-page .car-upload-dropzone .drop-icon {
+        font-size: 1.45rem;
+        color: var(--champagne);
+    }
+
+    .car-add-page .car-upload-dropzone .drop-label {
+        font-size: 0.95rem;
+        color: var(--text-main);
+        font-weight: 700;
+    }
+
+    .car-add-page .car-upload-dropzone .drop-hint {
+        color: var(--text-soft);
+        font-size: 0.84rem;
+    }
+
+    .car-add-page .car-upload-dropzone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .car-add-page .car-upload-thumb {
+        width: 132px;
+        height: 94px;
+        margin-top: 0.35rem;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 1px solid rgba(201, 164, 106, 0.36);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.30);
+    }
+
+    .car-add-page .submit-row {
+        margin-top: 1.4rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(201, 164, 106, 0.32);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+    }
+
+    .car-add-page .submit-row input[name="_save"] {
+        order: 1;
+        width: 100%;
+        min-height: 52px;
+        border: 0;
+        border-radius: 14px;
+        background: linear-gradient(45deg, var(--champagne-dark), var(--champagne-light));
+        color: var(--charcoal);
+        font-family: 'Cairo', 'Segoe UI', sans-serif;
+        font-size: 1.02rem;
+        font-weight: 800;
+    }
+
+    .car-add-page .submit-row input[name="_save"]:hover {
+        filter: brightness(1.03);
+    }
+
+    .car-add-page .submit-row input:not([name="_save"]) {
+        order: 2;
+        border-radius: 10px;
+        border: 1px solid rgba(201, 164, 106, 0.38);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text-soft);
+    }
+
+    @media (max-width: 991.98px) {
+        .car-add-page #content-main {
+            padding: 1.1rem;
+            border-radius: 16px;
+        }
+
+        .car-add-page .car-add-columns {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .car-add-page .car-price-currency-row .form-multiline {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 0.7rem;
+        }
+
+        .car-add-page .car-price-currency-row .fieldBox.field-cost_currency,
+        .car-add-page .car-price-currency-row .fieldBox.field-currency {
+            border-right: 0;
+            padding-right: 0;
+            margin-right: 0;
+        }
+    }
+</style>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if add %}
+<div class="car-add-page">
+    <div class="car-add-back-row">
+        <a href="{% url opts|admin_urlname:'changelist' %}" class="car-add-back-link">
+            <i class="bi bi-arrow-right-short" aria-hidden="true"></i>
+            <span>الرجوع لقائمة السيارات</span>
+        </a>
+    </div>
+    {{ block.super }}
+</div>
+{% else %}
+    {{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block field_sets %}
+{% if add %}
+<div class="car-add-columns">
+    {% for fieldset in adminform %}
+        {% if forloop.counter0 < 2 %}
+            {% include "admin/includes/fieldset.html" with heading_level=2 prefix="fieldset" id_prefix=0 id_suffix=forloop.counter0 %}
+        {% endif %}
+    {% endfor %}
+</div>
+{% for fieldset in adminform %}
+    {% if forloop.counter0 >= 2 %}
+        {% include "admin/includes/fieldset.html" with heading_level=2 prefix="fieldset" id_prefix=0 id_suffix=forloop.counter0 %}
+    {% endif %}
+{% endfor %}
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+{% if add %}
+<script src="{% static 'sales/js/car_add_admin_enhancements.js' %}"></script>
+{% endif %}
+{% endblock %}

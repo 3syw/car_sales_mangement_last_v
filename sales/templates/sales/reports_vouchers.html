@@ -1,0 +1,63 @@
+{% extends 'sales/base.html' %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1">تحرير السندات</h3>
+                <p class="lux-subtitle">اختر نوع السند المطلوب لإدارة الحركات المالية اليومية بدقة.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'reports' %}" class="lux-outline-btn">عودة</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <a href="{% url 'receipt_voucher' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                        <h5 class="lux-label mb-2">سند قبض</h5>
+                        <small class="lux-muted d-block mb-3">تسجيل تحصيل نقدي أو بنكي داخل النظام.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <a href="{% url 'payment_voucher' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-file-export"></i></span>
+                        <h5 class="lux-label mb-2">سند دفع</h5>
+                        <small class="lux-muted d-block mb-3">تسجيل المدفوعات والالتزامات الخارجة من الصندوق.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <a href="{% url 'operating_expenses_voucher' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-file-alt"></i></span>
+                        <h5 class="lux-label mb-2">مصروفات تشغيلية</h5>
+                        <small class="lux-muted d-block mb-3">تسجيل المصروفات الجارية وربطها بالتقارير المالية.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

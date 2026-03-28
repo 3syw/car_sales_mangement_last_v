@@ -1,0 +1,266 @@
+{% extends 'sales/base.html' %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <h2 class="lux-title h3">التقارير</h2>
+        <p class="lux-subtitle">اختر المسار المناسب للوصول إلى التحليلات المالية أو السندات أو السجل الكامل للحركات.</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'reports_financial' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-chart-line"></i></span>
+                        <h5 class="lux-label mb-2">التقارير</h5>
+                        <small class="lux-muted d-block mb-3">عرض الملخص المالي والتفاصيل الكاملة للربحية والمصاريف</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'reports_vouchers' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-file-signature"></i></span>
+                        <h5 class="lux-label mb-2">تحرير سند</h5>
+                        <small class="lux-muted d-block mb-3">الانتقال إلى شاشة سندات القبض والدفع والمستحقات</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'vouchers_list' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-receipt"></i></span>
+                        <h5 class="lux-label mb-2">عرض السندات</h5>
+                        <small class="lux-muted d-block mb-3">عرض كل السندات المحفوظة مع إمكانية التصفية حسب النوع</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'daily_closing' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-lock"></i></span>
+                        <h5 class="lux-label mb-2">إغلاق اليومية</h5>
+                        <small class="lux-muted d-block mb-3">إغلاق فترة اليوم لمنع تعديل القيود السابقة وحماية الانضباط المالي.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'debt_aging_report' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-hourglass-half"></i></span>
+                        <h5 class="lux-label mb-2">تقادم الديون</h5>
+                        <small class="lux-muted d-block mb-3">تحليل مديونيات العملاء حسب عمر الدين لتحديد الحالات الأكثر خطورة.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'car_profit_report' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-car-side"></i></span>
+                        <h5 class="lux-label mb-2">أرباح السيارات</h5>
+                        <small class="lux-muted d-block mb-3">عرض سعر الشراء والتكلفة الكلية وسعر البيع والربح الفعلي لكل سيارة.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'showroom_performance_report' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-chart-bar"></i></span>
+                        <h5 class="lux-label mb-2">أداء المعرض</h5>
+                        <small class="lux-muted d-block mb-3">متابعة إجمالي المبيعات وعدد السيارات المباعة ومتوسط الربح ومتوسط مدة التخزين.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'inventory_turnover_report' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-sync-alt"></i></span>
+                        <h5 class="lux-label mb-2">دوران المخزون</h5>
+                        <small class="lux-muted d-block mb-3">قياس سرعة خروج السيارات من المخزون مقارنة بالسيارات المتاحة حالياً.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'stale_cars_report' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-clock"></i></span>
+                        <h5 class="lux-label mb-2">السيارات الراكدة</h5>
+                        <small class="lux-muted d-block mb-3">عرض السيارات غير المباعة ضمن شرائح 30 و60 و90 يوم لمتابعة الركود.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        {% if user.is_superuser %}
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'audit_logs_report' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-user-shield"></i></span>
+                        <h5 class="lux-label mb-2">سجل التدقيق</h5>
+                        <small class="lux-muted d-block mb-3">مراجعة حركات التعديل والإضافة والحذف مع فلترة متقدمة حسب المستخدم والنموذج.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'central_audit_monitor' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-shield-alt"></i></span>
+                        <h5 class="lux-label mb-2">الرقابة المركزية</h5>
+                        <small class="lux-muted d-block mb-3">لوحة تشغيل موحدة لمؤشرات العزل، التوازن المالي، وسجل الأخطاء التقني.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'general_expenses_management' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                        <h5 class="lux-label mb-2">المصروفات العامة</h5>
+                        <small class="lux-muted d-block mb-3">إدارة مصروفات المعرض التشغيلية وربطها مباشرة بقائمة الدخل.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'cash_flow_projection' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-water"></i></span>
+                        <h5 class="lux-label mb-2">التدفق النقدي المتوقع</h5>
+                        <small class="lux-muted d-block mb-3">توقع التحصيلات القادمة حسب تواريخ استحقاق مديونيات العملاء.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'bank_reconciliation' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-university"></i></span>
+                        <h5 class="lux-label mb-2">مطابقة كشف البنك</h5>
+                        <small class="lux-muted d-block mb-3">مقارنة كشف الحساب البنكي مع السندات المسجلة واكتشاف الفروقات.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'financial_consistency_checker' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-balance-scale"></i></span>
+                        <h5 class="lux-label mb-2">فحص التوازن المالي</h5>
+                        <small class="lux-muted d-block mb-3">كشف السجلات اليتيمة والتعارضات المحاسبية بين المبيعات والسندات والديون.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'chart_of_accounts' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-sitemap"></i></span>
+                        <h5 class="lux-label mb-2">شجرة الحسابات</h5>
+                        <small class="lux-muted d-block mb-3">إدارة الحسابات المحاسبية الديناميكية وتفرعاتها لكل معرض.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'trial_balance_report' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-balance-scale-right"></i></span>
+                        <h5 class="lux-label mb-2">ميزان المراجعة</h5>
+                        <small class="lux-muted d-block mb-3">عرض أرصدة المدين/الدائن حسب الحساب حتى أي تاريخ.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'financial_containers' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-wallet"></i></span>
+                        <h5 class="lux-label mb-2">الصناديق والبنوك</h5>
+                        <small class="lux-muted d-block mb-3">تعريف وإدارة الأوعية المالية وربط كل وعاء بحساب محاسبي.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-7 col-lg-4">
+            <a href="{% url 'fiscal_period_closing' %}" class="text-decoration-none h-100 d-block">
+                <div class="card p-4 h-100 text-center">
+                    <div class="card-body d-flex flex-column">
+                        <span class="lux-icon"><i class="fas fa-lock"></i></span>
+                        <h5 class="lux-label mb-2">الإغلاق الشهري</h5>
+                        <small class="lux-muted d-block mb-3">إغلاق الفترات الشهرية مع مسار طلب فك إغلاق موثق ومراجع.</small>
+                        <span class="lux-outline-btn mt-auto">الذهاب</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

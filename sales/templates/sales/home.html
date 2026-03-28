@@ -1,0 +1,444 @@
+{% extends 'sales/base.html' %}
+
+{% block navbar %}{{ block.super }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .home-lux {
+        position: relative;
+        z-index: 1;
+        padding-top: 0.8rem;
+        padding-bottom: 1.6rem;
+    }
+
+    .home-lux .home-hero-panel {
+        border-radius: 24px;
+        padding: clamp(1.2rem, 2vw, 2rem);
+        border: 1px solid rgba(201, 164, 106, 0.34);
+        background: linear-gradient(155deg, rgba(62, 43, 33, 0.42), rgba(21, 16, 12, 0.35));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.30);
+    }
+
+    .home-lux .home-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        color: var(--champagne-light);
+        font-weight: 800;
+        letter-spacing: 0.35px;
+        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.25);
+        margin-bottom: 0.8rem;
+    }
+
+    .home-lux .home-subtitle {
+        color: #f2eee8;
+        font-size: 14px;
+        line-height: 1.95;
+        margin-bottom: 0;
+        max-width: 700px;
+    }
+
+    .home-lux .home-kpi-board {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 1.25rem;
+    }
+
+    .home-lux .home-kpi-item {
+        border-radius: 14px;
+        border: 1px solid rgba(201, 164, 106, 0.22);
+        background: rgba(255, 255, 255, 0.04);
+        padding: 0.65rem 0.75rem;
+        text-align: center;
+    }
+
+    .home-lux .home-kpi-value {
+        font-size: 1.05rem;
+        color: #f4efe5;
+        font-weight: 800;
+        text-shadow: 0 0 14px rgba(255, 255, 255, 0.14);
+    }
+
+    .home-lux .home-kpi-label {
+        display: block;
+        margin-top: 0.15rem;
+        font-size: 0.78rem;
+        color: #e8decb;
+        opacity: 0.9;
+    }
+
+    .home-lux .home-nav-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        height: 100%;
+    }
+
+    .home-lux .home-nav-card,
+    .home-lux .home-info-card {
+        position: relative;
+        height: 100%;
+        border-radius: 20px;
+        border: 1px solid rgba(201, 164, 106, 0.27);
+        background: linear-gradient(165deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.30));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+        padding: 1.2rem;
+        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .home-lux .home-nav-card:hover,
+    .home-lux .home-info-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(201, 164, 106, 0.62);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.34), 0 0 18px rgba(201, 164, 106, 0.22);
+    }
+
+    .home-lux .home-card-stat {
+        display: inline-block;
+        margin-bottom: 0.85rem;
+        font-size: 1.35rem;
+        font-weight: 800;
+        line-height: 1;
+        color: #f6f2ea;
+        text-shadow: 0 0 14px rgba(255, 255, 255, 0.16);
+    }
+
+    .home-lux .home-card-icon {
+        position: relative;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--champagne-light);
+        font-size: 1.4rem;
+        margin-bottom: 0.65rem;
+        border: 1px solid rgba(201, 164, 106, 0.42);
+        background: rgba(201, 164, 106, 0.08);
+    }
+
+    .home-lux .home-card-icon::before {
+        content: '';
+        position: absolute;
+        inset: 10px;
+        border-radius: 50%;
+        background: rgba(201, 164, 106, 0.24);
+        filter: blur(10px);
+        z-index: -1;
+    }
+
+    .home-lux .home-nav-card h3,
+    .home-lux .home-info-card h3 {
+        color: var(--champagne-light);
+        font-size: 1.03rem;
+        font-weight: 700;
+        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.22);
+        margin: 0 0 0.35rem;
+    }
+
+    .home-lux .home-nav-card p,
+    .home-lux .home-info-card p {
+        color: #f2eee8;
+        font-size: 14px;
+        line-height: 1.9;
+        margin-bottom: 0.85rem;
+        opacity: 0.95;
+    }
+
+    .home-lux .home-link-btn {
+        margin-top: auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        border-radius: 999px;
+        border: 1px solid rgba(201, 164, 106, 0.58);
+        color: var(--champagne-light);
+        background: transparent;
+        font-size: 0.84rem;
+        font-weight: 700;
+        padding: 0.38rem 0.92rem;
+        transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    }
+
+    .home-lux .home-nav-card:hover .home-link-btn,
+    .home-lux .home-link-btn:hover {
+        border-color: transparent;
+        background: linear-gradient(45deg, var(--champagne-dark), var(--champagne-light));
+        color: #322317;
+    }
+
+    .home-lux .home-section-title {
+        color: var(--champagne-light);
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.20);
+        margin-bottom: 0.9rem;
+    }
+
+    body.home-lux-active .navbar {
+        background: rgba(15, 20, 28, 0.08) !important;
+        border-bottom: 1px solid rgba(201, 164, 106, 0.18) !important;
+        box-shadow: none !important;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+
+    body.home-lux-active.nav-scrolled .navbar {
+        background: rgba(16, 22, 31, 0.68) !important;
+        border-bottom: 1px solid rgba(201, 164, 106, 0.42) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.33) !important;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    body.home-lux-active .navbar .nav-link.active {
+        color: var(--champagne) !important;
+        text-shadow: 0 0 10px rgba(201, 164, 106, 0.38);
+    }
+
+    body.home-lux-active .navbar .nav-icon-circle:hover {
+        box-shadow: 0 0 16px rgba(201, 164, 106, 0.46), inset 0 0 8px rgba(201, 164, 106, 0.18);
+    }
+
+    @media (max-width: 991.98px) {
+        .home-lux .home-hero-panel {
+            padding: 1rem;
+        }
+
+        .home-lux .home-title {
+            font-size: 2rem;
+        }
+
+        .home-lux .home-kpi-board {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="home-lux">
+    <div class="home-hero-panel mt-4 mb-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <h1 class="home-title">نظام المحاسب الآلي</h1>
+                <p class="home-subtitle">
+                    الحل الذكي والمتكامل لإدارة وتتبع مبيعات معرض السيارات، مع طبقات عرض زجاجية واضحة،
+                    وواجهة عملية مريحة لفرق العمل اليومية.
+                </p>
+            </div>
+            <div class="col-lg-4">
+                <div class="home-kpi-board">
+                    <div class="home-kpi-item">
+                        <span class="home-kpi-value">{{ home_stats.available_cars }}</span>
+                        <span class="home-kpi-label">سيارات متاحة</span>
+                    </div>
+                    <div class="home-kpi-item">
+                        <span class="home-kpi-value">{{ home_stats.sold_cars }}</span>
+                        <span class="home-kpi-label">سيارات مباعة</span>
+                    </div>
+                    <div class="home-kpi-item">
+                        <span class="home-kpi-value">{{ home_stats.pending_debts }}</span>
+                        <span class="home-kpi-label">ملفات ديون</span>
+                    </div>
+                    <div class="home-kpi-item">
+                        <span class="home-kpi-value">{{ home_stats.operations }}</span>
+                        <span class="home-kpi-label">عمليات مسجلة</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="home-section-title mt-4">أقسام النظام</h2>
+    <div class="row g-4 mb-5">
+        {% if user.is_authenticated %}
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'dashboard' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                    <h3>لوحة التحكم</h3>
+                    <p>إحصائيات مباشرة لحركة المعرض ومؤشرات أداء سريعة.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'car_list' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-stat">{{ home_stats.available_cars }}</span>
+                    <span class="home-card-icon"><i class="bi bi-car-front"></i></span>
+                    <h3>تصفح المعرض</h3>
+                    <p>متابعة السيارات الحالية وإدارة الإضافة والتعديل بسرعة.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'reports' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-icon"><i class="bi bi-bar-chart"></i></span>
+                    <h3>التقارير المالية</h3>
+                    <p>رؤية أوضح للأرباح والتكاليف واتجاهات الأداء المالي.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'debts_list' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-stat">{{ home_stats.pending_debts }}</span>
+                    <span class="home-card-icon"><i class="bi bi-wallet2"></i></span>
+                    <h3>إدارة الديون</h3>
+                    <p>تتبع ملفات المديونية وحالة السداد بشكل منظم.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+
+        {% if user.is_staff %}
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'admin:index' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-icon"><i class="bi bi-gear"></i></span>
+                    <h3>الإدارة الشاملة</h3>
+                    <p>إدارة المستخدمين وإعدادات النظام من لوحة الأدمن.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'timeline' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-stat">{{ home_stats.operations }}</span>
+                    <span class="home-card-icon"><i class="bi bi-clock-history"></i></span>
+                    <h3>الجدول الزمني</h3>
+                    <p>سجل زمني لجميع العمليات والأنشطة داخل النظام.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+
+        {% if request.session.platform_owner_authenticated %}
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'platform_switch_tenant' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-icon"><i class="bi bi-diagram-3"></i></span>
+                    <h3>خيارات أدمن المنصة</h3>
+                    <p>الانتقال بين المعارض وإدارة الوصول الفني بسرعة.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+        {% endif %}
+
+        {% if user.is_superuser %}
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'permissions_management' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-icon"><i class="bi bi-shield-lock"></i></span>
+                    <h3>إدارة الصلاحيات</h3>
+                    <p>التحكم بصلاحيات الحسابات وحدود الوصول للواجهات.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'logout' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-icon"><i class="bi bi-box-arrow-right"></i></span>
+                    <h3>تسجيل الخروج</h3>
+                    <p>إنهاء الجلسة الحالية والخروج الآمن من الحساب.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+        {% else %}
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'login' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-icon"><i class="bi bi-box-arrow-in-right"></i></span>
+                    <h3>تسجيل الدخول</h3>
+                    <p>الدخول إلى بيئة المعرض باستخدام معرف المعرض وبيانات الحساب.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-lg-4">
+            <a href="{% url 'register' %}" class="home-nav-link">
+                <article class="home-nav-card d-flex flex-column">
+                    <span class="home-card-icon"><i class="bi bi-person-plus"></i></span>
+                    <h3>إنشاء معرض جديد</h3>
+                    <p>إنشاء بيئة مستقلة للمعرض مع حساب مدير رئيسي.</p>
+                    <span class="home-link-btn">الذهاب <i class="bi bi-arrow-left-short"></i></span>
+                </article>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <h2 class="home-section-title">نظرة سريعة</h2>
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <article class="home-info-card d-flex flex-column">
+                <span class="home-card-icon"><i class="bi bi-car-front"></i></span>
+                <h3>إدارة المعرض</h3>
+                <p>متابعة دقيقة لكل سيارة وحالتها الحالية داخل المخزون.</p>
+                <span class="home-link-btn">حالة المخزون</span>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <article class="home-info-card d-flex flex-column">
+                <span class="home-card-icon"><i class="bi bi-currency-dollar"></i></span>
+                <h3>تقارير مالية</h3>
+                <p>قراءة سريعة لاتجاهات البيع وصافي النتائج المالية.</p>
+                <span class="home-link-btn">ملخص مالي</span>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <article class="home-info-card d-flex flex-column">
+                <span class="home-card-icon"><i class="bi bi-cash-stack"></i></span>
+                <h3>نظام الديون</h3>
+                <p>إظهار عدد الملفات المفتوحة لضبط التحصيل والمتابعة.</p>
+                <span class="home-link-btn">حالة الديون</span>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.body.classList.add('home-lux-active');
+
+        const setNavState = function () {
+            if (window.scrollY > 16) {
+                document.body.classList.add('nav-scrolled');
+            } else {
+                document.body.classList.remove('nav-scrolled');
+            }
+        };
+
+        setNavState();
+        window.addEventListener('scroll', setNavState, { passive: true });
+
+        window.addEventListener('beforeunload', function () {
+            document.body.classList.remove('home-lux-active');
+            document.body.classList.remove('nav-scrolled');
+        });
+    });
+</script>
+{% endblock %}

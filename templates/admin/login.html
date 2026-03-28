@@ -1,0 +1,273 @@
+{% extends 'sales/base.html' %}
+{% load i18n static %}
+
+{% block title %}تسجيل الدخول | معرض السيارات الذكي{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    body {
+        padding-top: 0 !important;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    #particles-js {
+        background-image:
+            linear-gradient(rgba(8, 10, 14, 0.76), rgba(8, 10, 14, 0.76)),
+            url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80') !important;
+        background-size: cover !important;
+        background-position: center !important;
+        filter: saturate(1.08) brightness(0.88);
+    }
+
+    #particles-js::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 18% 12%, rgba(212, 175, 55, 0.16) 0%, transparent 40%),
+            radial-gradient(circle at 82% 86%, rgba(255, 255, 255, 0.12) 0%, transparent 38%),
+            linear-gradient(rgba(4, 5, 8, 0.32), rgba(4, 5, 8, 0.58));
+    }
+
+    #particles-js::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.2;
+        mix-blend-mode: screen;
+        background-image:
+            repeating-linear-gradient(34deg, rgba(212, 175, 55, 0.08) 0, rgba(212, 175, 55, 0.08) 1px, transparent 1px, transparent 66px),
+            repeating-linear-gradient(146deg, rgba(255, 255, 255, 0.07) 0, rgba(255, 255, 255, 0.07) 1px, transparent 1px, transparent 74px);
+    }
+
+    .page-back-row {
+        position: fixed;
+        top: 1.2rem;
+        inset-inline-end: 1.3rem;
+        margin: 0;
+        z-index: 30;
+    }
+
+    .page-back-row .btn {
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.42);
+        background: rgba(0, 0, 0, 0.25);
+        color: #f5f5f5;
+        padding: 0.45rem 0.95rem;
+        font-weight: 600;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .page-back-row .btn:hover {
+        color: #fff;
+        border-color: rgba(212, 175, 55, 0.75);
+        background: rgba(212, 175, 55, 0.22);
+    }
+
+    .admin-login-wrap {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem 0.9rem;
+    }
+
+    .admin-login-card {
+        width: 100%;
+        max-width: 470px;
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: linear-gradient(150deg, rgba(20, 20, 20, 0.62), rgba(10, 10, 10, 0.5));
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        box-shadow: 0 26px 56px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(212, 175, 55, 0.08);
+    }
+
+    .admin-login-card.card:hover {
+        transform: none;
+        border-color: rgba(255, 255, 255, 0.14);
+        box-shadow: 0 26px 56px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(212, 175, 55, 0.08) !important;
+    }
+
+    .admin-login-card .card-body {
+        padding: 2.6rem;
+    }
+
+    .admin-login-logo {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 0.9rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: #d4af37;
+        border: 1px solid rgba(212, 175, 55, 0.44);
+        background: rgba(212, 175, 55, 0.09);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.16);
+    }
+
+    .admin-login-title {
+        font-size: 1.9rem;
+        line-height: 1.2;
+        text-align: center;
+        font-weight: 700;
+        background: linear-gradient(180deg, #f6e7b3 0%, #d4af37 58%, #aa7f1f 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .admin-login-subtitle {
+        font-size: 0.9rem;
+        color: #ccc;
+        text-align: center;
+        margin-bottom: 1.45rem;
+    }
+
+    .admin-login-card form p {
+        margin-bottom: 0.95rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.38rem;
+        text-align: right;
+    }
+
+    .admin-login-card label {
+        margin-bottom: 0;
+        font-size: 13px;
+        line-height: 1.35;
+        text-align: right;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .admin-login-card input[type=text],
+    .admin-login-card input[type=password] {
+        width: 100%;
+        border-radius: 10px;
+        padding: 0.7rem 0.86rem;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        background: rgba(0, 0, 0, 0.3) !important;
+        color: #f4f4f4 !important;
+    }
+
+    .admin-login-card input[type=text]::placeholder,
+    .admin-login-card input[type=password]::placeholder {
+        color: rgba(145, 145, 145, 0.92);
+    }
+
+    .admin-login-card input[type=text]:focus,
+    .admin-login-card input[type=password]:focus {
+        border-color: #d4af37 !important;
+        box-shadow: 0 0 8px rgba(212, 175, 55, 0.3) !important;
+        background: rgba(0, 0, 0, 0.35) !important;
+    }
+
+    .admin-login-card .errorlist {
+        margin: 0 0 0.5rem;
+        padding: 0;
+        list-style: none;
+        font-size: 0.82rem;
+        color: #ffc6c6;
+        text-align: right;
+    }
+
+    .btn-login-gold {
+        width: 100%;
+        padding: 0.78rem;
+        border: 0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 800;
+        color: #1a1a1a;
+        background: #d4af37;
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.34);
+        transition: all 0.25s ease;
+    }
+
+    .btn-login-gold:hover {
+        transform: translateY(-1px);
+        background: #e0be56;
+        box-shadow: 0 0 18px rgba(212, 175, 55, 0.45);
+    }
+
+    .admin-login-card .btn-outline-secondary,
+    .admin-login-card .btn-outline-warning {
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        color: #ededed;
+        border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .admin-login-card .btn-outline-secondary:hover,
+    .admin-login-card .btn-outline-warning:hover {
+        color: #fff;
+        border-color: rgba(212, 175, 55, 0.72);
+        background: rgba(212, 175, 55, 0.2);
+    }
+
+    @media (max-width: 575.98px) {
+        .admin-login-wrap {
+            padding: 0.9rem 0.45rem;
+        }
+
+        .admin-login-card .card-body {
+            padding: 2.05rem 1.2rem;
+        }
+
+        .admin-login-title {
+            font-size: 1.55rem;
+        }
+
+        .page-back-row {
+            top: 0.8rem;
+            inset-inline-end: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-login-wrap">
+    <div class="admin-login-card card shadow-sm fade-in-up">
+        <div class="card-body text-center">
+            <div class="mb-2 admin-login-logo"><i class="bi bi-car-front"></i></div>
+            <h3 class="admin-login-title mb-1">بوابة الدخول</h3>
+            <p class="admin-login-subtitle">أدخل بيانات المعرض والحساب، ثم سيتم التحقق الإلزامي عبر Google لإكمال الدخول</p>
+
+            {% if not google_oauth_enabled %}
+                <div class="alert alert-danger py-2 small text-end">
+                    Google OAuth غير مفعّل في إعدادات النظام، لذلك لا يمكن إكمال تسجيل الدخول حاليًا.
+                </div>
+            {% endif %}
+
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {{ form.as_p }}
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}" />
+                {% endif %}
+                <button type="submit" class="btn-login-gold">متابعة التحقق عبر Google</button>
+            </form>
+
+            <div class="mt-3">
+                <a href="{% url 'register' %}" class="btn btn-outline-secondary w-100">إنشاء حساب جديد</a>
+            </div>
+
+            <div class="mt-2">
+                <a href="{% url 'platform_owner_login' %}" class="btn btn-outline-warning w-100">دخول أدمن المنصة</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

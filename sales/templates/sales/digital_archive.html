@@ -1,0 +1,85 @@
+{% extends 'sales/base.html' %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'sales/includes/lux_content_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="lux-page">
+    <div class="lux-shell mt-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <h3 class="lux-title h4 mb-1">الأرشيف الرقمي للسيارات</h3>
+                <p class="lux-subtitle">مرجع موحد لمستندات السيارات مع مراقبة تواريخ انتهاء التأمين والاستمارة.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'car_list' %}" class="lux-outline-btn">عودة للمعرض</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>السيارة</th>
+                            <th>VIN</th>
+                            <th>انتهاء التأمين</th>
+                            <th>انتهاء الاستمارة</th>
+                            <th>عدد المستندات</th>
+                            <th>الحالة</th>
+                            <th>تفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in archive_rows %}
+                        <tr>
+                            <td>{{ row.car.brand }} {{ row.car.model_name }}</td>
+                            <td class="text-uppercase">{{ row.car.vin }}</td>
+                            <td>
+                                {% if row.car.insurance_expiry %}
+                                    {{ row.car.insurance_expiry|date:'Y-m-d' }}
+                                    {% if row.insurance_days_left is not None %}
+                                        <small class="lux-muted d-block">متبقي {{ row.insurance_days_left }} يوم</small>
+                                    {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.car.registration_expiry %}
+                                    {{ row.car.registration_expiry|date:'Y-m-d' }}
+                                    {% if row.registration_days_left is not None %}
+                                        <small class="lux-muted d-block">متبقي {{ row.registration_days_left }} يوم</small>
+                                    {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ row.documents_count }}</td>
+                            <td>
+                                {% if row.expiring_soon %}
+                                    <span class="badge bg-warning">ينتهي خلال 30 يوم</span>
+                                {% else %}
+                                    <span class="badge bg-success">سليم</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'car_detail' row.car.id %}?tab=documents" class="lux-outline-btn lux-outline-btn-sm">عرض</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4">لا توجد سيارات لعرض الأرشيف الرقمي.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

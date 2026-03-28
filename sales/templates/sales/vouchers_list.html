@@ -1,0 +1,77 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="row mb-4 mt-3 align-items-center">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h3 class="fw-bold text-primary mb-0">عرض السندات</h3>
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                النوع: {{ selected_type_label }}
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'vouchers_list' %}?type=all">الكل</a></li>
+                <li><a class="dropdown-item" href="{% url 'vouchers_list' %}?type=payment">سند دفع</a></li>
+                <li><a class="dropdown-item" href="{% url 'vouchers_list' %}?type=receipt">سند قبض</a></li>
+                <li><a class="dropdown-item" href="{% url 'vouchers_list' %}?type=operating">مصروفات تشغيلية</a></li>
+                <li><a class="dropdown-item" href="{% url 'vouchers_list' %}?type=settlement">سند تسديد</a></li>
+                <li><a class="dropdown-item" href="{% url 'vouchers_list' %}?type=maintenance">قيد صيانة سيارات</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    {% for voucher in vouchers %}
+    <div class="col-12">
+        <div class="card shadow-sm p-3">
+            <div class="card-body py-2">
+                <div class="row align-items-center gy-2">
+                    <div class="col-md-3">
+                        <div class="fw-bold text-primary">{{ voucher.get_voucher_type_display }}</div>
+                        <small class="text-muted">{{ voucher.voucher_number }}</small>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="fw-bold">{{ voucher.person_name }}</div>
+                        <small class="text-muted">{{ voucher.voucher_date|date:"Y-m-d" }}</small>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="fw-bold">{{ voucher.amount|intcomma }} {{ voucher.currency }}</div>
+                        <small class="text-muted">المبلغ</small>
+                    </div>
+                    <div class="col-md-3">
+                        <div>{{ voucher.reason }}</div>
+                        {% if voucher.financial_container %}
+                        <small class="text-muted d-block">الوعاء: {{ voucher.financial_container.name }} ({{ voucher.financial_container.get_container_type_display }})</small>
+                        {% endif %}
+                        {% if voucher.linked_car %}
+                        <small class="text-muted d-block">مركز التكلفة: {{ voucher.linked_car.brand }} {{ voucher.linked_car.model_name }} ({{ voucher.linked_car.vin }})</small>
+                        {% endif %}
+                        {% if voucher.debit_account != 'none' or voucher.credit_account != 'none' %}
+                        <small class="text-muted d-block">مدين: {{ voucher.get_debit_account_display }}</small>
+                        <small class="text-muted d-block">دائن: {{ voucher.get_credit_account_display }}</small>
+                        {% endif %}
+                        {% if voucher.voucher_type == 'maintenance' and voucher.maintenance_record %}
+                        <small class="text-muted d-block">السيارة: {{ voucher.maintenance_record.car.brand }} {{ voucher.maintenance_record.car.model_name }} ({{ voucher.maintenance_record.car.vin }})</small>
+                        {% if voucher.maintenance_record.invoice_image %}
+                        <a href="{{ voucher.maintenance_record.invoice_image.url }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill mt-2">فاتورة الورشة</a>
+                        {% endif %}
+                        {% endif %}
+                        {% if voucher.supporting_document %}
+                        <a href="{{ voucher.supporting_document.url }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill mt-2">المستند المرفق</a>
+                        {% endif %}
+                        <small class="text-muted">البيان</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card p-3">
+            <div class="card-body text-center text-muted">لا توجد سندات محفوظة حالياً.</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
