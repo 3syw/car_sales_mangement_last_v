@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: car_sales_mangement_last_v
+    env: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT --workers 3
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: DJANGO_SETTINGS_MODULE
+        value: core.settings_production
