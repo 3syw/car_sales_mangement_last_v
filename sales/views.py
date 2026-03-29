@@ -2975,6 +2975,14 @@ def _build_maintenance_monthly_series(total_months=6):
 
 
 def _build_financial_report_context(query_params):
+    def _safe_list(queryset):
+        try:
+            return list(queryset)
+        except OperationalError:
+            # Keep reports endpoint available when production DB/table is behind
+            # model fields during rolling deployments.
+            return []
+
     period = query_params.get('period', 'custom')
     reference_date_str = query_params.get('reference_date')
     start_date = query_params.get('start_date')
@@ -3036,17 +3044,12 @@ def _build_financial_report_context(query_params):
         debt_payments = debt_payments.filter(payment_date__lte=end_date)
         vouchers = vouchers.filter(voucher_date__lte=end_date)
 
-    sales_list = list(sales)
-    expense_list = list(expenses)
-    general_expense_list = list(general_expenses)
-    maintenance_list = list(maintenance_records)
-    try:
-        debt_payment_list = list(debt_payments)
-    except OperationalError:
-        # Safety fallback for environments where tenant migrations are pending.
-        # This keeps reports page available instead of returning a 500.
-        debt_payment_list = []
-    voucher_list = list(vouchers)
+    sales_list = _safe_list(sales)
+    expense_list = _safe_list(expenses)
+    general_expense_list = _safe_list(general_expenses)
+    maintenance_list = _safe_list(maintenance_records)
+    debt_payment_list = _safe_list(debt_payments)
+    voucher_list = _safe_list(vouchers)
 
     sold_car_ids = [sale.car_id for sale in sales_list]
     sold_maintenance_totals = {
