@@ -42,6 +42,7 @@ Critical variables:
 - `DJANGO_SECRET_KEY`
 - `DJANGO_ALLOWED_HOSTS`
 - database variables (`DJANGO_DB_*`)
+- `DJANGO_CACHE_URL` (use Redis in production to make security throttles consistent across workers)
 
 ## 3) Validate deploy security checks
 

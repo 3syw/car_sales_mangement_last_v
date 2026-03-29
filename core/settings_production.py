@@ -142,6 +142,22 @@ CHANNEL_LAYERS = {
 
 WEBSOCKET_ALLOWED_ORIGINS = _env_list('DJANGO_WEBSOCKET_ALLOWED_ORIGINS', default=CSRF_TRUSTED_ORIGINS)
 
+DJANGO_CACHE_URL = _env('DJANGO_CACHE_URL', default='locmem://default')
+if DJANGO_CACHE_URL.startswith('redis://') or DJANGO_CACHE_URL.startswith('rediss://'):
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': DJANGO_CACHE_URL,
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'car-sales-production-cache',
+        }
+    }
+
 SIMPLE_JWT.update({
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=_env_int('JWT_ACCESS_TOKEN_MINUTES', 15)),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=_env_int('JWT_REFRESH_TOKEN_DAYS', 7)),
@@ -162,6 +178,8 @@ REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'].update({
 
 SECURITY_EXPORT_WINDOW_SECONDS = _env_int('SECURITY_EXPORT_WINDOW_SECONDS', 600)
 SECURITY_EXPORT_ALERT_THRESHOLD = _env_int('SECURITY_EXPORT_ALERT_THRESHOLD', 5)
+SECURITY_PLATFORM_LOGIN_WINDOW_SECONDS = _env_int('SECURITY_PLATFORM_LOGIN_WINDOW_SECONDS', 900)
+SECURITY_PLATFORM_LOGIN_MAX_ATTEMPTS = _env_int('SECURITY_PLATFORM_LOGIN_MAX_ATTEMPTS', 5)
 
 GOOGLE_OAUTH_CLIENT_ID = _env('GOOGLE_OAUTH_CLIENT_ID', default='').strip()
 GOOGLE_OAUTH_CLIENT_SECRET = _env('GOOGLE_OAUTH_CLIENT_SECRET', default='').strip()
