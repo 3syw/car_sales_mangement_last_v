@@ -206,17 +206,163 @@
         box-shadow: 0 0 16px rgba(201, 164, 106, 0.46), inset 0 0 8px rgba(201, 164, 106, 0.18);
     }
 
-    @media (max-width: 991.98px) {
+    @media (max-width: 767.98px) {
+        .home-lux {
+            margin-inline: clamp(15px, 4.8vw, 20px);
+        }
+
         .home-lux .home-hero-panel {
-            padding: 1rem;
+            padding: 25px;
         }
 
         .home-lux .home-title {
             font-size: 2rem;
         }
 
+        .home-lux .home-subtitle {
+            color: rgba(224, 224, 224, 0.82);
+        }
+
         .home-lux .home-kpi-board {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        .home-lux .home-kpi-item {
+            padding: 0.95rem 0.75rem;
+            min-height: 92px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .home-lux .home-kpi-value {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--champagne-light);
+            text-shadow: 0 1px 2px rgba(201, 164, 106, 0.35);
+        }
+
+        .home-lux .home-kpi-label {
+            margin-top: 0.28rem;
+        }
+
+        .home-lux .home-section-title {
+            margin-inline: 0;
+            padding-inline: 0.75rem;
+        }
+
+        body.home-lux-active .navbar .container {
+            padding-inline: clamp(15px, 4.8vw, 20px);
+        }
+
+        body.home-lux-active .navbar-toggler {
+            margin-inline: 0;
+        }
+    }
+
+    @media (max-width: 412px) {
+        .home-lux {
+            margin-inline: 17px;
+        }
+
+        .home-lux .home-hero-panel {
+            padding: 24px;
+        }
+
+        .home-lux .home-title {
+            font-size: 1.95rem;
+            line-height: 1.4;
+        }
+
+        .home-lux .home-subtitle {
+            font-size: 13.5px;
+            line-height: 1.9;
+        }
+
+        .home-lux .home-kpi-board {
+            gap: 14px;
+        }
+
+        .home-lux .home-kpi-item {
+            min-height: 90px;
+            padding: 0.92rem 0.72rem;
+        }
+
+        .home-lux .home-kpi-value {
+            font-size: 1.3rem;
+        }
+
+        body.home-lux-active .navbar .container {
+            padding-inline: 17px;
+        }
+    }
+
+    @media (max-width: 389.98px) {
+        .home-lux {
+            margin-inline: 15px;
+        }
+
+        .home-lux .home-hero-panel {
+            padding: 22px;
+        }
+
+        .home-lux .home-title {
+            font-size: 1.85rem;
+            line-height: 1.35;
+        }
+
+        .home-lux .home-kpi-board {
+            gap: 12px;
+        }
+
+        .home-lux .home-kpi-item {
+            min-height: 86px;
+            padding: 0.85rem 0.65rem;
+        }
+
+        .home-lux .home-kpi-value {
+            font-size: 1.25rem;
+        }
+
+        body.home-lux-active .navbar .container {
+            padding-inline: 15px;
+        }
+    }
+
+    @media (max-width: 359.98px) {
+        .home-lux {
+            margin-inline: 14px;
+        }
+
+        .home-lux .home-hero-panel {
+            padding: 20px;
+        }
+
+        .home-lux .home-title {
+            font-size: 1.72rem;
+        }
+
+        .home-lux .home-kpi-board {
+            gap: 10px;
+        }
+
+        .home-lux .home-kpi-item {
+            min-height: 82px;
+            padding: 0.8rem 0.6rem;
+        }
+
+        .home-lux .home-kpi-value {
+            font-size: 1.16rem;
+        }
+
+        .home-lux .home-kpi-label {
+            font-size: 0.74rem;
+        }
+
+        body.home-lux-active .navbar .container {
+            padding-inline: 14px;
         }
     }
 </style>
