@@ -23,14 +23,17 @@ git pull
 echo "[2/6] Installing dependencies"
 pip install -r requirements.txt
 
-echo "[3/6] Running migrations"
+echo "[3/7] Running default DB migrations"
 python manage.py migrate --settings=core.settings_production
 
-echo "[4/6] Collecting static files"
+echo "[4/7] Running tenant DB migrations"
+python manage.py migrate_all_tenants --settings=core.settings_production
+
+echo "[5/7] Collecting static files"
 python manage.py collectstatic --noinput --settings=core.settings_production
 
-echo "[5/6] Running deploy checks"
+echo "[6/7] Running deploy checks"
 python manage.py check --deploy --settings=core.settings_production
 
-echo "[6/6] Deployment tasks completed"
+echo "[7/7] Deployment tasks completed"
 echo "Restart app services now (gunicorn/celery/nginx) according to your host setup."
