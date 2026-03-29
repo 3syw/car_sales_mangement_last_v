@@ -207,6 +207,24 @@
     }
 
     @media (max-width: 991.98px) {
+        body.home-lux-active .navbar {
+            background: transparent !important;
+            border-bottom: 0 !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            padding-top: 0.55rem !important;
+            padding-bottom: 0.2rem !important;
+        }
+
+        body.home-lux-active .navbar::before {
+            display: none;
+        }
+
+        body.home-lux-active .navbar .navbar-brand {
+            display: none !important;
+        }
+
         body.home-lux-active > .container {
             width: 100%;
             padding-inline: 0 !important;
@@ -217,54 +235,100 @@
         }
 
         .home-lux .home-hero-panel {
-            padding: 25px;
+            padding: 27px;
+            border-radius: 28px;
+            border-color: rgba(201, 164, 106, 0.38);
+            background: linear-gradient(160deg, rgba(68, 48, 36, 0.54), rgba(18, 13, 10, 0.56));
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .home-lux .home-title {
-            font-size: 2rem;
+            font-size: clamp(2rem, 6.4vw, 2.45rem);
+            line-height: 1.35;
+            margin-bottom: 1rem;
         }
 
         .home-lux .home-subtitle {
             color: rgba(224, 224, 224, 0.82);
+            font-size: 15px;
+            line-height: 1.92;
+            max-width: 100%;
         }
 
         .home-lux .home-kpi-board {
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 15px;
-            margin-top: 1rem;
+            gap: 16px;
+            margin-top: 1.2rem;
         }
 
         .home-lux .home-kpi-item {
-            padding: 0.95rem 0.75rem;
-            min-height: 92px;
+            padding: 1rem 0.78rem;
+            min-height: 98px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            border-radius: 18px;
+            border-color: rgba(201, 164, 106, 0.3);
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 18px rgba(0, 0, 0, 0.2);
         }
 
         .home-lux .home-kpi-value {
-            font-size: 1.35rem;
-            font-weight: 800;
+            font-size: 1.5rem;
+            font-weight: 900;
             color: var(--champagne-light);
-            text-shadow: 0 1px 2px rgba(201, 164, 106, 0.35);
+            text-shadow: 0 3px 16px rgba(201, 164, 106, 0.42);
         }
 
         .home-lux .home-kpi-label {
-            margin-top: 0.28rem;
+            margin-top: 0.32rem;
+            font-size: 0.84rem;
+            opacity: 0.95;
         }
 
         .home-lux .home-section-title {
             margin-inline: 0;
-            padding-inline: 0.75rem;
+            padding-inline: 0.85rem;
+            margin-bottom: 1.1rem;
+            letter-spacing: 0.2px;
+        }
+
+        .home-lux .home-nav-card,
+        .home-lux .home-info-card {
+            border-radius: 22px;
+            padding: 1.35rem;
+        }
+
+        .home-lux .row.g-4 {
+            --bs-gutter-y: 1.1rem;
         }
 
         body.home-lux-active .navbar .container {
             width: 100%;
             padding-inline: clamp(15px, 4.8vw, 20px) !important;
+            align-items: center;
         }
 
         body.home-lux-active .navbar-toggler {
             margin-inline: 0;
+            min-width: 56px;
+            height: 54px;
+            border-radius: 16px;
+            border-color: rgba(201, 164, 106, 0.58) !important;
+            background: linear-gradient(145deg, rgba(34, 27, 22, 0.74), rgba(19, 14, 11, 0.6));
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        }
+
+        body.home-lux-active .navbar-toggler-icon {
+            width: 1.45em;
+            height: 1.45em;
+            filter: brightness(1.28);
+        }
+
+        body.home-lux-active #mainNavbar {
+            margin-top: 0.7rem;
+            border-color: rgba(201, 164, 106, 0.3);
+            background: rgba(9, 13, 20, 0.88);
         }
     }
 
