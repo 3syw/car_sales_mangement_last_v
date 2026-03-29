@@ -688,24 +688,32 @@
         }
 
         [data-theme="light"] {
-            --charcoal: #F6F0E7;
-            --charcoal-soft: #EFE5D8;
-            --charcoal-muted: #E5D6C1;
-            --surface-glass: rgba(255, 255, 255, 0.68);
-            --surface-glass-strong: rgba(255, 255, 255, 0.84);
-            --text-main: #2A1C12;
-            --text-soft: #6F5A45;
+            --charcoal: #F8F3EA;
+            --charcoal-soft: #F3EBDD;
+            --charcoal-muted: #EBDDC9;
+            --surface-glass: rgba(255, 255, 255, 0.78);
+            --surface-glass-strong: rgba(255, 255, 255, 0.92);
+            --text-main: #2C1B10;
+            --text-soft: #6D5741;
             --champagne: #A46E2A;
             --champagne-light: #C0893F;
             --champagne-dark: #7A4F1E;
         }
 
+        [data-theme="light"] body {
+            background:
+                radial-gradient(circle at 18% 12%, rgba(164, 110, 42, 0.12) 0%, transparent 38%),
+                radial-gradient(circle at 86% 86%, rgba(122, 79, 30, 0.06) 0%, transparent 32%),
+                linear-gradient(180deg, #FAF6EF 0%, #F5ECDD 52%, #EFE1CC 100%) !important;
+            color: var(--text-main);
+        }
+
         [data-theme="light"] .navbar,
         [data-theme="light"] .bg-dark,
         [data-theme="light"] .bg-primary {
-            background: rgba(255, 251, 244, 0.9) !important;
+            background: rgba(255, 252, 246, 0.94) !important;
             border-bottom: 1px solid rgba(122, 79, 30, 0.24);
-            box-shadow: 0 8px 24px rgba(67, 45, 19, 0.14);
+            box-shadow: 0 10px 26px rgba(67, 45, 19, 0.12);
         }
 
         [data-theme="light"] .navbar::before,
@@ -729,9 +737,15 @@
         }
 
         [data-theme="light"] #mainNavbar {
-            background: rgba(255, 250, 242, 0.97);
+            background: rgba(255, 251, 245, 0.98);
             border: 1px solid rgba(164, 110, 42, 0.24);
             box-shadow: 0 16px 34px rgba(67, 45, 19, 0.15);
+        }
+
+        [data-theme="light"] .nav-link.active {
+            color: #2C1B10 !important;
+            font-weight: 800;
+            text-shadow: 0 0 0 transparent;
         }
 
         [data-theme="light"] .table-scroll-shell {
@@ -750,7 +764,9 @@
         }
 
         [data-theme="light"] .card {
-            box-shadow: 0 8px 24px rgba(67, 45, 19, 0.14);
+            border: 1px solid rgba(164, 110, 42, 0.2);
+            background: linear-gradient(155deg, rgba(255, 255, 255, 0.9), rgba(252, 244, 232, 0.88));
+            box-shadow: 0 10px 30px rgba(67, 45, 19, 0.13);
         }
 
         [data-theme="light"] .form-control,
@@ -758,6 +774,22 @@
         [data-theme="light"] textarea {
             background: rgba(255, 255, 255, 0.92) !important;
             border-color: rgba(164, 110, 42, 0.32) !important;
+            color: #2C1B10 !important;
+        }
+
+        [data-theme="light"] .form-label,
+        [data-theme="light"] label,
+        [data-theme="light"] .small,
+        [data-theme="light"] small,
+        [data-theme="light"] .text-muted {
+            color: #6D5741 !important;
+        }
+
+        [data-theme="light"] .form-control:focus,
+        [data-theme="light"] .form-select:focus,
+        [data-theme="light"] textarea:focus {
+            border-color: rgba(164, 110, 42, 0.58) !important;
+            box-shadow: 0 0 0 0.2rem rgba(164, 110, 42, 0.16) !important;
         }
 
         [data-theme="light"] .form-control::placeholder {
@@ -794,7 +826,7 @@
         }
 
         [data-theme="light"] #particles-js {
-            background: radial-gradient(circle at 25% 15%, #FFF8ED 0%, #F3E8D8 58%, #EBD8BF 100%);
+            background: radial-gradient(circle at 25% 15%, #FFF8ED 0%, #F5E9D9 58%, #EEDBC2 100%);
         }
     </style>
 </head>
