@@ -570,10 +570,12 @@ class TenantLoginForm(forms.Form):
     tenant_id = forms.CharField(
         label='معرف المعرض',
         max_length=50,
+        required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'مثال: showroom-alfa'})
     )
     tenant_key = forms.CharField(
         label='كلمة مرور المعرض',
+        required=False,
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
     username = forms.CharField(

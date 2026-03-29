@@ -8,6 +8,7 @@ class TenantDatabaseRouter:
         ('sales', 'globalauditlog'),
         ('sales', 'tenantbackuprecord'),
         ('sales', 'tenantmigrationrecord'),
+        ('sales', 'userthemepreference'),
     }
     SESSION_APP = 'sessions'
 

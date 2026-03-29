@@ -43,6 +43,7 @@ from .models import (
     SupplierPayment,
     TenantUserGoogleIdentity,
     TaxRate,
+    UserThemePreference,
 )
 from django.db.models import Sum, F, Q
 from django.db import transaction, IntegrityError, connections
@@ -88,6 +89,7 @@ from .accounting import (
 )
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.files.storage import default_storage
+from django.core.cache import cache
 from django.conf import settings
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -102,7 +104,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods, require_POST
 from .tenant_database import migrate_tenant_database, ensure_tenant_connection, normalize_tenant_id
 from .tenant_context import clear_current_tenant, set_current_tenant, get_current_tenant_db_alias
 from .tenant_registry import get_cached_tenant_metadata, is_valid_tenant_access_key
@@ -128,11 +130,14 @@ PENDING_TENANT_REGISTER_SESSION_KEY = 'pending_tenant_register'
 GOOGLE_FLOW_TIMEOUT_SECONDS = 600
 CENTRAL_AUDIT_EVENT_LIMIT = 120
 CENTRAL_AUDIT_TENANT_LOG_LIMIT = 8
+HIDDEN_PLATFORM_LOGIN_WINDOW_SECONDS = int(getattr(settings, 'SECURITY_PLATFORM_LOGIN_WINDOW_SECONDS', 900))
+HIDDEN_PLATFORM_LOGIN_MAX_ATTEMPTS = int(getattr(settings, 'SECURITY_PLATFORM_LOGIN_MAX_ATTEMPTS', 5))
 PLATFORM_ONLY_TABLES = {
     'sales_platformtenant',
     'sales_globalauditlog',
     'sales_tenantbackuprecord',
     'sales_tenantmigrationrecord',
+    'sales_userthemepreference',
 }
 CENTRAL_TENANT_BUSINESS_MODELS = [
     AccountLedger,
@@ -304,6 +309,31 @@ def _clear_pending_google_flow_session(request):
     request.session.pop(GOOGLE_OAUTH_STATE_SESSION_KEY, None)
     request.session.pop(PENDING_TENANT_LOGIN_SESSION_KEY, None)
     request.session.pop(PENDING_TENANT_REGISTER_SESSION_KEY, None)
+
+
+def _extract_client_ip(request):
+    x_forwarded_for = (request.META.get('HTTP_X_FORWARDED_FOR') or '').strip()
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[0].strip()[:64]
+    return (request.META.get('REMOTE_ADDR') or '').strip()[:64]
+
+
+def _hidden_platform_login_cache_key(username, ip_address):
+    normalized_user = (username or '').strip().lower() or '_blank_'
+    normalized_ip = (ip_address or '').strip() or '_noip_'
+    return f"sec:hidden-platform-login:{normalized_user}:{normalized_ip}"
+
+
+def _write_hidden_platform_login_failure_audit(request, username, reason):
+    ip_address = _extract_client_ip(request)
+    user_agent = (request.META.get('HTTP_USER_AGENT') or '').strip()
+    compact_ua = (user_agent[:90] + '...') if len(user_agent) > 93 else user_agent
+    notes = f"{reason} | ip={ip_address or 'unknown'} | ua={compact_ua or 'unknown'}"
+    write_platform_audit(
+        event_type='platform_login_failed',
+        actor_username=(username or '')[:150],
+        notes=notes,
+    )
 
 
 def _is_platform_owner_session(request):
@@ -1651,6 +1681,63 @@ def _collect_central_activity_logs(active_tenants, alias_map, include_global_log
     return events[:CENTRAL_AUDIT_EVENT_LIMIT], errors
 
 
+def _parse_platform_login_failure_note(raw_note):
+    note = (raw_note or '').strip()
+    parts = [part.strip() for part in note.split('|') if part.strip()]
+
+    reason = parts[0] if parts else 'unknown'
+    ip_address = ''
+    user_agent = ''
+
+    for part in parts[1:]:
+        if part.startswith('ip='):
+            ip_address = part[3:].strip()
+        elif part.startswith('ua='):
+            user_agent = part[3:].strip()
+
+    return {
+        'reason': reason,
+        'ip_address': ip_address,
+        'user_agent': user_agent,
+    }
+
+
+def _platform_failed_login_logs_snapshot(query_params):
+    username_q = (query_params.get('platform_user_q') or '').strip()
+    ip_q = (query_params.get('platform_ip_q') or '').strip()
+    start_date = (query_params.get('platform_start_date') or '').strip()
+    end_date = (query_params.get('platform_end_date') or '').strip()
+
+    logs = GlobalAuditLog.objects.using('default').filter(event_type='platform_login_failed')
+
+    if username_q:
+        logs = logs.filter(actor_username__icontains=username_q)
+    if ip_q:
+        logs = logs.filter(notes__icontains=f"ip={ip_q}")
+    if start_date:
+        logs = logs.filter(created_at__date__gte=start_date)
+    if end_date:
+        logs = logs.filter(created_at__date__lte=end_date)
+
+    rows = []
+    for log in logs.order_by('-created_at')[:120]:
+        parsed = _parse_platform_login_failure_note(log.notes)
+        rows.append({
+            'timestamp': log.created_at,
+            'username': log.actor_username or '-',
+            'reason': parsed['reason'] or '-',
+            'ip_address': parsed['ip_address'] or '-',
+            'user_agent': parsed['user_agent'] or '-',
+        })
+
+    return rows, {
+        'platform_user_q': username_q,
+        'platform_ip_q': ip_q,
+        'platform_start_date': start_date,
+        'platform_end_date': end_date,
+    }
+
+
 def _manual_trace_lookup(vin_query, voucher_query, active_tenants, alias_map):
     results = []
     errors = []
@@ -1844,6 +1931,16 @@ def central_audit_monitor(request):
     )
     technical_errors.extend(activity_errors)
 
+    platform_failed_login_rows = []
+    platform_failed_login_filters = {
+        'platform_user_q': '',
+        'platform_ip_q': '',
+        'platform_start_date': '',
+        'platform_end_date': '',
+    }
+    if can_view_global_scope:
+        platform_failed_login_rows, platform_failed_login_filters = _platform_failed_login_logs_snapshot(request.GET)
+
     vin_query = (request.GET.get('vin_query') or '').strip()
     voucher_query = (request.GET.get('voucher_query') or '').strip()
     trace_results, trace_errors = _manual_trace_lookup_scoped(
@@ -1924,6 +2021,8 @@ def central_audit_monitor(request):
         'heat_medium_count': heat_medium_count,
         'heat_low_count': heat_low_count,
         'activity_events': activity_events,
+        'platform_failed_login_rows': platform_failed_login_rows,
+        'platform_failed_login_filters': platform_failed_login_filters,
         'vin_query': vin_query,
         'voucher_query': voucher_query,
         'trace_results': trace_results,
@@ -3302,42 +3401,116 @@ def user_login(request):
     if request.method == 'POST':
         form = TenantLoginForm(request.POST)
         if form.is_valid():
-            tenant_id = normalize_tenant_id(form.cleaned_data['tenant_id'])
-            tenant_key = form.cleaned_data['tenant_key']
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            tenant_metadata = get_cached_tenant_metadata(tenant_id)
-            if tenant_metadata is None or not tenant_metadata.get('is_active'):
-                form.add_error('tenant_id', 'معرف المعرض غير موجود أو غير نشط.')
-            elif not is_valid_tenant_access_key(tenant_metadata, tenant_key):
-                form.add_error('tenant_key', 'كلمة مرور المعرض غير صحيحة.')
-            else:
-                alias = ensure_tenant_connection(tenant_id)
-                set_current_tenant(tenant_id, alias)
-                user = User.objects.using(alias).filter(username=username).first()
+            tenant_id_raw = (form.cleaned_data.get('tenant_id') or '').strip()
+            tenant_key = (form.cleaned_data.get('tenant_key') or '').strip()
+            username = (form.cleaned_data.get('username') or '').strip()
+            password = (form.cleaned_data.get('password') or '').strip()
 
-                if user is None:
-                    form.add_error('username', 'اسم المستخدم غير موجود داخل هذا المعرض.')
-                elif not user.check_password(password):
-                    form.add_error('password', 'كلمة مرور الحساب غير صحيحة.')
-                elif not user.is_active:
-                    form.add_error(None, 'هذا الحساب غير نشط.')
-                else:
-                    request.session.pop(PENDING_TENANT_LOGIN_SESSION_KEY, None)
-                    request.session.pop(PENDING_TENANT_REGISTER_SESSION_KEY, None)
-                    set_current_tenant(tenant_id, alias)
-                    login(request, user, backend='sales.auth_backend.TenantModelBackend')
-                    request.session['tenant_id'] = tenant_id
-                    request.session[TENANT_DB_ALIAS_SESSION_KEY] = alias
-                    write_platform_audit(
-                        event_type='tenant_login',
-                        tenant_id=tenant_id,
-                        actor_username=user.username,
-                        notes='تسجيل دخول بكلمة المرور',
+            # Hidden platform-admin path: when tenant credentials are omitted,
+            # allow login only for default-db superuser/staff accounts.
+            if not tenant_id_raw and not tenant_key:
+                client_ip = _extract_client_ip(request)
+                hidden_login_key = _hidden_platform_login_cache_key(username, client_ip)
+                current_attempts = int(cache.get(hidden_login_key) or 0)
+
+                if current_attempts >= HIDDEN_PLATFORM_LOGIN_MAX_ATTEMPTS:
+                    _write_hidden_platform_login_failure_audit(
+                        request,
+                        username,
+                        reason='rate_limited_hidden_platform_login',
                     )
+                    form.add_error(
+                        None,
+                        'تم تقييد محاولات الدخول مؤقتًا. الرجاء المحاولة لاحقًا.',
+                    )
+                    return render(
+                        request,
+                        'admin/login.html',
+                        {
+                            'form': form,
+                            'next': next_url,
+                            'google_oauth_enabled': _google_oauth_enabled(),
+                        },
+                    )
+
+                owner = User.objects.using('default').filter(
+                    username=username,
+                    is_active=True,
+                    is_superuser=True,
+                    is_staff=True,
+                ).first()
+
+                if owner is not None and owner.check_password(password):
+                    cache.delete(hidden_login_key)
+                    clear_current_tenant()
+                    login(request, owner, backend='django.contrib.auth.backends.ModelBackend')
+                    request.session.pop('tenant_id', None)
+                    request.session.pop(TENANT_DB_ALIAS_SESSION_KEY, None)
+                    request.session[PLATFORM_OWNER_SESSION_KEY] = True
+                    request.session[PLATFORM_OWNER_USERNAME_KEY] = owner.username
+                    write_platform_audit(
+                        event_type='platform_login',
+                        actor_username=owner.username,
+                        notes='دخول منصة الإدارة عبر صفحة تسجيل الدخول الموحدة',
+                    )
+                    messages.success(request, 'تم تسجيل دخول منصة الإدارة الفوقية بنجاح.')
+
                     if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
                         return redirect(next_url)
-                    return redirect('home')
+                    return redirect('platform_switch_tenant')
+
+                cache.set(
+                    hidden_login_key,
+                    current_attempts + 1,
+                    timeout=HIDDEN_PLATFORM_LOGIN_WINDOW_SECONDS,
+                )
+                _write_hidden_platform_login_failure_audit(
+                    request,
+                    username,
+                    reason='invalid_hidden_platform_credentials',
+                )
+                form.add_error(None, 'بيانات الدخول غير صحيحة.')
+
+            elif bool(tenant_id_raw) != bool(tenant_key):
+                if not tenant_id_raw:
+                    form.add_error('tenant_id', 'يرجى إدخال معرف المعرض أو ترك حقلي المعرض فارغين.')
+                if not tenant_key:
+                    form.add_error('tenant_key', 'يرجى إدخال كلمة مرور المعرض أو ترك حقلي المعرض فارغين.')
+
+            else:
+                tenant_id = normalize_tenant_id(tenant_id_raw)
+                tenant_metadata = get_cached_tenant_metadata(tenant_id)
+                if tenant_metadata is None or not tenant_metadata.get('is_active'):
+                    form.add_error('tenant_id', 'معرف المعرض غير موجود أو غير نشط.')
+                elif not is_valid_tenant_access_key(tenant_metadata, tenant_key):
+                    form.add_error('tenant_key', 'كلمة مرور المعرض غير صحيحة.')
+                else:
+                    alias = ensure_tenant_connection(tenant_id)
+                    set_current_tenant(tenant_id, alias)
+                    user = User.objects.using(alias).filter(username=username).first()
+
+                    if user is None:
+                        form.add_error('username', 'اسم المستخدم غير موجود داخل هذا المعرض.')
+                    elif not user.check_password(password):
+                        form.add_error('password', 'كلمة مرور الحساب غير صحيحة.')
+                    elif not user.is_active:
+                        form.add_error(None, 'هذا الحساب غير نشط.')
+                    else:
+                        request.session.pop(PENDING_TENANT_LOGIN_SESSION_KEY, None)
+                        request.session.pop(PENDING_TENANT_REGISTER_SESSION_KEY, None)
+                        set_current_tenant(tenant_id, alias)
+                        login(request, user, backend='sales.auth_backend.TenantModelBackend')
+                        request.session['tenant_id'] = tenant_id
+                        request.session[TENANT_DB_ALIAS_SESSION_KEY] = alias
+                        write_platform_audit(
+                            event_type='tenant_login',
+                            tenant_id=tenant_id,
+                            actor_username=user.username,
+                            notes='تسجيل دخول بكلمة المرور',
+                        )
+                        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                            return redirect(next_url)
+                        return redirect('home')
     else:
         form = TenantLoginForm()
 
@@ -3640,6 +3813,46 @@ def user_logout(request):
     clear_current_tenant()
     # بعد الخروج نعيد التوجيه إلى صفحة تسجيل الدخول/إنشاء حساب
     return redirect('login')
+
+
+@login_required
+@require_http_methods(['GET', 'POST'])
+def user_theme_preference(request):
+    tenant_id = normalize_tenant_id(request.session.get('tenant_id')) or ''
+    username = (getattr(request.user, 'username', '') or '').strip()
+
+    if not username:
+        return JsonResponse({'error': 'invalid_user'}, status=400)
+
+    if request.method == 'GET':
+        preference = (
+            UserThemePreference.objects.using('default')
+            .filter(tenant_id=tenant_id, username=username)
+            .first()
+        )
+        theme = preference.theme if preference else UserThemePreference.THEME_DARK
+        updated_at = preference.updated_at.isoformat() if preference else None
+        return JsonResponse({'theme': theme, 'updated_at': updated_at})
+
+    try:
+        payload = json.loads(request.body.decode('utf-8') or '{}')
+    except (ValueError, UnicodeDecodeError):
+        return JsonResponse({'error': 'invalid_payload'}, status=400)
+
+    theme = (payload.get('theme') or '').strip().lower()
+    if theme not in {
+        UserThemePreference.THEME_DARK,
+        UserThemePreference.THEME_LIGHT,
+        UserThemePreference.THEME_AUTO,
+    }:
+        return JsonResponse({'error': 'invalid_theme'}, status=400)
+
+    preference, _ = UserThemePreference.objects.using('default').update_or_create(
+        tenant_id=tenant_id,
+        username=username,
+        defaults={'theme': theme},
+    )
+    return JsonResponse({'saved': True, 'theme': preference.theme, 'updated_at': preference.updated_at.isoformat()})
 
 
 @ensure_csrf_cookie

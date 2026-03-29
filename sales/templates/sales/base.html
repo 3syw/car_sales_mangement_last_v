@@ -15,6 +15,18 @@
     <link rel="stylesheet" href="{% static 'sales/css/brand-theme.css' %}">
     {% block extrastyle %}{% endblock %}
     {% block extrahead %}{% endblock %}
+    <script>
+        (function () {
+            const key = 'ui-theme';
+            const savedTheme = localStorage.getItem(key);
+            const preference = ['dark', 'light', 'auto'].includes(savedTheme) ? savedTheme : 'dark';
+            const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const effectiveTheme = preference === 'auto' ? (systemPrefersDark ? 'dark' : 'light') : preference;
+            document.documentElement.setAttribute('data-theme-preference', preference);
+            document.documentElement.setAttribute('data-theme', effectiveTheme);
+            document.documentElement.style.colorScheme = effectiveTheme;
+        })();
+    </script>
     <style>
         :root {
             --charcoal: #0F141C;
@@ -639,6 +651,151 @@
             justify-content: flex-start;
             margin: 1rem 0 0.75rem;
         }
+
+        .theme-toggle-btn {
+            width: auto !important;
+            height: auto !important;
+            min-width: 98px;
+            min-height: 42px;
+            gap: 0.4rem;
+            border-radius: 999px;
+            padding: 0.48rem 0.95rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .theme-toggle-btn i {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .theme-toggle-btn .theme-label {
+            font-size: 0.9rem;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 767.98px) {
+            .theme-toggle-btn {
+                min-width: 90px;
+                min-height: 40px;
+                padding: 0.42rem 0.82rem;
+            }
+
+            .theme-toggle-btn .theme-label {
+                font-size: 0.84rem;
+            }
+        }
+
+        [data-theme="light"] {
+            --charcoal: #F6F0E7;
+            --charcoal-soft: #EFE5D8;
+            --charcoal-muted: #E5D6C1;
+            --surface-glass: rgba(255, 255, 255, 0.68);
+            --surface-glass-strong: rgba(255, 255, 255, 0.84);
+            --text-main: #2A1C12;
+            --text-soft: #6F5A45;
+            --champagne: #A46E2A;
+            --champagne-light: #C0893F;
+            --champagne-dark: #7A4F1E;
+        }
+
+        [data-theme="light"] .navbar,
+        [data-theme="light"] .bg-dark,
+        [data-theme="light"] .bg-primary {
+            background: rgba(255, 251, 244, 0.9) !important;
+            border-bottom: 1px solid rgba(122, 79, 30, 0.24);
+            box-shadow: 0 8px 24px rgba(67, 45, 19, 0.14);
+        }
+
+        [data-theme="light"] .navbar::before,
+        [data-theme="light"] .bg-dark::before {
+            background-image:
+                radial-gradient(circle at 20% 150%, rgba(164, 110, 42, 0.14) 0%, transparent 50%),
+                radial-gradient(circle at 80% -50%, rgba(122, 79, 30, 0.06) 0%, transparent 50%);
+        }
+
+        [data-theme="light"] .navbar .nav-link,
+        [data-theme="light"] .navbar .navbar-brand {
+            color: #3C2818 !important;
+        }
+
+        [data-theme="light"] .nav-link.text-danger {
+            color: #a94438 !important;
+        }
+
+        [data-theme="light"] .navbar-toggler-icon {
+            filter: invert(1) grayscale(1);
+        }
+
+        [data-theme="light"] #mainNavbar {
+            background: rgba(255, 250, 242, 0.97);
+            border: 1px solid rgba(164, 110, 42, 0.24);
+            box-shadow: 0 16px 34px rgba(67, 45, 19, 0.15);
+        }
+
+        [data-theme="light"] .table-scroll-shell {
+            background: rgba(164, 110, 42, 0.07);
+        }
+
+        [data-theme="light"] .table-mobile-cards tr {
+            border-color: rgba(164, 110, 42, 0.28);
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 10px 24px rgba(67, 45, 19, 0.12);
+        }
+
+        [data-theme="light"] .table-mobile-cards td,
+        [data-theme="light"] .table-mobile-cards tbody th {
+            border-bottom: 1px dashed rgba(164, 110, 42, 0.25);
+        }
+
+        [data-theme="light"] .card {
+            box-shadow: 0 8px 24px rgba(67, 45, 19, 0.14);
+        }
+
+        [data-theme="light"] .form-control,
+        [data-theme="light"] .form-select,
+        [data-theme="light"] textarea {
+            background: rgba(255, 255, 255, 0.92) !important;
+            border-color: rgba(164, 110, 42, 0.32) !important;
+        }
+
+        [data-theme="light"] .form-control::placeholder {
+            color: #8B765F;
+        }
+
+        [data-theme="light"] .btn-outline-secondary {
+            border-color: rgba(122, 79, 30, 0.35);
+            background: rgba(164, 110, 42, 0.06);
+        }
+
+        [data-theme="light"] .btn-outline-secondary:hover {
+            background-color: rgba(164, 110, 42, 0.16);
+            color: #2A1C12;
+        }
+
+        [data-theme="light"] .submit-row .deletelink {
+            border-color: rgba(122, 79, 30, 0.35);
+        }
+
+        [data-theme="light"] .submit-row .deletelink:hover {
+            background-color: rgba(164, 110, 42, 0.12);
+            color: #2A1C12;
+        }
+
+        [data-theme="light"] .nav-icon-circle {
+            border-color: rgba(164, 110, 42, 0.5);
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        [data-theme="light"] .nav-icon-circle:hover {
+            background: rgba(164, 110, 42, 0.2);
+            box-shadow: 0 0 16px rgba(164, 110, 42, 0.24);
+        }
+
+        [data-theme="light"] #particles-js {
+            background: radial-gradient(circle at 25% 15%, #FFF8ED 0%, #F3E8D8 58%, #EBD8BF 100%);
+        }
     </style>
 </head>
 
@@ -686,6 +843,15 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+                    <button
+                        id="themeToggleBtn"
+                        class="nav-icon-circle theme-toggle-btn"
+                        type="button"
+                        title="تبديل الوضع المشمس والمظلم"
+                        aria-label="تبديل الوضع المشمس والمظلم">
+                        <i class="bi bi-sun-fill" aria-hidden="true"></i>
+                        <span class="theme-label">مشمس</span>
+                    </button>
                     {% if user.is_authenticated %}
                         <a class="nav-icon-circle" href="{% url 'timeline' %}" title="الإشعارات"><i class="bi bi-bell"></i></a>
                         {% if user.is_staff %}
@@ -718,7 +884,315 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
+        const THEME_STORAGE_KEY = 'ui-theme';
         const BACK_NAV_FLAG = 'suppress_page_transition_once';
+        const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === 'true';
+        const THEME_API_URL = "{% url 'user_theme_preference' %}";
+        const THEME_PREFERENCES = ['dark', 'light', 'auto'];
+        let activeThemePreference = 'dark';
+        let activeResolvedTheme = 'dark';
+        let themePreferenceUpdatedAt = null;
+
+        function getStoredThemePreference() {
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            return THEME_PREFERENCES.includes(savedTheme) ? savedTheme : 'dark';
+        }
+
+        function resolveThemeFromPreference(preference) {
+            if (preference === 'auto') {
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                return prefersDark ? 'dark' : 'light';
+            }
+            return preference === 'light' ? 'light' : 'dark';
+        }
+
+        function getCsrfToken() {
+            const cookieValue = document.cookie
+                .split('; ')
+                .find((row) => row.startsWith('csrftoken='));
+            return cookieValue ? decodeURIComponent(cookieValue.split('=')[1]) : '';
+        }
+
+        async function getPreferredThemeFromServer() {
+            const fallbackPreference = getStoredThemePreference();
+            if (!IS_AUTHENTICATED) {
+                return { theme: fallbackPreference, updated_at: null };
+            }
+
+            try {
+                const response = await fetch(THEME_API_URL, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    return { theme: fallbackPreference, updated_at: null };
+                }
+
+                const data = await response.json();
+                const theme = data && THEME_PREFERENCES.includes(data.theme) ? data.theme : fallbackPreference;
+                localStorage.setItem(THEME_STORAGE_KEY, theme);
+                return { theme, updated_at: data.updated_at || null };
+            } catch (error) {
+                return { theme: fallbackPreference, updated_at: null };
+            }
+        }
+
+        function persistThemePreference(theme) {
+            localStorage.setItem(THEME_STORAGE_KEY, theme);
+            if (!IS_AUTHENTICATED) {
+                return Promise.resolve({ theme, updated_at: null });
+            }
+
+            const csrfToken = getCsrfToken();
+            if (!csrfToken) {
+                return Promise.resolve({ theme, updated_at: null });
+            }
+
+            return fetch(THEME_API_URL, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ theme }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        return { theme, updated_at: null };
+                    }
+                    return response.json();
+                })
+                .catch(() => ({ theme, updated_at: null }));
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.style.colorScheme = theme;
+        }
+
+        function updateThemeToggleAppearance(preference, resolvedTheme) {
+            const btn = document.getElementById('themeToggleBtn');
+            if (!btn) {
+                return;
+            }
+
+            const icon = btn.querySelector('i');
+            const label = btn.querySelector('.theme-label');
+
+            if (preference === 'auto') {
+                if (icon) {
+                    icon.className = 'bi bi-circle-half';
+                }
+                if (label) {
+                    label.textContent = 'تلقائي';
+                }
+                btn.setAttribute('title', 'الوضع التلقائي مفعل - اضغط للتبديل اليدوي');
+                btn.setAttribute('aria-label', 'الوضع التلقائي مفعل - اضغط للتبديل اليدوي');
+                return;
+            }
+
+            if (resolvedTheme === 'light') {
+                if (icon) {
+                    icon.className = 'bi bi-moon-stars-fill';
+                }
+                if (label) {
+                    label.textContent = 'مظلم';
+                }
+                btn.setAttribute('title', 'الانتقال للوضع المظلم');
+                btn.setAttribute('aria-label', 'الانتقال للوضع المظلم');
+                return;
+            }
+
+            if (icon) {
+                icon.className = 'bi bi-sun-fill';
+            }
+            if (label) {
+                label.textContent = 'مشمس';
+            }
+            btn.setAttribute('title', 'الانتقال للوضع المشمس');
+            btn.setAttribute('aria-label', 'الانتقال للوضع المشمس');
+        }
+
+        function getParticlesConfig(theme) {
+            const isLight = theme === 'light';
+            return {
+                particles: {
+                    number: {
+                        value: 80,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: isLight ? ['#A46E2A', '#d6b78f', '#f6dec0'] : ['#C9A46A', '#ffffff', '#DBC090']
+                    },
+                    shape: {
+                        type: 'circle',
+                        stroke: {
+                            width: 0,
+                            color: '#000000'
+                        },
+                        polygon: {
+                            nb_sides: 5
+                        }
+                    },
+                    opacity: {
+                        value: isLight ? 0.26 : 0.42,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 1,
+                            opacity_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    size: {
+                        value: 3,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 2,
+                            size_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: isLight ? '#A46E2A' : '#C9A46A',
+                        opacity: isLight ? 0.2 : 0.35,
+                        width: 1.1,
+                        shadow: {
+                            enable: true,
+                            color: isLight ? '#A46E2A' : '#C9A46A',
+                            blur: 4
+                        }
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1.8,
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false,
+                        attract: {
+                            enable: true,
+                            rotateX: 600,
+                            rotateY: 1200
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: 'window',
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: 'grab'
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: 'push'
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 200,
+                            line_linked: {
+                                opacity: isLight ? 0.35 : 0.8
+                            }
+                        },
+                        bubble: {
+                            distance: 400,
+                            size: 40,
+                            duration: 2,
+                            opacity: 8,
+                            speed: 3
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4
+                        },
+                        push: {
+                            particles_nb: 4
+                        },
+                        remove: {
+                            particles_nb: 2
+                        }
+                    }
+                },
+                retina_detect: true
+            };
+        }
+
+        function renderParticles(theme) {
+            if (typeof particlesJS !== 'function') {
+                return;
+            }
+
+            if (window.pJSDom && window.pJSDom.length) {
+                window.pJSDom.forEach((item) => {
+                    if (item && item.pJS && item.pJS.fn && item.pJS.fn.vendors && item.pJS.fn.vendors.destroypJS) {
+                        item.pJS.fn.vendors.destroypJS();
+                    }
+                });
+                window.pJSDom = [];
+            }
+
+            particlesJS('particles-js', getParticlesConfig(theme));
+        }
+
+        function applyThemePreferenceState(preference, options = {}) {
+            const resolvedTheme = resolveThemeFromPreference(preference);
+            activeThemePreference = preference;
+            activeResolvedTheme = resolvedTheme;
+
+            document.documentElement.setAttribute('data-theme-preference', preference);
+            applyTheme(resolvedTheme);
+            updateThemeToggleAppearance(preference, resolvedTheme);
+            renderParticles(resolvedTheme);
+
+            if (!options.silent) {
+                document.dispatchEvent(new CustomEvent('theme:changed', {
+                    detail: {
+                        preference,
+                        resolvedTheme,
+                        updatedAt: themePreferenceUpdatedAt,
+                        source: options.source || 'ui',
+                    },
+                }));
+            }
+        }
+
+        function setThemePreference(preference, options = {}) {
+            const nextPreference = THEME_PREFERENCES.includes(preference) ? preference : 'dark';
+            return persistThemePreference(nextPreference).then((result) => {
+                themePreferenceUpdatedAt = result && result.updated_at ? result.updated_at : themePreferenceUpdatedAt;
+                applyThemePreferenceState(nextPreference, { source: options.source || 'save' });
+                return {
+                    preference: nextPreference,
+                    resolvedTheme: activeResolvedTheme,
+                    updatedAt: themePreferenceUpdatedAt,
+                };
+            });
+        }
+
+        function toggleTheme() {
+            let nextTheme = 'dark';
+            if (activeThemePreference === 'auto') {
+                nextTheme = activeResolvedTheme === 'dark' ? 'light' : 'dark';
+            } else {
+                nextTheme = activeThemePreference === 'dark' ? 'light' : 'dark';
+            }
+            setThemePreference(nextTheme, { source: 'toggle' });
+        }
 
         function navigateBack() {
             sessionStorage.setItem(BACK_NAV_FLAG, '1');
@@ -746,7 +1220,40 @@
             sessionStorage.removeItem(BACK_NAV_FLAG);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            const themeState = await getPreferredThemeFromServer();
+            const themePreference = THEME_PREFERENCES.includes(themeState.theme) ? themeState.theme : 'dark';
+            themePreferenceUpdatedAt = themeState.updated_at || null;
+            applyThemePreferenceState(themePreference, { source: 'bootstrap' });
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const listener = () => {
+                    if (activeThemePreference === 'auto') {
+                        applyThemePreferenceState('auto', { source: 'system' });
+                    }
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', listener);
+                } else if (mediaQuery.addListener) {
+                    mediaQuery.addListener(listener);
+                }
+            }
+
+            window.themePreferenceAPI = {
+                getState: () => ({
+                    preference: activeThemePreference,
+                    resolvedTheme: activeResolvedTheme,
+                    updatedAt: themePreferenceUpdatedAt,
+                }),
+                setPreference: (preference) => setThemePreference(preference, { source: 'panel' }),
+            };
+
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', toggleTheme);
+            }
+
             if (shouldSuppressTransition()) {
                 document.body.classList.add('no-page-transition');
                 consumeBackNavFlag();
@@ -832,117 +1339,6 @@
                 document.body.classList.remove('no-page-transition');
             }
             ensurePageVisible();
-        });
-
-        particlesJS("particles-js", {
-            "particles": {
-                "number": {
-                    "value": 80,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
-                    }
-                },
-                "color": {
-                    "value": ["#C9A46A", "#ffffff", "#DBC090"]
-                },
-                "shape": {
-                    "type": "circle",
-                    "stroke": {
-                        "width": 0,
-                        "color": "#000000"
-                    },
-                    "polygon": {
-                        "nb_sides": 5
-                    }
-                },
-                "opacity": {
-                    "value": 0.42,
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "size": {
-                    "value": 3,
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 2,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#C9A46A",
-                    "opacity": 0.35,
-                    "width": 1.1,
-                    "shadow": {
-                        "enable": true,
-                        "color": "#C9A46A",
-                        "blur": 4
-                    }
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 1.8,
-                    "direction": "none",
-                    "random": true,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false,
-                    "attract": {
-                        "enable": true,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
-                }
-            },
-            "interactivity": {
-                "detect_on": "window",
-                "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "grab"
-                    },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "push"
-                    },
-                    "resize": true
-                },
-                "modes": {
-                    "grab": {
-                        "distance": 200,
-                        "line_linked": {
-                            "opacity": 0.8
-                        }
-                    },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
-                    },
-                    "repulse": {
-                        "distance": 200,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
-                    }
-                }
-            },
-            "retina_detect": true
         });
     </script>
 </body>

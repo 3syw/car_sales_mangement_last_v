@@ -176,6 +176,27 @@
         align-items: end;
     }
 
+    .platform-failed-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr auto;
+        gap: 0.7rem;
+        align-items: end;
+    }
+
+    .platform-failed-form .form-label {
+        text-align: right;
+        color: #fff;
+        font-size: 0.83rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .platform-failed-form .form-control {
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+        background: rgba(0, 0, 0, 0.3) !important;
+        color: #f5f5f5 !important;
+    }
+
     .manual-search-form .form-label {
         text-align: right;
         color: #fff;
@@ -374,6 +395,10 @@
 
     @media (max-width: 991.98px) {
         .manual-search-form {
+            grid-template-columns: 1fr;
+        }
+
+        .platform-failed-form {
             grid-template-columns: 1fr;
         }
 
@@ -744,6 +769,85 @@
                     {% endfor %}
                 </div>
             </div>
+
+            {% if can_view_global_scope %}
+            <div class="monitor-card p-3 mt-3">
+                <h5>محاولات فشل دخول منصة الإدارة</h5>
+                <small class="text-muted">Hidden Platform Admin Failed Login Attempts</small>
+
+                <form method="get" class="platform-failed-form mt-2">
+                    <div>
+                        <label class="form-label" for="platform_user_q">اسم الحساب</label>
+                        <input id="platform_user_q" name="platform_user_q" type="text" class="form-control" placeholder="مثال: admin" value="{{ platform_failed_login_filters.platform_user_q }}">
+                    </div>
+                    <div>
+                        <label class="form-label" for="platform_ip_q">عنوان IP</label>
+                        <input id="platform_ip_q" name="platform_ip_q" type="text" class="form-control" placeholder="مثال: 127.0.0.1" value="{{ platform_failed_login_filters.platform_ip_q }}">
+                    </div>
+                    <div>
+                        <label class="form-label" for="platform_start_date">من تاريخ</label>
+                        <input id="platform_start_date" name="platform_start_date" type="date" class="form-control" value="{{ platform_failed_login_filters.platform_start_date }}">
+                    </div>
+                    <div>
+                        <label class="form-label" for="platform_end_date">إلى تاريخ</label>
+                        <input id="platform_end_date" name="platform_end_date" type="date" class="form-control" value="{{ platform_failed_login_filters.platform_end_date }}">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn-monitor-gold">تصفية</button>
+                    </div>
+                </form>
+
+                <div class="monitor-table-shell table-responsive mt-3">
+                    <table class="table audit-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>الوقت</th>
+                                <th>اسم الحساب</th>
+                                <th>السبب</th>
+                                <th>IP</th>
+                                <th>User-Agent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in platform_failed_login_rows %}
+                            <tr>
+                                <td>{{ row.timestamp|date:'Y-m-d H:i:s' }}</td>
+                                <td>{{ row.username }}</td>
+                                <td>{{ row.reason }}</td>
+                                <td>{{ row.ip_address }}</td>
+                                <td>{{ row.user_agent }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-3">لا توجد محاولات فشل مطابقة للمرشحات.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="monitor-mobile-list">
+                    {% for row in platform_failed_login_rows %}
+                    <div class="monitor-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <strong class="d-block">{{ row.username }}</strong>
+                                <small>{{ row.timestamp|date:'Y-m-d H:i:s' }}</small>
+                            </div>
+                            <span class="audit-status audit-status-failed">Failed</span>
+                        </div>
+                        <div class="monitor-mobile-grid">
+                            <div><small>السبب</small><strong>{{ row.reason }}</strong></div>
+                            <div><small>IP</small><strong>{{ row.ip_address }}</strong></div>
+                            <div><small>User-Agent</small><strong>{{ row.user_agent }}</strong></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="monitor-mobile-card text-center">لا توجد محاولات فشل مطابقة للمرشحات.</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
 
         {% if technical_errors %}

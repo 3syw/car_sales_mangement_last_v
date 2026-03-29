@@ -90,6 +90,48 @@
         transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
     }
 
+    .home-lux .home-theme-card {
+        position: relative;
+        border-radius: 20px;
+        border: 1px solid rgba(201, 164, 106, 0.27);
+        background: linear-gradient(165deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.3));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+        padding: 1.2rem;
+    }
+
+    .home-lux .home-theme-card h3 {
+        color: var(--champagne-light);
+        font-size: 1.03rem;
+        font-weight: 700;
+        margin: 0 0 0.45rem;
+    }
+
+    .home-lux .home-theme-help {
+        color: #f2eee8;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.94;
+    }
+
+    .home-lux .theme-status-row {
+        margin-top: 0.8rem;
+        padding-top: 0.7rem;
+        border-top: 1px dashed rgba(201, 164, 106, 0.22);
+        font-size: 0.84rem;
+        color: #e8decb;
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    .home-lux .theme-save-note {
+        font-size: 0.78rem;
+        color: var(--champagne-light);
+        min-height: 1.2rem;
+        margin-top: 0.55rem;
+    }
+
     .home-lux .home-nav-card:hover,
     .home-lux .home-info-card:hover {
         transform: translateY(-5px);
@@ -634,6 +676,33 @@
             </article>
         </div>
     </div>
+
+    {% if user.is_authenticated %}
+    <h2 class="home-section-title">إعدادات الواجهة</h2>
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-lg-6">
+            <article class="home-theme-card">
+                <span class="home-card-icon"><i class="bi bi-palette2"></i></span>
+                <h3>المظهر</h3>
+                <p class="home-theme-help">اختر وضع العرض المناسب لك. خيار تلقائي يطابق إعداد جهازك بين النهاري والليلي.</p>
+
+                <label for="themePreferenceSelect" class="form-label mb-2">وضع الواجهة</label>
+                <select id="themePreferenceSelect" class="form-select">
+                    <option value="dark">مظلم (افتراضي)</option>
+                    <option value="light">مشمس</option>
+                    <option value="auto">تلقائي حسب الجهاز</option>
+                </select>
+
+                <div class="theme-status-row">
+                    <div>الوضع الفعلي الآن: <strong id="themeResolvedStatus">-</strong></div>
+                    <div>آخر مزامنة: <strong id="themeUpdatedStatus">-</strong></div>
+                </div>
+
+                <div id="themeSaveNote" class="theme-save-note"></div>
+            </article>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 <script>
@@ -655,6 +724,64 @@
             document.body.classList.remove('home-lux-active');
             document.body.classList.remove('nav-scrolled');
         });
+
+        const select = document.getElementById('themePreferenceSelect');
+        const resolvedStatus = document.getElementById('themeResolvedStatus');
+        const updatedStatus = document.getElementById('themeUpdatedStatus');
+        const saveNote = document.getElementById('themeSaveNote');
+
+        const formatResolved = function (value) {
+            return value === 'light' ? 'مشمس' : 'مظلم';
+        };
+
+        const formatDateTime = function (isoValue) {
+            if (!isoValue) {
+                return 'لم يتم الحفظ بعد';
+            }
+            const d = new Date(isoValue);
+            if (Number.isNaN(d.getTime())) {
+                return 'تم الحفظ';
+            }
+            return d.toLocaleString('ar-SA');
+        };
+
+        const syncThemePanel = function (state) {
+            if (!state) {
+                return;
+            }
+            if (select && state.preference) {
+                select.value = state.preference;
+            }
+            if (resolvedStatus) {
+                resolvedStatus.textContent = formatResolved(state.resolvedTheme || 'dark');
+            }
+            if (updatedStatus) {
+                updatedStatus.textContent = formatDateTime(state.updatedAt || null);
+            }
+        };
+
+        if (window.themePreferenceAPI && typeof window.themePreferenceAPI.getState === 'function') {
+            syncThemePanel(window.themePreferenceAPI.getState());
+        }
+
+        document.addEventListener('theme:changed', function (event) {
+            syncThemePanel(event.detail || {});
+        });
+
+        if (select && window.themePreferenceAPI && typeof window.themePreferenceAPI.setPreference === 'function') {
+            select.addEventListener('change', function () {
+                saveNote.textContent = 'جاري حفظ تفضيلك...';
+                window.themePreferenceAPI
+                    .setPreference(select.value)
+                    .then(function (result) {
+                        syncThemePanel(result);
+                        saveNote.textContent = 'تم الحفظ بنجاح';
+                    })
+                    .catch(function () {
+                        saveNote.textContent = 'تعذر الحفظ الآن، حاول مرة أخرى.';
+                    });
+            });
+        }
     });
 </script>
 {% endblock %}

@@ -53,6 +53,7 @@ class GlobalAuditLog(models.Model):
         ('tenant_login', 'دخول معرض'),
         ('tenant_logout', 'خروج معرض'),
         ('platform_login', 'دخول منصة فوقية'),
+        ('platform_login_failed', 'فشل دخول منصة فوقية'),
         ('platform_switch', 'تحويل معرض فني'),
         ('platform_exit_switch', 'إنهاء التحويل الفني'),
         ('fiscal_period_close', 'إغلاق فترة مالية'),
@@ -117,6 +118,36 @@ class TenantMigrationRecord(models.Model):
 
     def __str__(self):
         return f"{self.tenant.tenant_id} - {self.status}"
+
+
+class UserThemePreference(models.Model):
+    THEME_DARK = 'dark'
+    THEME_LIGHT = 'light'
+    THEME_AUTO = 'auto'
+    THEME_CHOICES = [
+        (THEME_DARK, 'مظلم'),
+        (THEME_LIGHT, 'مشمس'),
+        (THEME_AUTO, 'تلقائي'),
+    ]
+
+    tenant_id = models.SlugField('معرف المعرض', max_length=50, blank=True, default='')
+    username = models.CharField('اسم المستخدم', max_length=150)
+    theme = models.CharField('الثيم', max_length=10, choices=THEME_CHOICES, default=THEME_DARK)
+    updated_at = models.DateTimeField('آخر تحديث', auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['tenant_id', 'username'],
+                name='uniq_theme_pref_tenant_username',
+            )
+        ]
+        verbose_name = 'تفضيل ثيم المستخدم'
+        verbose_name_plural = 'تفضيلات ثيم المستخدمين'
+
+    def __str__(self):
+        scope = self.tenant_id or 'platform'
+        return f"{scope}:{self.username}:{self.theme}"
 
 
 class DailyClosing(models.Model):

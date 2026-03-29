@@ -23,6 +23,7 @@ class Command(BaseCommand):
         'globalauditlog',
         'tenantbackuprecord',
         'tenantmigrationrecord',
+        'userthemepreference',
     }
 
     def add_arguments(self, parser):

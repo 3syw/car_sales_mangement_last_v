@@ -189,6 +189,41 @@
         text-align: center;
         margin: 0.2rem 0;
     }
+
+    .dashboard-lux .dashboard-theme-card {
+        border-radius: 20px;
+        border: 1px solid rgba(201, 164, 106, 0.27);
+        background: linear-gradient(165deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.30));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+        padding: 1.1rem;
+        height: 100%;
+    }
+
+    .dashboard-lux .dashboard-theme-help {
+        color: #f2eee8;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.94;
+    }
+
+    .dashboard-lux .dashboard-theme-status {
+        margin-top: 0.75rem;
+        padding-top: 0.7rem;
+        border-top: 1px dashed rgba(201, 164, 106, 0.22);
+        font-size: 0.84rem;
+        color: #e8decb;
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    .dashboard-lux .dashboard-theme-save-note {
+        font-size: 0.78rem;
+        color: var(--champagne-light);
+        min-height: 1.2rem;
+        margin-top: 0.55rem;
+    }
 </style>
 {% endblock %}
 
@@ -272,5 +307,90 @@
         <p class="dashboard-empty">لا توجد أخبار جديدة اليوم.</p>
         {% endfor %}
     </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-12 col-lg-6">
+            <article class="dashboard-theme-card">
+                <div class="dashboard-panel-header"><i class="bi bi-palette2"></i> إعدادات المظهر</div>
+                <p class="dashboard-theme-help">يمكنك التبديل بين المظلم والمشمس أو استخدام الوضع التلقائي حسب إعداد جهازك.</p>
+
+                <label for="dashboardThemePreferenceSelect" class="form-label mb-2">وضع الواجهة</label>
+                <select id="dashboardThemePreferenceSelect" class="form-select">
+                    <option value="dark">مظلم (افتراضي)</option>
+                    <option value="light">مشمس</option>
+                    <option value="auto">تلقائي حسب الجهاز</option>
+                </select>
+
+                <div class="dashboard-theme-status">
+                    <div>الوضع الفعلي الآن: <strong id="dashboardThemeResolvedStatus">-</strong></div>
+                    <div>آخر مزامنة: <strong id="dashboardThemeUpdatedStatus">-</strong></div>
+                </div>
+
+                <div id="dashboardThemeSaveNote" class="dashboard-theme-save-note"></div>
+            </article>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const select = document.getElementById('dashboardThemePreferenceSelect');
+        const resolvedStatus = document.getElementById('dashboardThemeResolvedStatus');
+        const updatedStatus = document.getElementById('dashboardThemeUpdatedStatus');
+        const saveNote = document.getElementById('dashboardThemeSaveNote');
+
+        const formatResolved = function (value) {
+            return value === 'light' ? 'مشمس' : 'مظلم';
+        };
+
+        const formatDateTime = function (isoValue) {
+            if (!isoValue) {
+                return 'لم يتم الحفظ بعد';
+            }
+            const d = new Date(isoValue);
+            if (Number.isNaN(d.getTime())) {
+                return 'تم الحفظ';
+            }
+            return d.toLocaleString('ar-SA');
+        };
+
+        const syncPanel = function (state) {
+            if (!state) {
+                return;
+            }
+            if (select && state.preference) {
+                select.value = state.preference;
+            }
+            if (resolvedStatus) {
+                resolvedStatus.textContent = formatResolved(state.resolvedTheme || 'dark');
+            }
+            if (updatedStatus) {
+                updatedStatus.textContent = formatDateTime(state.updatedAt || null);
+            }
+        };
+
+        if (window.themePreferenceAPI && typeof window.themePreferenceAPI.getState === 'function') {
+            syncPanel(window.themePreferenceAPI.getState());
+        }
+
+        document.addEventListener('theme:changed', function (event) {
+            syncPanel(event.detail || {});
+        });
+
+        if (select && window.themePreferenceAPI && typeof window.themePreferenceAPI.setPreference === 'function') {
+            select.addEventListener('change', function () {
+                saveNote.textContent = 'جاري حفظ تفضيلك...';
+                window.themePreferenceAPI
+                    .setPreference(select.value)
+                    .then(function (result) {
+                        syncPanel(result);
+                        saveNote.textContent = 'تم الحفظ بنجاح';
+                    })
+                    .catch(function () {
+                        saveNote.textContent = 'تعذر الحفظ الآن، حاول مرة أخرى.';
+                    });
+            });
+        }
+    });
+</script>
 {% endblock %}
