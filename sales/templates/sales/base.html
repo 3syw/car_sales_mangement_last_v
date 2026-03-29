@@ -919,6 +919,27 @@
                 return { theme: fallbackPreference, updated_at: null };
             }
 
+            // If the user just logged in and had changed the theme on the login
+            // page (where they were anonymous), carry that choice to the server.
+            const pendingTheme = sessionStorage.getItem('ui-theme-pending-login');
+            if (pendingTheme && THEME_PREFERENCES.includes(pendingTheme)) {
+                sessionStorage.removeItem('ui-theme-pending-login');
+                localStorage.setItem(THEME_STORAGE_KEY, pendingTheme);
+                const csrfToken = getCsrfToken();
+                if (csrfToken) {
+                    fetch(THEME_API_URL, {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({ theme: pendingTheme }),
+                    }).catch(() => {});
+                }
+                return { theme: pendingTheme, updated_at: null };
+            }
+
             try {
                 const response = await fetch(THEME_API_URL, {
                     method: 'GET',
@@ -944,6 +965,8 @@
         function persistThemePreference(theme) {
             localStorage.setItem(THEME_STORAGE_KEY, theme);
             if (!IS_AUTHENTICATED) {
+                // Keep a pending flag so the first post-login page picks it up
+                sessionStorage.setItem('ui-theme-pending-login', theme);
                 return Promise.resolve({ theme, updated_at: null });
             }
 
