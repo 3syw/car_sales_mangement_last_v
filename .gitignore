@@ -6,3 +6,4 @@ desktop-client/node_modules/
 desktop-client/dist/
 desktop-client/release/
 desktop-client/.env
+env.production

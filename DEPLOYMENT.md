@@ -57,6 +57,20 @@ python manage.py migrate --settings=core.settings_production
 python manage.py collectstatic --noinput --settings=core.settings_production
 ```
 
+Quick one-command option:
+
+Linux/bash:
+
+```bash
+./release_production.sh env.production
+```
+
+PowerShell:
+
+```powershell
+.\release_production.ps1 -EnvFile env.production
+```
+
 ## 5) Start Gunicorn behind Nginx
 Example process command:
 
