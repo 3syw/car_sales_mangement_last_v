@@ -47,6 +47,7 @@ from .models import (
 )
 from django.db.models import Sum, F, Q
 from django.db import transaction, IntegrityError, connections
+from django.db.utils import OperationalError
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.sessions.models import Session
@@ -3039,7 +3040,12 @@ def _build_financial_report_context(query_params):
     expense_list = list(expenses)
     general_expense_list = list(general_expenses)
     maintenance_list = list(maintenance_records)
-    debt_payment_list = list(debt_payments)
+    try:
+        debt_payment_list = list(debt_payments)
+    except OperationalError:
+        # Safety fallback for environments where tenant migrations are pending.
+        # This keeps reports page available instead of returning a 500.
+        debt_payment_list = []
     voucher_list = list(vouchers)
 
     sold_car_ids = [sale.car_id for sale in sales_list]
