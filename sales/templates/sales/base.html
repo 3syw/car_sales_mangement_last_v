@@ -34,6 +34,8 @@
     <style>
         :root {
             --app-font-family: 'Inter', 'Noto Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --topbar-height: 92px;
+            --topbar-z-index: 3000;
             --charcoal: #0F0F0F;
             --charcoal-soft: #1C1C1C;
             --charcoal-muted: #292929;
@@ -73,17 +75,37 @@
             -webkit-text-size-adjust: 100%;
             text-size-adjust: 100%;
             scroll-behavior: smooth;
+            scroll-padding-top: calc(var(--topbar-height) + env(safe-area-inset-top) + 10px);
+        }
+
+        [id] {
+            scroll-margin-top: calc(var(--topbar-height) + env(safe-area-inset-top) + 10px);
         }
 
         body {
             background-color: var(--charcoal) !important;
             font-family: var(--app-font-family);
             color: var(--text-main);
-            padding-top: 92px;
+            margin: 0;
+            padding-top: calc(var(--topbar-height) + env(safe-area-inset-top));
             overflow-x: hidden;
             opacity: 0;
             transform: translateY(6px);
             transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .app-topbar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
+            width: 100% !important;
+            z-index: var(--topbar-z-index) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(15, 23, 42, 0.8) !important;
         }
 
         body,
@@ -128,8 +150,6 @@
             background: rgba(16, 22, 31, 0.72) !important;
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            position: relative;
-            z-index: 2100;
             border-bottom: 1px solid rgba(33, 46, 63, 0.45);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
         }
@@ -233,8 +253,8 @@
         }
 
         @media (max-width: 991.98px) {
-            body {
-                padding-top: 84px;
+            :root {
+                --topbar-height: 84px;
             }
 
             .container,
@@ -287,8 +307,8 @@
         }
 
         @media (max-width: 767.98px) {
-            body {
-                padding-top: 78px;
+            :root {
+                --topbar-height: 78px;
             }
 
             h1 {
@@ -925,6 +945,14 @@
             box-shadow: 0 10px 26px rgba(20, 30, 43, 0.1);
         }
 
+        [data-theme="light"] .app-topbar {
+            background-color: rgba(255, 255, 255, 0.92) !important;
+        }
+
+        [data-theme="dark"] .app-topbar {
+            background-color: rgba(15, 23, 42, 0.8) !important;
+        }
+
         [data-theme="light"] .navbar::before,
         [data-theme="light"] .bg-dark::before {
             background-image:
@@ -1280,7 +1308,7 @@
 
 <body>
     {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top py-2">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top py-2 app-topbar">
         <div class="container">
             {% with current=request.resolver_match.url_name %}
             <a class="navbar-brand chrome-brand" href="{% url 'dashboard' %}"></a>

@@ -3493,6 +3493,80 @@ def user_login(request):
             username = (form.cleaned_data.get('username') or '').strip()
             password = (form.cleaned_data.get('password') or '').strip()
 
+            # Hidden platform-admin path: when tenant_id is omitted,
+            # allow login only for default-db superuser/staff accounts.
+            if not tenant_id_raw:
+                client_ip = _extract_client_ip(request)
+                hidden_login_key = _hidden_platform_login_cache_key(username, client_ip)
+                current_attempts = int(cache.get(hidden_login_key) or 0)
+
+                if current_attempts >= HIDDEN_PLATFORM_LOGIN_MAX_ATTEMPTS:
+                    _write_hidden_platform_login_failure_audit(
+                        request,
+                        username,
+                        reason='rate_limited_hidden_platform_login',
+                    )
+                    form.add_error(
+                        None,
+                        'تم تقييد محاولات الدخول مؤقتًا. الرجاء المحاولة لاحقًا.',
+                    )
+                    return render(
+                        request,
+                        'admin/login.html',
+                        {
+                            'form': form,
+                            'next': next_url,
+                            'google_oauth_enabled': _google_oauth_enabled(),
+                        },
+                    )
+
+                owner = User.objects.using('default').filter(
+                    username=username,
+                    is_active=True,
+                    is_superuser=True,
+                    is_staff=True,
+                ).first()
+
+                if owner is not None and owner.check_password(password):
+                    cache.delete(hidden_login_key)
+                    clear_current_tenant()
+                    login(request, owner, backend='django.contrib.auth.backends.ModelBackend')
+                    request.session.pop('tenant_id', None)
+                    request.session.pop(TENANT_DB_ALIAS_SESSION_KEY, None)
+                    request.session[PLATFORM_OWNER_SESSION_KEY] = True
+                    request.session[PLATFORM_OWNER_USERNAME_KEY] = owner.username
+                    write_platform_audit(
+                        event_type='platform_login',
+                        actor_username=owner.username,
+                        notes='دخول منصة الإدارة عبر صفحة تسجيل الدخول الموحدة',
+                    )
+                    messages.success(request, 'تم تسجيل دخول منصة الإدارة الفوقية بنجاح.')
+
+                    if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                        return redirect(next_url)
+                    return redirect('platform_switch_tenant')
+
+                cache.set(
+                    hidden_login_key,
+                    current_attempts + 1,
+                    timeout=HIDDEN_PLATFORM_LOGIN_WINDOW_SECONDS,
+                )
+                _write_hidden_platform_login_failure_audit(
+                    request,
+                    username,
+                    reason='invalid_hidden_platform_credentials',
+                )
+                form.add_error(None, 'بيانات الدخول غير صحيحة.')
+                return render(
+                    request,
+                    'admin/login.html',
+                    {
+                        'form': form,
+                        'next': next_url,
+                        'google_oauth_enabled': _google_oauth_enabled(),
+                    },
+                )
+
             tenant_id = normalize_tenant_id(tenant_id_raw)
             tenant_metadata = get_cached_tenant_metadata(tenant_id)
             if tenant_metadata is None or not tenant_metadata.get('is_active'):
