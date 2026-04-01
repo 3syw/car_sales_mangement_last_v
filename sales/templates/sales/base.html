@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-{% load static %}
+﻿<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'ar' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+{% load static i18n %}
 
 <head>
     <meta charset="UTF-8">
@@ -8,8 +8,12 @@
     <title>المحاسب الذكي</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Inter:wght@400;600;700;800&family=Noto+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    {% if LANGUAGE_BIDI %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    {% else %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    {% endif %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'sales/css/brand-theme.css' %}">
@@ -29,16 +33,40 @@
     </script>
     <style>
         :root {
-            --charcoal: #0F141C;
-            --charcoal-soft: #171E29;
-            --charcoal-muted: #202A38;
+            --app-font-family: 'Inter', 'Noto Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --charcoal: #0F0F0F;
+            --charcoal-soft: #1C1C1C;
+            --charcoal-muted: #292929;
             --surface-glass: rgba(255, 255, 255, 0.08);
             --surface-glass-strong: rgba(255, 255, 255, 0.12);
-            --text-main: #F2EEE8;
-            --text-soft: #D4CEC5;
-            --champagne: #C9A46A;
-            --champagne-light: #DBC090;
-            --champagne-dark: #A9854F;
+            --text-main: #F2F2F2;
+            --text-soft: #B8B8B8;
+            --champagne: #8A8A8A;
+            --champagne-light: #D8D8D8;
+            --champagne-dark: #4E4E4E;
+            --gold: #5E6A79;
+            --gold-light: #95A2B2;
+            --gold-dark: #2C3440;
+        }
+
+        html[lang="ar"] {
+            --app-font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html[lang="en"] {
+            --app-font-family: 'Inter', 'Noto Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html[lang="ru"] {
+            --app-font-family: 'Noto Sans', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html[lang="ko"] {
+            --app-font-family: 'Noto Sans KR', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html[lang="zh-hans"] {
+            --app-font-family: 'Noto Sans SC', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         html {
@@ -49,7 +77,7 @@
 
         body {
             background-color: var(--charcoal) !important;
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--app-font-family);
             color: var(--text-main);
             padding-top: 92px;
             overflow-x: hidden;
@@ -101,8 +129,8 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             position: relative;
-            z-index: 1;
-            border-bottom: 1px solid rgba(201, 164, 106, 0.45);
+            z-index: 2100;
+            border-bottom: 1px solid rgba(33, 46, 63, 0.45);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
         }
 
@@ -115,7 +143,7 @@
             right: 0;
             bottom: 0;
             background-image:
-                radial-gradient(circle at 20% 150%, rgba(201, 164, 106, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 20% 150%, rgba(33, 46, 63, 0.18) 0%, transparent 50%),
                 radial-gradient(circle at 80% -50%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
             z-index: -1;
             border-radius: inherit;
@@ -135,6 +163,30 @@
             color: #f6f1e9 !important;
         }
 
+        .navbar .nav-link {
+            white-space: nowrap;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        .navbar .nav-link i {
+            font-size: 1.06rem;
+            margin-inline-end: 0.26rem;
+            vertical-align: -0.08rem;
+        }
+
+        .navbar .nav-link.home-link {
+            border-radius: 999px;
+            padding: 0.46rem 0.9rem;
+            border: 1px solid transparent;
+            background: transparent;
+        }
+
+        .navbar .nav-link.home-link.active {
+            border-color: rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
         .navbar .nav-link:hover {
             color: var(--champagne-light) !important;
         }
@@ -145,16 +197,39 @@
         }
 
         .navbar-toggler {
-            border-color: rgba(201, 164, 106, 0.56) !important;
+            border-color: rgba(33, 46, 63, 0.56) !important;
             box-shadow: none !important;
         }
 
         .navbar-toggler:focus {
-            box-shadow: 0 0 0 .2rem rgba(201, 164, 106, 0.18) !important;
+            box-shadow: 0 0 0 .2rem rgba(33, 46, 63, 0.18) !important;
         }
 
         #mainNavbar {
             max-width: 100%;
+        }
+
+        @media (min-width: 992px) {
+            #mainNavbar {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            #mainNavbar .navbar-nav {
+                flex: 1 1 auto;
+                min-width: 0;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: thin;
+                white-space: nowrap;
+                flex-wrap: nowrap;
+            }
+
+            .navbar-tools {
+                flex: 0 0 auto;
+                margin-inline-start: 0.4rem;
+            }
         }
 
         @media (max-width: 991.98px) {
@@ -183,13 +258,31 @@
                 padding: 0.9rem 0.85rem;
                 border-radius: 18px;
                 background: rgba(11, 16, 23, 0.84);
-                border: 1px solid rgba(201, 164, 106, 0.16);
+                border: 1px solid rgba(33, 46, 63, 0.16);
                 box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
             }
 
             #mainNavbar .d-flex {
                 flex-wrap: wrap;
                 justify-content: flex-start;
+            }
+
+            #mainNavbar .d-flex.align-items-center {
+                width: 100%;
+                margin-top: 0.75rem !important;
+                padding-top: 0.75rem;
+                border-top: 1px solid rgba(33, 46, 63, 0.18);
+                justify-content: space-between;
+                gap: 0.55rem !important;
+            }
+
+            #mainNavbar .d-flex.align-items-center .nav-link {
+                margin: 0;
+                padding-inline: 0.25rem;
+            }
+
+            #mainNavbar .d-flex.align-items-center .theme-toggle-btn {
+                min-width: 84px;
             }
         }
 
@@ -220,7 +313,7 @@
             }
 
             .table-scroll-shell {
-                border: 1px solid rgba(201, 164, 106, 0.18);
+                border: 1px solid rgba(33, 46, 63, 0.18);
                 background: rgba(255, 255, 255, 0.02);
             }
 
@@ -260,7 +353,7 @@
             }
 
             .table-mobile-cards tr {
-                border: 1px solid rgba(201, 164, 106, 0.2);
+                border: 1px solid rgba(33, 46, 63, 0.2);
                 border-radius: 18px;
                 padding: 0.95rem;
                 background: rgba(255, 255, 255, 0.05);
@@ -271,12 +364,13 @@
             .table-mobile-cards td,
             .table-mobile-cards tbody th {
                 display: flex;
-                align-items: flex-start;
-                justify-content: space-between;
-                gap: 0.85rem;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+                gap: 0.35rem;
                 padding: 0.55rem 0;
                 border: 0;
-                border-bottom: 1px dashed rgba(201, 164, 106, 0.16);
+                border-bottom: 1px dashed rgba(33, 46, 63, 0.16);
                 white-space: normal;
                 text-align: right;
             }
@@ -290,7 +384,7 @@
             .table-mobile-cards td::before,
             .table-mobile-cards tbody th::before {
                 content: attr(data-label);
-                flex: 0 0 42%;
+                flex: 0 0 auto;
                 color: var(--text-soft);
                 font-weight: 700;
                 font-size: 0.84rem;
@@ -298,7 +392,8 @@
 
             .table-mobile-cards td > :first-child:last-child,
             .table-mobile-cards tbody th > :first-child:last-child {
-                margin-inline-start: auto;
+                margin-inline-start: 0;
+                width: 100%;
             }
 
             .nav-tabs {
@@ -389,7 +484,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border: 1px solid rgba(201, 164, 106, 0.56);
+            border: 1px solid rgba(33, 46, 63, 0.56);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -400,8 +495,8 @@
 
         .nav-icon-circle:hover {
             color: #fff !important;
-            background: rgba(201, 164, 106, 0.24);
-            box-shadow: 0 0 16px rgba(201, 164, 106, 0.35);
+            background: rgba(33, 46, 63, 0.24);
+            box-shadow: 0 0 16px rgba(33, 46, 63, 0.35);
         }
 
         .text-primary {
@@ -429,24 +524,24 @@
             background: linear-gradient(45deg, var(--champagne-dark), var(--champagne));
             border: 1px solid var(--champagne-dark);
             color: #fff;
-            box-shadow: 0 6px 14px rgba(201, 164, 106, 0.24);
+            box-shadow: 0 6px 14px rgba(33, 46, 63, 0.24);
         }
 
         .btn-primary:hover {
             background: linear-gradient(45deg, var(--champagne), var(--champagne-light));
             color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 0 18px rgba(201, 164, 106, 0.36);
+            box-shadow: 0 0 18px rgba(33, 46, 63, 0.36);
         }
 
         .btn-outline-primary {
             color: var(--champagne-light);
-            border-color: rgba(201, 164, 106, 0.68);
+            border-color: rgba(33, 46, 63, 0.68);
             background: rgba(255, 255, 255, 0.02);
         }
 
         .btn-outline-primary:hover {
-            background-color: rgba(201, 164, 106, 0.24);
+            background-color: rgba(33, 46, 63, 0.24);
             color: #fff;
         }
 
@@ -481,7 +576,7 @@
         }
 
         .card {
-            border: 1px solid rgba(201, 164, 106, 0.35);
+            border: 1px solid rgba(33, 46, 63, 0.35);
             border-radius: 20px;
             transition: all 0.3s ease-in-out;
             background: var(--surface-glass);
@@ -494,7 +589,7 @@
 
         .card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 0 20px rgba(201, 164, 106, 0.24), 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+            box-shadow: 0 0 20px rgba(33, 46, 63, 0.24), 0 12px 28px rgba(0, 0, 0, 0.24) !important;
             border-color: var(--champagne-light);
         }
 
@@ -517,11 +612,11 @@
         .table-light {
             --bs-table-bg: rgba(255, 255, 255, 0.08);
             --bs-table-color: var(--champagne-light);
-            border-color: rgba(201, 164, 106, 0.30);
+            border-color: rgba(33, 46, 63, 0.30);
         }
 
         .table-hover>tbody>tr:hover>* {
-            --bs-table-accent-bg: rgba(201, 164, 106, 0.10);
+            --bs-table-accent-bg: rgba(33, 46, 63, 0.10);
         }
 
         .table-scroll-shell {
@@ -558,7 +653,7 @@
         .form-select,
         textarea {
             background: rgba(255, 255, 255, 0.06) !important;
-            border: 1px solid rgba(201, 164, 106, 0.35) !important;
+            border: 1px solid rgba(33, 46, 63, 0.35) !important;
             color: var(--text-main) !important;
         }
 
@@ -570,7 +665,7 @@
         .form-select:focus,
         textarea:focus {
             border-color: var(--champagne) !important;
-            box-shadow: 0 0 0 .2rem rgba(201, 164, 106, 0.18) !important;
+            box-shadow: 0 0 0 .2rem rgba(33, 46, 63, 0.18) !important;
         }
 
         .fade-in-up {
@@ -588,16 +683,6 @@
 
         * {
             transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
-        }
-
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -2;
-            background: radial-gradient(circle at 30% 20%, #1C2430 0%, var(--charcoal) 62%, #0B1017 100%);
         }
 
         a {
@@ -655,24 +740,138 @@
         .theme-toggle-btn {
             width: auto !important;
             height: auto !important;
-            min-width: 98px;
+            min-width: 112px;
             min-height: 42px;
-            gap: 0.4rem;
+            gap: 0.5rem;
             border-radius: 999px;
-            padding: 0.48rem 0.95rem;
+            padding: 0.32rem 0.5rem 0.32rem 0.86rem;
             font-size: 1rem;
+            font-weight: 700;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .language-toggle-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--champagne-light) !important;
+        }
+
+        .language-menu {
+            min-width: 180px;
+            border-radius: 14px;
+            border: 1px solid rgba(33, 46, 63, 0.18);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
+            padding: 0.4rem;
+            z-index: 2100;
+        }
+
+        .language-dropdown .dropdown-menu {
+            margin-top: 0.45rem;
+            z-index: 2200;
+        }
+
+        .language-dropdown {
+            position: relative;
+            z-index: 2201;
+        }
+
+        .language-menu.language-menu-mobile-full {
+            left: 0.5rem !important;
+            right: 0.5rem !important;
+            min-width: 0;
+        }
+
+        .language-menu-item {
+            width: 100%;
+            text-align: start;
+            border: 0;
+            background: transparent;
+            border-radius: 9px;
+            padding: 0.45rem 0.6rem;
+            font-weight: 600;
+            color: inherit;
+        }
+
+        .language-menu-item:hover {
+            background: rgba(33, 46, 63, 0.12);
+        }
+
+        .language-menu-item.active {
+            background: rgba(33, 46, 63, 0.2);
             font-weight: 700;
         }
 
-        .theme-toggle-btn i {
-            font-size: 1rem;
+        .theme-toggle-btn .theme-switch-label {
+            font-size: 0.84rem;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .theme-toggle-btn .theme-switch-knob {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.14);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .theme-toggle-btn .theme-switch-knob i {
+            font-size: 0.92rem;
             line-height: 1;
         }
 
-        .theme-toggle-btn .theme-label {
+        .theme-toggle-btn[data-resolved-theme="light"] .theme-switch-knob {
+            transform: translateX(-3px);
+        }
+
+        .theme-toggle-btn[data-resolved-theme="dark"] .theme-switch-knob {
+            transform: translateX(3px);
+        }
+
+        .navbar-search {
+            position: relative;
+            min-width: 190px;
+            max-width: 260px;
+        }
+
+        .navbar-search .bi-search {
+            position: absolute;
+            right: 11px;
+            top: 50%;
+            transform: translateY(-50%);
             font-size: 0.9rem;
-            line-height: 1.1;
-            white-space: nowrap;
+            color: rgba(242, 242, 242, 0.8);
+            pointer-events: none;
+        }
+
+        .navbar-search-input {
+            width: 100%;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+            color: #f6f1e9;
+            padding: 0.35rem 0.95rem 0.35rem 2rem;
+            font-size: 0.85rem;
+        }
+
+        .navbar-search-input::placeholder {
+            color: rgba(242, 242, 242, 0.7);
+        }
+
+        .navbar-search-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.42);
+            box-shadow: 0 0 0 .2rem rgba(255, 255, 255, 0.08);
         }
 
         @media (max-width: 767.98px) {
@@ -682,50 +881,74 @@
                 padding: 0.42rem 0.82rem;
             }
 
-            .theme-toggle-btn .theme-label {
+            .theme-toggle-btn .theme-switch-label {
                 font-size: 0.84rem;
+            }
+
+            .navbar-search {
+                min-width: 100%;
+                max-width: 100%;
+                order: -1;
+                margin-bottom: 0.35rem;
             }
         }
 
         [data-theme="light"] {
-            --charcoal: #F8F3EA;
-            --charcoal-soft: #F3EBDD;
-            --charcoal-muted: #EBDDC9;
+            --charcoal: #F6F7F9;
+            --charcoal-soft: #EDF1F5;
+            --charcoal-muted: #E4E9EF;
             --surface-glass: rgba(255, 255, 255, 0.78);
             --surface-glass-strong: rgba(255, 255, 255, 0.92);
-            --text-main: #2C1B10;
-            --text-soft: #6D5741;
-            --champagne: #A46E2A;
-            --champagne-light: #C0893F;
-            --champagne-dark: #7A4F1E;
+            --text-main: #151B23;
+            --text-soft: #4C5868;
+            --champagne: #2C3440;
+            --champagne-light: #5E6A79;
+            --champagne-dark: #0F141A;
+            --gold: #2C3440;
+            --gold-light: #5E6A79;
+            --gold-dark: #0F141A;
         }
 
         [data-theme="light"] body {
             background:
-                radial-gradient(circle at 18% 12%, rgba(164, 110, 42, 0.12) 0%, transparent 38%),
-                radial-gradient(circle at 86% 86%, rgba(122, 79, 30, 0.06) 0%, transparent 32%),
-                linear-gradient(180deg, #FAF6EF 0%, #F5ECDD 52%, #EFE1CC 100%) !important;
+                radial-gradient(circle at 16% 10%, rgba(42, 54, 71, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 86% 86%, rgba(71, 92, 120, 0.05) 0%, transparent 34%),
+                linear-gradient(180deg, #FCFDFE 0%, #F5F7FA 52%, #EDF1F5 100%) !important;
             color: var(--text-main);
         }
 
         [data-theme="light"] .navbar,
         [data-theme="light"] .bg-dark,
         [data-theme="light"] .bg-primary {
-            background: rgba(255, 252, 246, 0.94) !important;
-            border-bottom: 1px solid rgba(122, 79, 30, 0.24);
-            box-shadow: 0 10px 26px rgba(67, 45, 19, 0.12);
+            background: rgba(255, 255, 255, 0.92) !important;
+            border-bottom: 1px solid rgba(23, 34, 48, 0.12);
+            box-shadow: 0 10px 26px rgba(20, 30, 43, 0.1);
         }
 
         [data-theme="light"] .navbar::before,
         [data-theme="light"] .bg-dark::before {
             background-image:
-                radial-gradient(circle at 20% 150%, rgba(164, 110, 42, 0.14) 0%, transparent 50%),
-                radial-gradient(circle at 80% -50%, rgba(122, 79, 30, 0.06) 0%, transparent 50%);
+                radial-gradient(circle at 20% 150%, rgba(38, 55, 78, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% -50%, rgba(24, 36, 51, 0.04) 0%, transparent 50%);
         }
 
         [data-theme="light"] .navbar .nav-link,
         [data-theme="light"] .navbar .navbar-brand {
-            color: #3C2818 !important;
+            color: #223043 !important;
+        }
+
+        [data-theme="light"] .navbar .nav-link.home-link {
+            border-color: transparent;
+            background: transparent;
+            color: #223043 !important;
+            font-weight: 600;
+        }
+
+        [data-theme="light"] .navbar .nav-link.home-link.active {
+            border-color: rgba(33, 46, 63, 0.2);
+            background: rgba(33, 46, 63, 0.08);
+            color: #0f1722 !important;
+            font-weight: 800;
         }
 
         [data-theme="light"] .nav-link.text-danger {
@@ -737,44 +960,48 @@
         }
 
         [data-theme="light"] #mainNavbar {
-            background: rgba(255, 251, 245, 0.98);
-            border: 1px solid rgba(164, 110, 42, 0.24);
-            box-shadow: 0 16px 34px rgba(67, 45, 19, 0.15);
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(33, 46, 63, 0.14);
+            box-shadow: 0 16px 34px rgba(20, 30, 43, 0.12);
+        }
+
+        [data-theme="light"] #mainNavbar .d-flex.align-items-center {
+            border-top-color: rgba(33, 46, 63, 0.16);
         }
 
         [data-theme="light"] .nav-link.active {
-            color: #2C1B10 !important;
+            color: #0F1722 !important;
             font-weight: 800;
             text-shadow: 0 0 0 transparent;
         }
 
         [data-theme="light"] .table-scroll-shell {
-            background: rgba(164, 110, 42, 0.07);
+            background: rgba(21, 31, 44, 0.04);
         }
 
         [data-theme="light"] .table-mobile-cards tr {
-            border-color: rgba(164, 110, 42, 0.28);
-            background: rgba(255, 255, 255, 0.85);
-            box-shadow: 0 10px 24px rgba(67, 45, 19, 0.12);
+            border-color: rgba(21, 31, 44, 0.16);
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 10px 24px rgba(20, 30, 43, 0.1);
         }
 
         [data-theme="light"] .table-mobile-cards td,
         [data-theme="light"] .table-mobile-cards tbody th {
-            border-bottom: 1px dashed rgba(164, 110, 42, 0.25);
+            border-bottom: 1px dashed rgba(21, 31, 44, 0.14);
         }
 
         [data-theme="light"] .card {
-            border: 1px solid rgba(164, 110, 42, 0.2);
-            background: linear-gradient(155deg, rgba(255, 255, 255, 0.9), rgba(252, 244, 232, 0.88));
-            box-shadow: 0 10px 30px rgba(67, 45, 19, 0.13);
+            border: 1px solid rgba(21, 31, 44, 0.12);
+            background: linear-gradient(155deg, rgba(255, 255, 255, 0.96), rgba(247, 250, 253, 0.94));
+            box-shadow: 0 10px 30px rgba(20, 30, 43, 0.1);
         }
 
         [data-theme="light"] .form-control,
         [data-theme="light"] .form-select,
         [data-theme="light"] textarea {
             background: rgba(255, 255, 255, 0.92) !important;
-            border-color: rgba(164, 110, 42, 0.32) !important;
-            color: #2C1B10 !important;
+            border-color: rgba(33, 46, 63, 0.2) !important;
+            color: #1A2330 !important;
         }
 
         [data-theme="light"] .form-label,
@@ -782,58 +1009,276 @@
         [data-theme="light"] .small,
         [data-theme="light"] small,
         [data-theme="light"] .text-muted {
-            color: #6D5741 !important;
+            color: #4C5868 !important;
         }
 
         [data-theme="light"] .form-control:focus,
         [data-theme="light"] .form-select:focus,
         [data-theme="light"] textarea:focus {
-            border-color: rgba(164, 110, 42, 0.58) !important;
-            box-shadow: 0 0 0 0.2rem rgba(164, 110, 42, 0.16) !important;
+            border-color: rgba(33, 46, 63, 0.42) !important;
+            box-shadow: 0 0 0 0.2rem rgba(33, 46, 63, 0.1) !important;
         }
 
         [data-theme="light"] .form-control::placeholder {
-            color: #8B765F;
+            color: #7A8696;
         }
 
         [data-theme="light"] .btn-outline-secondary {
-            border-color: rgba(122, 79, 30, 0.35);
-            background: rgba(164, 110, 42, 0.06);
+            border-color: rgba(33, 46, 63, 0.28);
+            background: rgba(33, 46, 63, 0.04);
         }
 
         [data-theme="light"] .btn-outline-secondary:hover {
-            background-color: rgba(164, 110, 42, 0.16);
-            color: #2A1C12;
+            background-color: rgba(33, 46, 63, 0.12);
+            color: #0F1722;
         }
 
         [data-theme="light"] .submit-row .deletelink {
-            border-color: rgba(122, 79, 30, 0.35);
+            border-color: rgba(33, 46, 63, 0.28);
         }
 
         [data-theme="light"] .submit-row .deletelink:hover {
-            background-color: rgba(164, 110, 42, 0.12);
-            color: #2A1C12;
+            background-color: rgba(33, 46, 63, 0.1);
+            color: #0F1722;
         }
 
         [data-theme="light"] .nav-icon-circle {
-            border-color: rgba(164, 110, 42, 0.5);
+            border-color: rgba(33, 46, 63, 0.3);
             background: rgba(255, 255, 255, 0.72);
         }
 
         [data-theme="light"] .nav-icon-circle:hover {
-            background: rgba(164, 110, 42, 0.2);
-            box-shadow: 0 0 16px rgba(164, 110, 42, 0.24);
+            background: rgba(33, 46, 63, 0.12);
+            box-shadow: 0 0 16px rgba(33, 46, 63, 0.16);
         }
 
-        [data-theme="light"] #particles-js {
-            background: radial-gradient(circle at 25% 15%, #FFF8ED 0%, #F5E9D9 58%, #EEDBC2 100%);
+        [data-theme="light"] .theme-toggle-btn {
+            border-color: rgba(33, 46, 63, 0.24);
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a2431 !important;
         }
+
+        [data-theme="light"] .language-toggle-btn {
+            border-color: rgba(33, 46, 63, 0.24);
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a2431 !important;
+        }
+
+        [data-theme="light"] .language-menu-item:hover {
+            background: rgba(33, 46, 63, 0.1);
+        }
+
+        [data-theme="light"] .language-menu-item.active {
+            background: rgba(33, 46, 63, 0.16);
+        }
+
+        [data-theme="light"] .theme-toggle-btn .theme-switch-knob {
+            background: rgba(33, 46, 63, 0.12);
+            box-shadow: 0 4px 10px rgba(18, 28, 40, 0.18);
+        }
+
+        [data-theme="light"] .navbar-search .bi-search {
+            color: rgba(33, 46, 63, 0.7);
+        }
+
+        [data-theme="light"] .navbar-search-input {
+            border-color: rgba(33, 46, 63, 0.24);
+            background: rgba(255, 255, 255, 0.94);
+            color: #1a2431;
+        }
+
+        [data-theme="light"] .navbar-search-input::placeholder {
+            color: #6b7787;
+        }
+
+        /* Global text contrast system: applies across all pages in both themes. */
+        :root {
+            --ui-dark-text-strong: #f8fbff;
+            --ui-dark-text-normal: #e6edf7;
+            --ui-dark-text-muted: #ced8e6;
+            --ui-dark-surface: rgba(15, 23, 42, 0.9);
+            --ui-dark-border: rgba(148, 163, 184, 0.4);
+
+            --ui-light-text-strong: #0f172a;
+            --ui-light-text-normal: #1e293b;
+            --ui-light-text-muted: #3f4d62;
+            --ui-light-surface: rgba(255, 255, 255, 0.94);
+            --ui-light-border: rgba(30, 41, 59, 0.2);
+        }
+
+        [data-theme="dark"] body {
+            color: var(--ui-dark-text-normal);
+        }
+
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4,
+        [data-theme="dark"] h5,
+        [data-theme="dark"] h6,
+        [data-theme="dark"] .card-title,
+        [data-theme="dark"] .fw-bold,
+        [data-theme="dark"] strong,
+        [data-theme="dark"] th,
+        [data-theme="dark"] .table,
+        [data-theme="dark"] .table th,
+        [data-theme="dark"] .table td,
+        [data-theme="dark"] .nav-link,
+        [data-theme="dark"] .navbar-brand,
+        [data-theme="dark"] .form-label,
+        [data-theme="dark"] label,
+        [data-theme="dark"] .modal-title,
+        [data-theme="dark"] .dropdown-item,
+        [data-theme="dark"] .language-menu-item {
+            color: var(--ui-dark-text-strong) !important;
+        }
+
+        [data-theme="dark"] .text-muted,
+        [data-theme="dark"] .form-text,
+        [data-theme="dark"] .text-secondary {
+            color: var(--ui-dark-text-muted) !important;
+        }
+
+        [data-theme="dark"] .badge.bg-light,
+        [data-theme="dark"] :is(span, div, small, p, a, strong, li)[class*="chip"],
+        [data-theme="dark"] :is(span, div, small, p, a, strong, li)[class*="-pill"] {
+            background: rgba(30, 41, 59, 0.9) !important;
+            border-color: rgba(148, 163, 184, 0.4) !important;
+            color: var(--ui-dark-text-strong) !important;
+        }
+
+        [data-theme="dark"] .bg-light,
+        [data-theme="dark"] .text-bg-light {
+            background: rgba(30, 41, 59, 0.9) !important;
+            border-color: rgba(148, 163, 184, 0.4) !important;
+            color: var(--ui-dark-text-strong) !important;
+        }
+
+        [data-theme="dark"] .text-dark,
+        [data-theme="dark"] .link-dark {
+            color: var(--ui-dark-text-strong) !important;
+        }
+
+        [data-theme="dark"] :is(span, div, small, p, a, strong, li)[class*="chip"] .text-muted,
+        [data-theme="dark"] :is(span, div, small, p, a, strong, li)[class*="-pill"] .text-muted,
+        [data-theme="dark"] :is(span, div, small, p, a, strong, li)[class*="chip"] small,
+        [data-theme="dark"] :is(span, div, small, p, a, strong, li)[class*="-pill"] small {
+            color: #d7e0ec !important;
+        }
+
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .modal-content,
+        [data-theme="dark"] .dropdown-menu,
+        [data-theme="dark"] .table,
+        [data-theme="dark"] .table-responsive,
+        [data-theme="dark"] .table-scroll-shell,
+        [data-theme="dark"] .alert,
+        [data-theme="dark"] .list-group-item {
+            background: var(--ui-dark-surface) !important;
+            border-color: var(--ui-dark-border) !important;
+            box-shadow: 0 14px 32px rgba(2, 6, 23, 0.42);
+        }
+
+        [data-theme="dark"] .form-control,
+        [data-theme="dark"] .form-select,
+        [data-theme="dark"] textarea,
+        [data-theme="dark"] input,
+        [data-theme="dark"] select {
+            background: rgba(15, 23, 42, 0.86) !important;
+            color: var(--ui-dark-text-strong) !important;
+            border-color: rgba(148, 163, 184, 0.38) !important;
+        }
+
+        [data-theme="dark"] .form-control::placeholder,
+        [data-theme="dark"] input::placeholder,
+        [data-theme="dark"] textarea::placeholder {
+            color: #b6c2d3 !important;
+            opacity: 1;
+        }
+
+        [data-theme="dark"] .table > :not(caption) > * > * {
+            border-bottom-color: rgba(148, 163, 184, 0.26) !important;
+        }
+
+        [data-theme="light"] body {
+            color: var(--ui-light-text-normal);
+        }
+
+        [data-theme="light"] h1,
+        [data-theme="light"] h2,
+        [data-theme="light"] h3,
+        [data-theme="light"] h4,
+        [data-theme="light"] h5,
+        [data-theme="light"] h6,
+        [data-theme="light"] .card-title,
+        [data-theme="light"] .fw-bold,
+        [data-theme="light"] strong,
+        [data-theme="light"] th,
+        [data-theme="light"] .table,
+        [data-theme="light"] .table th,
+        [data-theme="light"] .table td,
+        [data-theme="light"] .nav-link,
+        [data-theme="light"] .navbar-brand,
+        [data-theme="light"] .form-label,
+        [data-theme="light"] label,
+        [data-theme="light"] .modal-title,
+        [data-theme="light"] .dropdown-item,
+        [data-theme="light"] .language-menu-item {
+            color: var(--ui-light-text-strong) !important;
+        }
+
+        [data-theme="light"] .text-muted,
+        [data-theme="light"] .form-text,
+        [data-theme="light"] .text-secondary {
+            color: var(--ui-light-text-muted) !important;
+        }
+
+        [data-theme="light"] .badge.bg-light,
+        [data-theme="light"] :is(span, div, small, p, a, strong, li)[class*="chip"],
+        [data-theme="light"] :is(span, div, small, p, a, strong, li)[class*="-pill"] {
+            background: rgba(255, 255, 255, 0.94) !important;
+            border-color: rgba(30, 41, 59, 0.18) !important;
+            color: var(--ui-light-text-strong) !important;
+        }
+
+        [data-theme="light"] :is(span, div, small, p, a, strong, li)[class*="chip"] .text-muted,
+        [data-theme="light"] :is(span, div, small, p, a, strong, li)[class*="-pill"] .text-muted,
+        [data-theme="light"] :is(span, div, small, p, a, strong, li)[class*="chip"] small,
+        [data-theme="light"] :is(span, div, small, p, a, strong, li)[class*="-pill"] small {
+            color: #4b5f77 !important;
+        }
+
+        [data-theme="light"] .card,
+        [data-theme="light"] .modal-content,
+        [data-theme="light"] .dropdown-menu,
+        [data-theme="light"] .table,
+        [data-theme="light"] .table-responsive,
+        [data-theme="light"] .table-scroll-shell,
+        [data-theme="light"] .alert,
+        [data-theme="light"] .list-group-item {
+            background: var(--ui-light-surface) !important;
+            border-color: var(--ui-light-border) !important;
+        }
+
+        [data-theme="light"] .form-control,
+        [data-theme="light"] .form-select,
+        [data-theme="light"] textarea,
+        [data-theme="light"] input,
+        [data-theme="light"] select {
+            color: var(--ui-light-text-strong) !important;
+        }
+
+        [data-theme="light"] .form-control::placeholder,
+        [data-theme="light"] input::placeholder,
+        [data-theme="light"] textarea::placeholder {
+            color: #64748b !important;
+            opacity: 1;
+        }
+
     </style>
 </head>
 
 <body>
-    <div id="particles-js"></div>
-
     {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top py-2">
         <div class="container">
@@ -849,41 +1294,89 @@
                     {% if user.is_authenticated %}
                     <a class="nav-link {% if current == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><i class="bi bi-compass"></i> عام</a>
                     {% endif %}
-                    <a class="nav-link {% if current == 'home' %}active{% endif %}" href="{% url 'home' %}"><i class="bi bi-house"></i> الرئيسية</a>
+                    <a class="nav-link home-link {% if current == 'home' %}active{% endif %}" href="{% url 'home' %}" title="الرئيسية"><i class="bi bi-house"></i> الرئيسية</a>
                     {% if user.is_authenticated %}
                         {% if request.session.platform_owner_authenticated %}
-                        <a class="nav-link {% if current == 'platform_switch_tenant' %}active{% endif %}" href="{% url 'platform_switch_tenant' %}"><i class="bi bi-diagram-3"></i> خيارات المنصة</a>
+                        <a class="nav-link {% if current == 'platform_switch_tenant' %}active{% endif %}" href="{% url 'platform_switch_tenant' %}" title="خيارات المنصة"><i class="bi bi-diagram-3"></i> خيارات المنصة</a>
                         {% endif %}
-                        <a class="nav-link {% if current == 'car_list' %}active{% endif %}" href="{% url 'car_list' %}"><i class="bi bi-car-front"></i> المعرض</a>
+                        <a class="nav-link {% if current == 'car_list' %}active{% endif %}" href="{% url 'car_list' %}" title="المعرض"><i class="bi bi-car-front"></i> المعرض</a>
                         {% if user.is_superuser %}
-                        <a class="nav-link {% if current == 'reports' or current == 'audit_logs_report' or current == 'central_audit_monitor' or current == 'reports_financial' or current == 'reports_vouchers' or current == 'vouchers_list' %}active{% endif %}" href="{% url 'reports' %}"><i class="bi bi-bar-chart-line"></i> التقارير</a>
-                        <a class="nav-link {% if current == 'general_expenses_management' %}active{% endif %}" href="{% url 'general_expenses_management' %}"><i class="bi bi-file-invoice-dollar"></i> الإدارة المالية</a>
+                        <a class="nav-link {% if current == 'reports' or current == 'audit_logs_report' or current == 'central_audit_monitor' or current == 'reports_financial' or current == 'reports_vouchers' or current == 'vouchers_list' %}active{% endif %}" href="{% url 'reports' %}" title="التقارير"><i class="bi bi-bar-chart-line"></i> التقارير</a>
+                        <a class="nav-link {% if current == 'general_expenses_management' %}active{% endif %}" href="{% url 'general_expenses_management' %}" title="الإدارة المالية"><i class="bi bi-file-invoice-dollar"></i> الإدارة المالية</a>
                         {% endif %}
-                        <a class="nav-link {% if current == 'debts_list' %}active{% endif %}" href="{% url 'debts_list' %}"><i class="bi bi-wallet2"></i> الديون</a>
+                        <a class="nav-link {% if current == 'debts_list' %}active{% endif %}" href="{% url 'debts_list' %}" title="الديون"><i class="bi bi-wallet2"></i> الديون</a>
                         {% if user.is_staff %}
-                        <a class="nav-link {% if current == 'digital_archive' %}active{% endif %}" href="{% url 'digital_archive' %}"><i class="bi bi-folder2-open"></i> الأرشيف الرقمي</a>
-                        <a class="nav-link {% if current == 'inventory_reconciliation' %}active{% endif %}" href="{% url 'inventory_reconciliation' %}"><i class="bi bi-clipboard-check"></i> جرد المخزون</a>
+                        <a class="nav-link {% if current == 'digital_archive' %}active{% endif %}" href="{% url 'digital_archive' %}" title="الأرشيف الرقمي"><i class="bi bi-folder2-open"></i> الأرشيف الرقمي</a>
+                        <a class="nav-link {% if current == 'inventory_reconciliation' %}active{% endif %}" href="{% url 'inventory_reconciliation' %}" title="جرد المخزون"><i class="bi bi-clipboard-check"></i> جرد المخزون</a>
                         {% endif %}
-                        <a class="nav-link {% if current == 'timeline' %}active{% endif %}" href="{% url 'timeline' %}"><i class="bi bi-clock-history"></i> الجدول الزمني</a>
+                        <a class="nav-link {% if current == 'timeline' %}active{% endif %}" href="{% url 'timeline' %}" title="الجدول الزمني"><i class="bi bi-clock-history"></i> الجدول الزمني</a>
                         {% if user.is_superuser %}
-                        <a class="nav-link {% if current == 'permissions_management' %}active{% endif %}" href="{% url 'permissions_management' %}"><i class="bi bi-shield-lock"></i> إدارة الصلاحيات</a>
+                        <a class="nav-link {% if current == 'permissions_management' %}active{% endif %}" href="{% url 'permissions_management' %}" title="إدارة الصلاحيات"><i class="bi bi-shield-lock"></i> إدارة الصلاحيات</a>
                         {% endif %}
                         {% if user.is_staff %}
-                        <a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> الإدارة</a>
+                        <a class="nav-link" href="{% url 'admin:index' %}" title="الإدارة"><i class="bi bi-gear"></i> الإدارة</a>
                         {% endif %}
                     {% endif %}
                 </div>
 
-                <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+                <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 navbar-tools">
+                    {% if user.is_authenticated %}
+                    <div class="navbar-search" role="search" aria-label="بحث سريع">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                        <input type="search" class="navbar-search-input" placeholder="بحث سريع..." aria-label="بحث سريع">
+                    </div>
+                    {% endif %}
                     <button
                         id="themeToggleBtn"
                         class="nav-icon-circle theme-toggle-btn"
                         type="button"
                         title="تبديل الوضع المشمس والمظلم"
                         aria-label="تبديل الوضع المشمس والمظلم">
-                        <i class="bi bi-sun-fill" aria-hidden="true"></i>
-                        <span class="theme-label">مشمس</span>
+                        <span class="theme-switch-knob" aria-hidden="true"><i class="bi bi-sun-fill"></i></span>
+                        <span class="theme-switch-label">مشمس</span>
                     </button>
+                    <div class="dropdown language-dropdown">
+                        <button class="nav-icon-circle language-toggle-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تغيير اللغة" aria-label="تغيير اللغة">
+                            <i class="bi bi-translate"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end language-menu">
+                            <li>
+                                <form method="post" action="{% url 'set_language' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" name="language" value="ar" class="language-menu-item {% if LANGUAGE_CODE == 'ar' %}active{% endif %}">العربية</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="post" action="{% url 'set_language' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" name="language" value="en" class="language-menu-item {% if LANGUAGE_CODE == 'en' %}active{% endif %}">English</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="post" action="{% url 'set_language' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" name="language" value="ru" class="language-menu-item {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">Русский</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="post" action="{% url 'set_language' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" name="language" value="ko" class="language-menu-item {% if LANGUAGE_CODE == 'ko' %}active{% endif %}">한국어</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="post" action="{% url 'set_language' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" name="language" value="zh-hans" class="language-menu-item {% if LANGUAGE_CODE == 'zh-hans' %}active{% endif %}">简体中文</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                     {% if user.is_authenticated %}
                         <a class="nav-icon-circle" href="{% url 'timeline' %}" title="الإشعارات"><i class="bi bi-bell"></i></a>
                         {% if user.is_staff %}
@@ -914,8 +1407,50 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
+        const ACTIVE_UI_LANGUAGE = "{{ LANGUAGE_CODE|default:'ar' }}";
+        const UI_TEXT = {
+            ar: {
+                auto: 'تلقائي',
+                dark: 'مظلم',
+                light: 'مشمس',
+                autoModeTitle: 'الوضع التلقائي مفعل - اضغط للتبديل اليدوي',
+                toDark: 'الانتقال للوضع المظلم',
+                toLight: 'الانتقال للوضع المشمس',
+            },
+            en: {
+                auto: 'Auto',
+                dark: 'Dark',
+                light: 'Light',
+                autoModeTitle: 'Auto mode is enabled - click for manual switching',
+                toDark: 'Switch to dark mode',
+                toLight: 'Switch to light mode',
+            },
+            ru: {
+                auto: 'Авто',
+                dark: 'Темная',
+                light: 'Светлая',
+                autoModeTitle: 'Автоматический режим включен — нажмите для ручного переключения',
+                toDark: 'Переключить на темный режим',
+                toLight: 'Переключить на светлый режим',
+            },
+            ko: {
+                auto: '자동',
+                dark: '다크',
+                light: '라이트',
+                autoModeTitle: '자동 모드가 활성화되었습니다 - 수동 전환하려면 클릭',
+                toDark: '다크 모드로 전환',
+                toLight: '라이트 모드로 전환',
+            },
+            'zh-hans': {
+                auto: '自动',
+                dark: '深色',
+                light: '浅色',
+                autoModeTitle: '自动模式已启用 - 点击切换为手动',
+                toDark: '切换到深色模式',
+                toLight: '切换到浅色模式',
+            },
+        };
         const THEME_STORAGE_KEY = 'ui-theme';
         const BACK_NAV_FLAG = 'suppress_page_transition_once';
         const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === 'true';
@@ -1036,172 +1571,44 @@
                 return;
             }
 
-            const icon = btn.querySelector('i');
-            const label = btn.querySelector('.theme-label');
+            const localizedText = UI_TEXT[ACTIVE_UI_LANGUAGE] || UI_TEXT.ar;
+
+            const knobIcon = btn.querySelector('.theme-switch-knob i');
+            const label = btn.querySelector('.theme-switch-label');
+            btn.dataset.resolvedTheme = resolvedTheme;
 
             if (preference === 'auto') {
-                if (icon) {
-                    icon.className = 'bi bi-circle-half';
+                if (knobIcon) {
+                    knobIcon.className = 'bi bi-circle-half';
                 }
                 if (label) {
-                    label.textContent = 'تلقائي';
+                    label.textContent = localizedText.auto;
                 }
-                btn.setAttribute('title', 'الوضع التلقائي مفعل - اضغط للتبديل اليدوي');
-                btn.setAttribute('aria-label', 'الوضع التلقائي مفعل - اضغط للتبديل اليدوي');
+                btn.setAttribute('title', localizedText.autoModeTitle);
+                btn.setAttribute('aria-label', localizedText.autoModeTitle);
                 return;
             }
 
             if (resolvedTheme === 'light') {
-                if (icon) {
-                    icon.className = 'bi bi-moon-stars-fill';
+                if (knobIcon) {
+                    knobIcon.className = 'bi bi-moon-stars-fill';
                 }
                 if (label) {
-                    label.textContent = 'مظلم';
+                    label.textContent = localizedText.dark;
                 }
-                btn.setAttribute('title', 'الانتقال للوضع المظلم');
-                btn.setAttribute('aria-label', 'الانتقال للوضع المظلم');
+                btn.setAttribute('title', localizedText.toDark);
+                btn.setAttribute('aria-label', localizedText.toDark);
                 return;
             }
 
-            if (icon) {
-                icon.className = 'bi bi-sun-fill';
+            if (knobIcon) {
+                knobIcon.className = 'bi bi-sun-fill';
             }
             if (label) {
-                label.textContent = 'مشمس';
+                label.textContent = localizedText.light;
             }
-            btn.setAttribute('title', 'الانتقال للوضع المشمس');
-            btn.setAttribute('aria-label', 'الانتقال للوضع المشمس');
-        }
-
-        function getParticlesConfig(theme) {
-            const isLight = theme === 'light';
-            return {
-                particles: {
-                    number: {
-                        value: 80,
-                        density: {
-                            enable: true,
-                            value_area: 800
-                        }
-                    },
-                    color: {
-                        value: isLight ? ['#A46E2A', '#d6b78f', '#f6dec0'] : ['#C9A46A', '#ffffff', '#DBC090']
-                    },
-                    shape: {
-                        type: 'circle',
-                        stroke: {
-                            width: 0,
-                            color: '#000000'
-                        },
-                        polygon: {
-                            nb_sides: 5
-                        }
-                    },
-                    opacity: {
-                        value: isLight ? 0.26 : 0.42,
-                        random: true,
-                        anim: {
-                            enable: true,
-                            speed: 1,
-                            opacity_min: 0.1,
-                            sync: false
-                        }
-                    },
-                    size: {
-                        value: 3,
-                        random: true,
-                        anim: {
-                            enable: true,
-                            speed: 2,
-                            size_min: 0.1,
-                            sync: false
-                        }
-                    },
-                    line_linked: {
-                        enable: true,
-                        distance: 150,
-                        color: isLight ? '#A46E2A' : '#C9A46A',
-                        opacity: isLight ? 0.2 : 0.35,
-                        width: 1.1,
-                        shadow: {
-                            enable: true,
-                            color: isLight ? '#A46E2A' : '#C9A46A',
-                            blur: 4
-                        }
-                    },
-                    move: {
-                        enable: true,
-                        speed: 1.8,
-                        direction: 'none',
-                        random: true,
-                        straight: false,
-                        out_mode: 'out',
-                        bounce: false,
-                        attract: {
-                            enable: true,
-                            rotateX: 600,
-                            rotateY: 1200
-                        }
-                    }
-                },
-                interactivity: {
-                    detect_on: 'window',
-                    events: {
-                        onhover: {
-                            enable: true,
-                            mode: 'grab'
-                        },
-                        onclick: {
-                            enable: true,
-                            mode: 'push'
-                        },
-                        resize: true
-                    },
-                    modes: {
-                        grab: {
-                            distance: 200,
-                            line_linked: {
-                                opacity: isLight ? 0.35 : 0.8
-                            }
-                        },
-                        bubble: {
-                            distance: 400,
-                            size: 40,
-                            duration: 2,
-                            opacity: 8,
-                            speed: 3
-                        },
-                        repulse: {
-                            distance: 200,
-                            duration: 0.4
-                        },
-                        push: {
-                            particles_nb: 4
-                        },
-                        remove: {
-                            particles_nb: 2
-                        }
-                    }
-                },
-                retina_detect: true
-            };
-        }
-
-        function renderParticles(theme) {
-            if (typeof particlesJS !== 'function') {
-                return;
-            }
-
-            if (window.pJSDom && window.pJSDom.length) {
-                window.pJSDom.forEach((item) => {
-                    if (item && item.pJS && item.pJS.fn && item.pJS.fn.vendors && item.pJS.fn.vendors.destroypJS) {
-                        item.pJS.fn.vendors.destroypJS();
-                    }
-                });
-                window.pJSDom = [];
-            }
-
-            particlesJS('particles-js', getParticlesConfig(theme));
+            btn.setAttribute('title', localizedText.toLight);
+            btn.setAttribute('aria-label', localizedText.toLight);
         }
 
         function applyThemePreferenceState(preference, options = {}) {
@@ -1212,7 +1619,6 @@
             document.documentElement.setAttribute('data-theme-preference', preference);
             applyTheme(resolvedTheme);
             updateThemeToggleAppearance(preference, resolvedTheme);
-            renderParticles(resolvedTheme);
 
             if (!options.silent) {
                 document.dispatchEvent(new CustomEvent('theme:changed', {
@@ -1228,9 +1634,11 @@
 
         function setThemePreference(preference, options = {}) {
             const nextPreference = THEME_PREFERENCES.includes(preference) ? preference : 'dark';
+            // Apply immediately so navigation/back never shows stale theme.
+            applyThemePreferenceState(nextPreference, { source: options.source || 'save' });
+
             return persistThemePreference(nextPreference).then((result) => {
                 themePreferenceUpdatedAt = result && result.updated_at ? result.updated_at : themePreferenceUpdatedAt;
-                applyThemePreferenceState(nextPreference, { source: options.source || 'save' });
                 return {
                     preference: nextPreference,
                     resolvedTheme: activeResolvedTheme,
@@ -1307,6 +1715,51 @@
             const themeToggleBtn = document.getElementById('themeToggleBtn');
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('click', toggleTheme);
+            }
+
+            const languageDropdown = document.querySelector('.language-dropdown');
+            if (languageDropdown) {
+                const languageMenu = languageDropdown.querySelector('.language-menu');
+                const alignLanguageMenu = () => {
+                    if (!languageMenu) {
+                        return;
+                    }
+
+                    languageMenu.classList.remove('dropdown-menu-start', 'dropdown-menu-end', 'language-menu-mobile-full');
+                    languageMenu.style.left = '';
+                    languageMenu.style.right = '';
+
+                    if (window.innerWidth > 576) {
+                        languageMenu.classList.add('dropdown-menu-end');
+                        return;
+                    }
+
+                    languageMenu.classList.add('dropdown-menu-end');
+                    let rect = languageMenu.getBoundingClientRect();
+
+                    if (rect.left < 8) {
+                        languageMenu.classList.remove('dropdown-menu-end');
+                        languageMenu.classList.add('dropdown-menu-start');
+                        rect = languageMenu.getBoundingClientRect();
+                    }
+
+                    if (rect.right > (window.innerWidth - 8)) {
+                        languageMenu.classList.remove('dropdown-menu-start');
+                        languageMenu.classList.add('dropdown-menu-end');
+                        rect = languageMenu.getBoundingClientRect();
+                    }
+
+                    if (rect.left < 8 || rect.right > (window.innerWidth - 8)) {
+                        languageMenu.classList.add('language-menu-mobile-full');
+                    }
+                };
+
+                languageDropdown.addEventListener('shown.bs.dropdown', alignLanguageMenu);
+                window.addEventListener('resize', () => {
+                    if (languageDropdown.classList.contains('show')) {
+                        alignLanguageMenu();
+                    }
+                });
             }
 
             if (shouldSuppressTransition()) {
@@ -1387,6 +1840,12 @@
         });
 
         window.addEventListener('pageshow', () => {
+            // Restore latest saved preference when returning from bfcache/history.
+            const storedPreference = getStoredThemePreference();
+            if (storedPreference !== activeThemePreference) {
+                applyThemePreferenceState(storedPreference, { source: 'pageshow', silent: true });
+            }
+
             if (shouldSuppressTransition()) {
                 document.body.classList.add('no-page-transition');
                 consumeBackNavFlag();

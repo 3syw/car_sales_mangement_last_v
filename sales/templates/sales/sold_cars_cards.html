@@ -1,10 +1,11 @@
-{% extends "sales/base.html" %}
+﻿{% extends "sales/base.html" %}
+{% load ui_i18n %}
 
 {% block content %}
 <div class="row align-items-center mb-3">
     <div class="col-12 d-flex justify-content-between align-items-center">
-        <h3 class="mb-0 text-primary">السيارات المباعة</h3>
-        <a href="{% url 'admin:sales_car_changelist' %}" class="btn btn-sm btn-outline-secondary">لوحة السيارات</a>
+        <h3 class="mb-0 text-primary">{% ui 'السيارات المباعة' %}</h3>
+        <a href="{% url 'admin:sales_car_changelist' %}" class="btn btn-sm btn-outline-secondary">{% ui 'لوحة السيارات' %}</a>
     </div>
 </div>
 
@@ -14,15 +15,15 @@
         <div class="card p-3 h-100">
             <div class="card-body text-center">
                 <h5 class="fw-bold mb-2">{{ car.brand }} {{ car.model_name }}</h5>
-                <p class="text-muted mb-3">سنة التصنيع: {{ car.year }}</p>
-                <a href="{% url 'sold_car_details' car.id %}" class="btn btn-outline-light" style="color:var(--gold); font-weight:700; border:1px solid rgba(212,175,55,0.35);">عرض التفاصيل</a>
+                <p class="text-muted mb-3">{% ui 'سنة التصنيع' %}: {{ car.year }}</p>
+                <a href="{% url 'sold_car_details' car.id %}" class="btn btn-outline-light" style="color:var(--gold); font-weight:700; border:1px solid rgba(33, 46, 63, 0.35);">{% ui 'عرض التفاصيل' %}</a>
             </div>
         </div>
     </div>
     {% empty %}
     <div class="col-12">
         <div class="card p-3">
-            <div class="card-body text-center text-muted">لا توجد سيارات مباعة حالياً.</div>
+            <div class="card-body text-center text-muted">{% ui 'لا توجد سيارات مباعة حالياً.' %}</div>
         </div>
     </div>
     {% endfor %}

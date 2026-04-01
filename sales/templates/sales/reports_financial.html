@@ -1,5 +1,6 @@
-{% extends 'sales/base.html' %}
+﻿{% extends 'sales/base.html' %}
 {% load humanize %}
+{% load ui_i18n %}
 
 {% block extrastyle %}
 {{ block.super }}
@@ -21,7 +22,7 @@
 
     .reports-fin-filter-card {
         border-radius: 1.4rem;
-        border: 1px solid rgba(201, 164, 106, 0.18);
+        border: 1px solid rgba(33, 46, 63, 0.18);
         box-shadow: 0 20px 44px rgba(15, 23, 42, 0.1);
     }
 
@@ -39,7 +40,7 @@
         padding: 0.75rem 1rem;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(201, 164, 106, 0.22);
+        border: 1px solid rgba(33, 46, 63, 0.22);
         color: var(--text-main);
         font-weight: 700;
     }
@@ -50,7 +51,7 @@
 
     .reports-fin-mobile-card {
         border-radius: 1rem;
-        border: 1px solid rgba(201, 164, 106, 0.18);
+        border: 1px solid rgba(33, 46, 63, 0.18);
         background: rgba(255, 255, 255, 0.04);
         padding: 1rem;
         box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
@@ -67,7 +68,7 @@
         border-radius: 0.9rem;
         padding: 0.75rem;
         background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(201, 164, 106, 0.12);
+        border: 1px solid rgba(33, 46, 63, 0.12);
     }
 
     .reports-fin-mobile-grid small {
@@ -84,7 +85,7 @@
     .reports-fin-lux .bg-light {
         background: linear-gradient(165deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.30)) !important;
         color: var(--text-main) !important;
-        border: 1px solid rgba(201, 164, 106, 0.27) !important;
+        border: 1px solid rgba(33, 46, 63, 0.27) !important;
     }
 
     .reports-fin-lux .btn,
@@ -96,7 +97,7 @@
     .reports-fin-lux .btn-primary,
     .reports-fin-lux .btn-outline-success,
     .reports-fin-lux .btn-outline-secondary {
-        border: 1px solid rgba(201, 164, 106, 0.58) !important;
+        border: 1px solid rgba(33, 46, 63, 0.58) !important;
         color: var(--champagne-light) !important;
         background: transparent !important;
     }
@@ -115,7 +116,7 @@
 
     .reports-fin-lux canvas {
         background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(201, 164, 106, 0.16);
+        border: 1px solid rgba(33, 46, 63, 0.16);
         border-radius: 12px;
         padding: 0.35rem;
     }
@@ -218,7 +219,7 @@
         </div>
         <div class="col-md-2 d-grid">
             <a class="btn btn-outline-success" href="{% url 'export_financial_excel' %}?{{ request.GET.urlencode }}">
-                <i class="fas fa-file-excel"></i> تصدير XL
+                <i class="fas fa-file-excel"></i> {% ui 'تصدير XL' %}
             </a>
         </div>
     </form>
@@ -227,9 +228,9 @@
     <div class="col-md-3 mb-4">
         <div class="card bg-primary text-white shadow p-3 border-0">
             <div class="card-body">
-                <h6 class="text-uppercase opacity-75">إجمالي المبيعات</h6>
+                <h6 class="text-uppercase opacity-75">{% ui 'إجمالي المبيعات' %}</h6>
                 <h2 class="display-6 fw-bold">{{ total_sales|intcomma }} SR</h2>
-                <small><i class="fas fa-file-contract"></i> مجموع عقود البيع</small>
+                <small><i class="fas fa-file-contract"></i> {% ui 'مجموع عقود البيع' %}</small>
             </div>
         </div>
     </div>
@@ -237,9 +238,9 @@
     <div class="col-md-3 mb-4">
         <div class="card bg-dark text-white shadow p-3 border-0">
             <div class="card-body">
-                <h6 class="text-uppercase opacity-75">ربح أولي (قبل المصاريف)</h6>
+                <h6 class="text-uppercase opacity-75">{% ui 'ربح أولي (قبل المصاريف)' %}</h6>
                 <h2 class="display-6 fw-bold">{{ gross_profit|intcomma }} SR</h2>
-                <small>المبيعات - تكلفة السيارات المباعة</small>
+                <small>{% ui 'المبيعات - تكلفة السيارات المباعة' %}</small>
             </div>
         </div>
     </div>
@@ -247,9 +248,9 @@
     <div class="col-md-3 mb-4">
         <div class="card bg-success text-white shadow p-3 border-0">
             <div class="card-body">
-                <h6 class="text-uppercase opacity-75">صافي الربح النهائي</h6>
+                <h6 class="text-uppercase opacity-75">{% ui 'صافي الربح النهائي' %}</h6>
                 <h2 class="display-6 fw-bold">{{ final_net_profit|intcomma }} SR</h2>
-                <small>بعد خصم المصروفات التشغيلية</small>
+                <small>{% ui 'بعد خصم المصروفات التشغيلية' %}</small>
             </div>
         </div>
     </div>
@@ -257,19 +258,19 @@
     <div class="col-md-3">
         <div class="list-group shadow-sm">
             <div class="list-group-item d-flex justify-content-between align-items-center p-3">
-                عدد السيارات المباعة
+                {% ui 'عدد السيارات المباعة' %}
                 <span class="badge bg-success rounded-pill px-3">{{ sold_count }}</span>
             </div>
             <div class="list-group-item d-flex justify-content-between align-items-center p-3">
-                عدد السيارات المتاحة
+                {% ui 'عدد السيارات المتاحة' %}
                 <span class="badge bg-info rounded-pill px-3">{{ available_count }}</span>
             </div>
             <div class="list-group-item d-flex justify-content-between align-items-center p-3">
-                تقييم المخزون الحالي
+                {% ui 'تقييم المخزون الحالي' %}
                 <span class="fw-bold">{{ inventory_value|intcomma }} SR</span>
             </div>
             <div class="list-group-item d-flex justify-content-between align-items-center p-3">
-                التكاليف الإضافية للسيارات المباعة
+                {% ui 'التكاليف الإضافية للسيارات المباعة' %}
                 <span class="fw-bold">{{ total_additional_cost_sold|intcomma }} SR</span>
             </div>
         </div>
@@ -280,16 +281,16 @@
     <div class="col-md-4 mb-3">
         <div class="card bg-warning text-dark shadow p-3 border-0">
             <div class="card-body">
-                <h6 class="text-uppercase opacity-75">صيانة هذا الشهر</h6>
+                <h6 class="text-uppercase opacity-75">{% ui 'صيانة هذا الشهر' %}</h6>
                 <h3 class="fw-bold">{{ maintenance_current_month|intcomma }} SR</h3>
-                <small>متوسط الأشهر السابقة: {{ maintenance_previous_avg|intcomma }} SR</small>
+                <small>{% ui 'متوسط الأشهر السابقة' %}: {{ maintenance_previous_avg|intcomma }} SR</small>
             </div>
         </div>
     </div>
     <div class="col-md-8 mb-3">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h6 class="fw-bold mb-3">مقارنة مصروفات الصيانة</h6>
+                <h6 class="fw-bold mb-3">{% ui 'مقارنة مصروفات الصيانة' %}</h6>
                 <div class="row g-2">
                     {% for item in maintenance_monthly_series %}
                     <div class="col-md-2 col-6">
@@ -307,20 +308,20 @@
 
 <div class="card shadow-sm border-0 mt-4 mb-4">
     <div class="card-header bg-white py-3">
-        <h5 class="mb-0">التحليل البصري والتحديث اللحظي</h5>
+        <h5 class="mb-0">{% ui 'التحليل البصري والتحديث اللحظي' %}</h5>
     </div>
     <div class="card-body">
         <div class="row g-4">
             <div class="col-lg-7">
-                <h6 class="fw-bold mb-2">المخطط الخطي للمبيعات</h6>
+                <h6 class="fw-bold mb-2">{% ui 'المخطط الخطي للمبيعات' %}</h6>
                 <canvas id="salesLineChart" height="120"></canvas>
             </div>
             <div class="col-lg-5">
-                <h6 class="fw-bold mb-2">توزيع (أرباح/مصاريف/ديون)</h6>
+                <h6 class="fw-bold mb-2">{% ui 'توزيع (أرباح/مصاريف/ديون)' %}</h6>
                 <canvas id="financeDoughnutChart" height="120"></canvas>
             </div>
             <div class="col-12">
-                <h6 class="fw-bold mb-2">مقارنة الشهر الحالي مع الأشهر السابقة</h6>
+                <h6 class="fw-bold mb-2">{% ui 'مقارنة الشهر الحالي مع الأشهر السابقة' %}</h6>
                 <canvas id="monthlyCompareChart" height="110"></canvas>
             </div>
         </div>
@@ -329,15 +330,15 @@
 
 <div class="card shadow-sm border-0 mt-4">
     <div class="card-header bg-white py-3">
-        <h5 class="mb-0">الرقابة المالية والتدفق النقدي</h5>
+        <h5 class="mb-0">{% ui 'الرقابة المالية والتدفق النقدي' %}</h5>
     </div>
     <div class="row mt-4">
         <div class="col-md-4 mb-4">
             <div class="card bg-danger text-white shadow p-3 border-0">
                 <div class="card-body">
-                    <h6 class="text-uppercase opacity-75">إجمالي المصاريف التشغيلية</h6>
+                    <h6 class="text-uppercase opacity-75">{% ui 'إجمالي المصاريف التشغيلية' %}</h6>
                     <h2 class="display-6 fw-bold">{{ total_expenses|intcomma }} SR</h2>
-                    <small>تشغيلية + صيانة + سندات تشغيلية</small>
+                    <small>{% ui 'تشغيلية + صيانة + سندات تشغيلية' %}</small>
                 </div>
             </div>
         </div>
@@ -345,9 +346,9 @@
         <div class="col-md-4 mb-4">
             <div class="card bg-primary text-white shadow p-3 border-0">
                 <div class="card-body">
-                    <h6 class="text-uppercase opacity-75">الكاش الفعلي الداخل</h6>
+                    <h6 class="text-uppercase opacity-75">{% ui 'الكاش الفعلي الداخل' %}</h6>
                     <h2 class="display-6 fw-bold">{{ total_cash_in|intcomma }} SR</h2>
-                    <small>دفعات العقود + سندات قبض + تسديدات</small>
+                    <small>{% ui 'دفعات العقود + سندات قبض + تسديدات' %}</small>
                 </div>
             </div>
         </div>
@@ -355,9 +356,9 @@
         <div class="col-md-4 mb-4">
             <div class="card bg-dark text-white shadow p-3 border-0">
                 <div class="card-body">
-                    <h6 class="text-uppercase opacity-75">صافي التدفق النقدي</h6>
+                    <h6 class="text-uppercase opacity-75">{% ui 'صافي التدفق النقدي' %}</h6>
                     <h2 class="display-6 fw-bold">{{ net_cash_flow|intcomma }} SR</h2>
-                    <small>الكاش الداخل - الكاش الخارج</small>
+                    <small>{% ui 'الكاش الداخل - الكاش الخارج' %}</small>
                 </div>
             </div>
         </div>
@@ -366,29 +367,29 @@
     <div class="row g-3 mb-4">
         <div class="col-md-4">
             <div class="card p-3 h-100 border-0 shadow-sm">
-                <small class="text-uppercase opacity-75">الربح على أساس الاستحقاق</small>
+                <small class="text-uppercase opacity-75">{% ui 'الربح على أساس الاستحقاق' %}</small>
                 <h4 class="fw-bold mb-0 {% if accrual_basis_profit >= 0 %}text-success{% else %}text-danger{% endif %}">
                     {{ accrual_basis_profit|intcomma }} SR
                 </h4>
-                <small class="text-muted">قائمة الدخل وفق تسجيل المبيعات كاملة</small>
+                <small class="text-muted">{% ui 'قائمة الدخل وفق تسجيل المبيعات كاملة' %}</small>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card p-3 h-100 border-0 shadow-sm">
-                <small class="text-uppercase opacity-75">الربح على الأساس النقدي</small>
+                <small class="text-uppercase opacity-75">{% ui 'الربح على الأساس النقدي' %}</small>
                 <h4 class="fw-bold mb-0 {% if cash_basis_profit >= 0 %}text-success{% else %}text-danger{% endif %}">
                     {{ cash_basis_profit|intcomma }} SR
                 </h4>
-                <small class="text-muted">صافي الداخل الفعلي ناقص الخارج الفعلي</small>
+                <small class="text-muted">{% ui 'صافي الداخل الفعلي ناقص الخارج الفعلي' %}</small>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card p-3 h-100 border-0 shadow-sm">
-                <small class="text-uppercase opacity-75">فجوة الاستحقاق مقابل النقد</small>
+                <small class="text-uppercase opacity-75">{% ui 'فجوة الاستحقاق مقابل النقد' %}</small>
                 <h4 class="fw-bold mb-0 {% if accrual_cash_gap >= 0 %}text-warning{% else %}text-info{% endif %}">
                     {{ accrual_cash_gap|intcomma }} SR
                 </h4>
-                <small class="text-muted">تعكس أثر الذمم المدينة غير المحصلة</small>
+                <small class="text-muted">{% ui 'تعكس أثر الذمم المدينة غير المحصلة' %}</small>
             </div>
         </div>
     </div>
@@ -397,74 +398,74 @@
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    دفعات عقود البيع المستلمة
+                    {% ui 'دفعات عقود البيع المستلمة' %}
                     <span class="fw-bold">{{ cash_from_sales|intcomma }} SR</span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    سندات القبض
+                    {% ui 'سندات القبض' %}
                     <span class="fw-bold">{{ cash_manual_receipts|intcomma }} SR</span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    سندات التسديد
+                    {% ui 'سندات التسديد' %}
                     <span class="fw-bold">{{ cash_settlements|intcomma }} SR</span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    سندات الدفع
+                    {% ui 'سندات الدفع' %}
                     <span class="fw-bold">{{ voucher_payments|intcomma }} SR</span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    مصروفات الصيانة
+                    {% ui 'مصروفات الصيانة' %}
                     <span class="fw-bold text-warning">{{ maintenance_total|intcomma }} SR</span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    المصروفات العامة
+                    {% ui 'المصروفات العامة' %}
                     <span class="fw-bold text-warning">{{ general_expenses_total|intcomma }} SR</span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    ديون العملاء المتبقية
+                    {% ui 'ديون العملاء المتبقية' %}
                     <span class="fw-bold text-danger">{{ outstanding_debts|intcomma }} SR</span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    إجمالي التسديدات المحصلة
+                    {% ui 'إجمالي التسديدات المحصلة' %}
                     <span class="fw-bold text-success">{{ debts_collected|intcomma }} SR</span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="list-group-item d-flex justify-content-between align-items-center p-3 border rounded">
-                    نسبة تأثير الذمم المدينة
+                    {% ui 'نسبة تأثير الذمم المدينة' %}
                     <span class="fw-bold text-danger">{{ receivables_impact_ratio|floatformat:2 }}%</span>
                 </div>
             </div>
         </div>
 
-        <h5 class="mb-3">تفاصيل أرباح المبيعات</h5>
+        <h5 class="mb-3">{% ui 'تفاصيل أرباح المبيعات' %}</h5>
         <div class="reports-fin-sales-table table-responsive">
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>السيارة</th>
-                    <th>التكلفة الأساسية</th>
-                    <th>التكاليف الإضافية</th>
-                    <th>الصيانة</th>
-                    <th>إجمالي التكلفة</th>
-                    <th>سعر البيع</th>
-                    <th>الربح (استحقاق)</th>
-                    <th>المحصل نقدًا</th>
-                    <th>الربح النقدي</th>
+                    <th>{% ui 'السيارة' %}</th>
+                    <th>{% ui 'التكلفة الأساسية' %}</th>
+                    <th>{% ui 'التكاليف الإضافية' %}</th>
+                    <th>{% ui 'الصيانة' %}</th>
+                    <th>{% ui 'إجمالي التكلفة' %}</th>
+                    <th>{% ui 'سعر البيع' %}</th>
+                    <th>{% ui 'الربح (استحقاق)' %}</th>
+                    <th>{% ui 'المحصل نقدًا' %}</th>
+                    <th>{% ui 'الربح النقدي' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -482,7 +483,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="9" class="text-center py-3 text-muted">لا توجد مبيعات ضمن الفترة المحددة.</td>
+                    <td colspan="9" class="text-center py-3 text-muted">{% ui 'لا توجد مبيعات ضمن الفترة المحددة' %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -495,7 +496,7 @@
                 <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
                     <div>
                         <strong class="d-block">{{ sale.car.brand }} ({{ sale.car.vin }})</strong>
-                        <small class="text-muted">سعر البيع: {{ sale.sale_price_sr|intcomma }} SR</small>
+                        <small class="text-muted">{% ui 'سعر البيع' %}: {{ sale.sale_price_sr|intcomma }} SR</small>
                     </div>
                     <span class="badge {% if sale.accrual_profit_sr >= 0 %}text-bg-success{% else %}text-bg-danger{% endif %}">
                         {{ sale.accrual_profit_sr|intcomma }} SR
@@ -503,33 +504,33 @@
                 </div>
                 <div class="reports-fin-mobile-grid">
                     <div>
-                        <small>التكلفة الأساسية</small>
+                        <small>{% ui 'التكلفة الأساسية' %}</small>
                         <strong>{{ sale.base_cost_sr|intcomma }} SR</strong>
                     </div>
                     <div>
-                        <small>التكاليف الإضافية</small>
+                        <small>{% ui 'التكاليف الإضافية' %}</small>
                         <strong>{{ sale.additional_cost_sr|intcomma }} SR</strong>
                     </div>
                     <div>
-                        <small>الصيانة</small>
+                        <small>{% ui 'الصيانة' %}</small>
                         <strong>{{ sale.maintenance_total_sr|intcomma }} SR</strong>
                     </div>
                     <div>
-                        <small>إجمالي التكلفة</small>
+                        <small>{% ui 'إجمالي التكلفة' %}</small>
                         <strong>{{ sale.cost_price_sr|intcomma }} SR</strong>
                     </div>
                     <div>
-                        <small>المحصل نقدًا</small>
+                        <small>{% ui 'المحصل نقدًا' %}</small>
                         <strong>{{ sale.amount_paid_sr|intcomma }} SR</strong>
                     </div>
                     <div>
-                        <small>الربح النقدي</small>
+                        <small>{% ui 'الربح النقدي' %}</small>
                         <strong class="{% if sale.cash_realized_profit_sr >= 0 %}text-success{% else %}text-danger{% endif %}">{{ sale.cash_realized_profit_sr|intcomma }} SR</strong>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="reports-fin-mobile-card text-center text-muted">لا توجد مبيعات ضمن الفترة المحددة.</div>
+            <div class="reports-fin-mobile-card text-center text-muted">{% ui 'لا توجد مبيعات ضمن الفترة المحددة' %}</div>
             {% endfor %}
         </div>
     </div>
@@ -539,7 +540,7 @@
 <script>
 (() => {
     Chart.defaults.color = '#E8DECB';
-    Chart.defaults.borderColor = 'rgba(201, 164, 106, 0.24)';
+    Chart.defaults.borderColor = 'rgba(33, 46, 63, 0.24)';
 
     let salesLineChart = null;
     let financeDoughnutChart = null;
@@ -570,8 +571,8 @@
                     datasets: [{
                         label: 'إجمالي المبيعات',
                         data: payload.line_chart.values,
-                        borderColor: '#D4AF37',
-                        backgroundColor: 'rgba(212,175,55,0.2)',
+                        borderColor: '#2C3440',
+                        backgroundColor: 'rgba(33, 46, 63, 0.2)',
                         fill: true,
                         tension: 0.3
                     }]

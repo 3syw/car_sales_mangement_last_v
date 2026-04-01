@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'sales.middleware.TenantMiddleware',
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     'sales.middleware.InterfaceAccessMiddleware',
     'sales.middleware.OperationLogMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'sales.middleware.UITranslationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -80,6 +82,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -126,11 +129,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # switch to Arabic so built-in admin strings are translated
 LANGUAGE_CODE = 'ar'
-
-# Optionally restrict available languages if needed
-# LANGUAGES = [
-#     ('ar', 'Arabic'),
-# ]
+LANGUAGES = [
+    ('ar', 'العربية'),
+    ('en', 'English'),
+    ('ru', 'Русский'),
+    ('ko', '한국어'),
+    ('zh-hans', '简体中文'),
+]
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 TIME_ZONE = 'UTC'
 

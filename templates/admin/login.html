@@ -1,88 +1,65 @@
-{% extends 'sales/base.html' %}
+﻿{% extends 'sales/base.html' %}
 {% load i18n static %}
+{% load ui_i18n %}
 
-{% block title %}تسجيل الدخول | معرض السيارات الذكي{% endblock %}
-
-{% block navbar %}{% endblock %}
+{% block title %}{% ui 'تسجيل الدخول' %} | {% ui 'معرض السيارات الذكي' %}{% endblock %}
 
 {% block extrastyle %}
 {{ block.super }}
 <style>
     body {
-        padding-top: 0 !important;
         min-height: 100vh;
         overflow-x: hidden;
-    }
-
-    #particles-js {
         background-image:
             linear-gradient(rgba(8, 10, 14, 0.76), rgba(8, 10, 14, 0.76)),
             url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80') !important;
         background-size: cover !important;
         background-position: center !important;
+        background-attachment: fixed;
         filter: saturate(1.08) brightness(0.88);
+        position: relative;
     }
 
-    #particles-js::before {
+    body::before {
         content: '';
-        position: absolute;
+        position: fixed;
         inset: 0;
         pointer-events: none;
+        z-index: -1;
         background:
-            radial-gradient(circle at 18% 12%, rgba(212, 175, 55, 0.16) 0%, transparent 40%),
+            radial-gradient(circle at 18% 12%, rgba(33, 46, 63, 0.16) 0%, transparent 40%),
             radial-gradient(circle at 82% 86%, rgba(255, 255, 255, 0.12) 0%, transparent 38%),
             linear-gradient(rgba(4, 5, 8, 0.32), rgba(4, 5, 8, 0.58));
     }
 
-    #particles-js::after {
+    body::after {
         content: '';
-        position: absolute;
+        position: fixed;
         inset: 0;
         pointer-events: none;
+        z-index: -1;
         opacity: 0.2;
         mix-blend-mode: screen;
         background-image:
-            repeating-linear-gradient(34deg, rgba(212, 175, 55, 0.08) 0, rgba(212, 175, 55, 0.08) 1px, transparent 1px, transparent 66px),
+            repeating-linear-gradient(34deg, rgba(33, 46, 63, 0.08) 0, rgba(33, 46, 63, 0.08) 1px, transparent 1px, transparent 66px),
             repeating-linear-gradient(146deg, rgba(255, 255, 255, 0.07) 0, rgba(255, 255, 255, 0.07) 1px, transparent 1px, transparent 74px);
     }
 
     .page-back-row {
-        position: fixed;
-        top: 1.2rem;
-        inset-inline-end: 1.3rem;
+        position: static;
+        inset-inline-end: auto;
         margin: 0;
         z-index: 30;
     }
 
-    .floating-theme-toggle {
-        position: fixed;
-        top: 1.2rem;
-        inset-inline-start: 1.3rem;
-        z-index: 30;
-    }
-
-    .floating-theme-toggle .theme-toggle-btn {
-        border: 1px solid rgba(255, 255, 255, 0.42);
-        background: rgba(0, 0, 0, 0.25);
-        color: #f5f5f5 !important;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-    }
-
-    .floating-theme-toggle .theme-toggle-btn:hover {
-        border-color: rgba(212, 175, 55, 0.75);
-        background: rgba(212, 175, 55, 0.22);
-        color: #fff !important;
-    }
-
-    [data-theme="light"] #particles-js {
+    [data-theme="light"] body {
         background-image:
             linear-gradient(rgba(255, 249, 239, 0.88), rgba(255, 249, 239, 0.9)),
             url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80') !important;
         filter: saturate(1.02) brightness(1.02);
     }
 
-    [data-theme="light"] #particles-js::before {
+    [data-theme="light"] body::before {
         background:
             radial-gradient(circle at 18% 12%, rgba(164, 110, 42, 0.14) 0%, transparent 40%),
             radial-gradient(circle at 82% 86%, rgba(122, 79, 30, 0.08) 0%, transparent 38%),
@@ -138,12 +115,12 @@
 
     .page-back-row .btn:hover {
         color: #fff;
-        border-color: rgba(212, 175, 55, 0.75);
-        background: rgba(212, 175, 55, 0.22);
+        border-color: rgba(33, 46, 63, 0.75);
+        background: rgba(33, 46, 63, 0.22);
     }
 
     .admin-login-wrap {
-        min-height: 100vh;
+        min-height: calc(100vh - 92px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -158,13 +135,13 @@
         background: linear-gradient(150deg, rgba(20, 20, 20, 0.62), rgba(10, 10, 10, 0.5));
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
-        box-shadow: 0 26px 56px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(212, 175, 55, 0.08);
+        box-shadow: 0 26px 56px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(33, 46, 63, 0.08);
     }
 
     .admin-login-card.card:hover {
         transform: none;
         border-color: rgba(255, 255, 255, 0.14);
-        box-shadow: 0 26px 56px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(212, 175, 55, 0.08) !important;
+        box-shadow: 0 26px 56px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(33, 46, 63, 0.08) !important;
     }
 
     .admin-login-card .card-body {
@@ -180,10 +157,10 @@
         align-items: center;
         justify-content: center;
         font-size: 1.8rem;
-        color: #d4af37;
-        border: 1px solid rgba(212, 175, 55, 0.44);
-        background: rgba(212, 175, 55, 0.09);
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.16);
+        color: #2C3440;
+        border: 1px solid rgba(33, 46, 63, 0.44);
+        background: rgba(33, 46, 63, 0.09);
+        box-shadow: 0 0 20px rgba(33, 46, 63, 0.16);
     }
 
     .admin-login-title {
@@ -191,7 +168,7 @@
         line-height: 1.2;
         text-align: center;
         font-weight: 700;
-        background: linear-gradient(180deg, #f6e7b3 0%, #d4af37 58%, #aa7f1f 100%);
+        background: linear-gradient(180deg, #f6e7b3 0%, #2C3440 58%, #aa7f1f 100%);
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -238,8 +215,8 @@
 
     .admin-login-card input[type=text]:focus,
     .admin-login-card input[type=password]:focus {
-        border-color: #d4af37 !important;
-        box-shadow: 0 0 8px rgba(212, 175, 55, 0.3) !important;
+        border-color: #2C3440 !important;
+        box-shadow: 0 0 8px rgba(33, 46, 63, 0.3) !important;
         background: rgba(0, 0, 0, 0.35) !important;
     }
 
@@ -261,15 +238,15 @@
         font-size: 1rem;
         font-weight: 800;
         color: #1a1a1a;
-        background: #d4af37;
-        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.34);
+        background: #2C3440;
+        box-shadow: 0 8px 20px rgba(33, 46, 63, 0.34);
         transition: all 0.25s ease;
     }
 
     .btn-login-gold:hover {
         transform: translateY(-1px);
         background: #e0be56;
-        box-shadow: 0 0 18px rgba(212, 175, 55, 0.45);
+        box-shadow: 0 0 18px rgba(33, 46, 63, 0.45);
     }
 
     .admin-login-card .btn-outline-secondary,
@@ -284,12 +261,13 @@
     .admin-login-card .btn-outline-secondary:hover,
     .admin-login-card .btn-outline-warning:hover {
         color: #fff;
-        border-color: rgba(212, 175, 55, 0.72);
-        background: rgba(212, 175, 55, 0.2);
+        border-color: rgba(33, 46, 63, 0.72);
+        background: rgba(33, 46, 63, 0.2);
     }
 
     @media (max-width: 767.98px) {
         .admin-login-wrap {
+            min-height: calc(100vh - 78px);
             align-items: stretch;
             padding: 1rem 0.65rem 1.35rem;
         }
@@ -328,13 +306,7 @@
         }
 
         .page-back-row {
-            top: 0.8rem;
-            inset-inline-end: 0.8rem;
-        }
-
-        .floating-theme-toggle {
-            top: 0.8rem;
-            inset-inline-start: 0.8rem;
+            margin-bottom: 0.8rem;
         }
 
         .admin-login-card form p {
@@ -351,24 +323,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="floating-theme-toggle">
-    <button
-        id="themeToggleBtn"
-        class="nav-icon-circle theme-toggle-btn"
-        type="button"
-        title="تبديل الوضع المشمس والمظلم"
-        aria-label="تبديل الوضع المشمس والمظلم">
-        <i class="bi bi-sun-fill" aria-hidden="true"></i>
-        <span class="theme-label">مشمس</span>
-    </button>
-</div>
-
 <div class="admin-login-wrap">
     <div class="admin-login-card card shadow-sm fade-in-up">
         <div class="card-body text-center">
             <div class="mb-2 admin-login-logo"><i class="bi bi-car-front"></i></div>
-            <h3 class="admin-login-title mb-1">بوابة الدخول</h3>
-            <p class="admin-login-subtitle">أدخل بيانات المعرض والحساب لتسجيل الدخول مباشرة.</p>
+            <h3 class="admin-login-title mb-1">{% ui 'بوابة الدخول' %}</h3>
+            <p class="admin-login-subtitle">{% ui 'أدخل بيانات المعرض والحساب لتسجيل الدخول مباشرة.' %}</p>
 
             <form method="post" action="">
                 {% csrf_token %}
@@ -377,11 +337,11 @@
                 {% if next %}
                     <input type="hidden" name="next" value="{{ next }}" />
                 {% endif %}
-                <button type="submit" class="btn-login-gold">تسجيل الدخول</button>
+                <button type="submit" class="btn-login-gold">{% ui 'تسجيل الدخول' %}</button>
             </form>
 
             <div class="mt-3">
-                <a href="{% url 'register' %}" class="btn btn-outline-secondary w-100">إنشاء حساب جديد</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-secondary w-100">{% ui 'إنشاء حساب جديد' %}</a>
             </div>
         </div>
     </div>

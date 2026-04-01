@@ -1,7 +1,9 @@
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
+from django.utils.translation import get_language
 from .models import AuditLog, InterfaceAccess, OperationLog
+from .translation_catalog import UI_TRANSLATIONS
 from .audit import set_request_audit_context, clear_request_audit_context
 from .realtime import publish_tenant_event
 from .tenant_context import clear_current_tenant, set_current_tenant, get_current_tenant_db_alias
@@ -284,3 +286,40 @@ class OperationLogMiddleware:
     def process_exception(self, request, exception):
         clear_request_audit_context()
         return None
+
+
+class UITranslationMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self._sorted_source_texts = sorted(UI_TRANSLATIONS.keys(), key=len, reverse=True)
+
+    def __call__(self, request):
+        response = self.get_response(request)
+
+        content_type = (response.get('Content-Type') or '').lower() if hasattr(response, 'get') else ''
+        language = (get_language() or 'ar').lower()
+        if language.startswith('zh'):
+            language = 'zh-hans'
+
+        if language == 'ar' or 'text/html' not in content_type:
+            return response
+
+        raw_content = getattr(response, 'content', b'')
+        if not raw_content:
+            return response
+
+        try:
+            html = raw_content.decode(response.charset or 'utf-8')
+        except Exception:
+            return response
+
+        translated_html = html
+        for source_text in self._sorted_source_texts:
+            target_text = UI_TRANSLATIONS.get(source_text, {}).get(language)
+            if target_text:
+                translated_html = translated_html.replace(source_text, target_text)
+
+        if translated_html != html:
+            response.content = translated_html.encode(response.charset or 'utf-8')
+
+        return response

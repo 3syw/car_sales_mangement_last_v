@@ -1,5 +1,6 @@
-{% extends 'sales/base.html' %}
+﻿{% extends 'sales/base.html' %}
 {% load humanize %}
+{% load ui_i18n %}
 
 {% block extrastyle %}
 {{ block.super }}
@@ -29,7 +30,7 @@
 
     .car-detail-page .car-summary-card {
         background: linear-gradient(150deg, rgba(24, 31, 43, 0.90), rgba(15, 20, 28, 0.82));
-        border: 1px solid rgba(201, 164, 106, 0.38);
+        border: 1px solid rgba(33, 46, 63, 0.38);
         box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
     }
 
@@ -51,7 +52,7 @@
     }
 
     .car-detail-page .car-divider {
-        border-color: rgba(201, 164, 106, 0.30);
+        border-color: rgba(33, 46, 63, 0.30);
         opacity: 1;
     }
 
@@ -74,7 +75,7 @@
 
     .car-detail-page .car-meta-panel {
         background: rgba(255, 255, 255, 0.045);
-        border: 1px solid rgba(201, 164, 106, 0.24);
+        border: 1px solid rgba(33, 46, 63, 0.24);
         border-radius: 14px;
         padding: 0.95rem;
     }
@@ -110,13 +111,13 @@
         min-height: 48px;
         font-weight: 700;
         letter-spacing: 0.15px;
-        border-color: rgba(201, 164, 106, 0.56);
+        border-color: rgba(33, 46, 63, 0.56);
         color: var(--champagne-light);
         background: rgba(255, 255, 255, 0.03);
     }
 
     .car-detail-page .car-edit-btn:hover {
-        background: rgba(201, 164, 106, 0.22);
+        background: rgba(33, 46, 63, 0.22);
         color: #fff;
     }
 
@@ -128,7 +129,7 @@
 
     .car-detail-page .car-mobile-card {
         border-radius: 1rem;
-        border: 1px solid rgba(201, 164, 106, 0.18);
+        border: 1px solid rgba(33, 46, 63, 0.18);
         background: rgba(255, 255, 255, 0.04);
         padding: 1rem;
     }
@@ -143,7 +144,7 @@
         padding: 0.75rem;
         border-radius: 0.8rem;
         background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(201, 164, 106, 0.1);
+        border: 1px solid rgba(33, 46, 63, 0.1);
     }
 
     .car-detail-page .car-mobile-grid small {
@@ -160,15 +161,15 @@
 
     .car-detail-page .nav-tabs .nav-link {
         border-radius: 999px;
-        border: 1px solid rgba(201, 164, 106, 0.22);
+        border: 1px solid rgba(33, 46, 63, 0.22);
         background: rgba(255, 255, 255, 0.03);
         color: var(--text-main);
     }
 
     .car-detail-page .nav-tabs .nav-link.active {
-        background: rgba(201, 164, 106, 0.2);
+        background: rgba(33, 46, 63, 0.2);
         color: #fff;
-        border-color: rgba(201, 164, 106, 0.42);
+        border-color: rgba(33, 46, 63, 0.42);
     }
 
     @media (max-width: 767.98px) {
@@ -210,27 +211,27 @@
 <div class="car-detail-page">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'car_list' %}">المعرض</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'car_list' %}">{% ui 'المعرض' %}</a></li>
             <li class="breadcrumb-item active">{{ car.brand }} {{ car.model_name }}</li>
         </ol>
     </nav>
 
     {% if request.GET.maintenance_saved == '1' %}
-    <div class="alert alert-success">تم حفظ مصروف الصيانة وترحيله محاسبياً بنجاح.</div>
+    <div class="alert alert-success">{% ui 'تم حفظ مصروف الصيانة وترحيله محاسبياً بنجاح.' %}</div>
     {% endif %}
 
     {% if request.GET.maintenance_error == 'sold' %}
-    <div class="alert alert-warning">لا يمكن إضافة مصروفات صيانة لسيارة حالتها مباعة.</div>
+    <div class="alert alert-warning">{% ui 'لا يمكن إضافة مصروفات صيانة لسيارة حالتها مباعة.' %}</div>
     {% endif %}
 
     {% if request.GET.document_saved == '1' %}
-    <div class="alert alert-success">تم رفع المستند وحفظه في الأرشيف الرقمي للسيارة.</div>
+    <div class="alert alert-success">{% ui 'تم رفع المستند وحفظه في الأرشيف الرقمي للسيارة.' %}</div>
     {% endif %}
 
     <div class="car-top-actions mb-3">
         <div class="d-flex flex-wrap gap-2">
-            <span class="badge text-bg-light">رقم المركبة: #{{ car.id }}</span>
-            <span class="badge {% if car.is_sold %}text-bg-danger{% else %}text-bg-success{% endif %}">{% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}</span>
+            <span class="badge text-bg-light">{% ui 'رقم المركبة' %}: #{{ car.id }}</span>
+            <span class="badge {% if car.is_sold %}text-bg-danger{% else %}text-bg-success{% endif %}">{% if car.is_sold %}{% ui 'مباعة' %}{% else %}{% ui 'متوفرة' %}{% endif %}</span>
         </div>
     </div>
 
@@ -252,7 +253,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <span class="badge {% if car.is_sold %}bg-danger{% else %}bg-success{% endif %} mb-2">
-                            {% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}
+                            {% if car.is_sold %}{% ui 'مباعة' %}{% else %}{% ui 'متوفرة' %}{% endif %}
                         </span>
                         <h1 class="fw-bold car-title">{{ car.brand }}</h1>
                         <h4 class="car-subtitle">{{ car.model_name }} - {{ car.year }}</h4>
@@ -261,45 +262,45 @@
                     <hr class="car-divider">
 
                     <div class="my-4">
-                        <p class="car-price-label">السعر المطلوب</p>
+                        <p class="car-price-label">{% ui 'السعر المطلوب' %}</p>
                         <h2 class="fw-bold car-price-amount">{{ car.selling_price|intcomma }} <small>{{ car.currency }}</small></h2>
                     </div>
 
                     <div class="car-meta-panel mb-4">
                         <div class="car-meta-row">
-                            <span class="car-meta-label">رقم الشاسيه:</span>
+                            <span class="car-meta-label">{% ui 'رقم الشاسيه' %}:</span>
                             <span class="car-meta-value car-vin">{{ car.vin }}</span>
                         </div>
                         <div class="car-meta-row">
-                            <span class="car-meta-label">التكلفة الأساسية:</span>
+                            <span class="car-meta-label">{% ui 'التكلفة الأساسية' %}:</span>
                             <span class="car-meta-value">{{ car.cost_price|intcomma }} {{ car.currency }}</span>
                         </div>
                         <div class="car-meta-row">
-                            <span class="car-meta-label">رسوم الجمارك:</span>
+                            <span class="car-meta-label">{% ui 'رسوم الجمارك' %}:</span>
                             <span class="car-meta-value">{{ car.customs_cost|intcomma }} {{ car.currency }}</span>
                         </div>
                         <div class="car-meta-row">
-                            <span class="car-meta-label">تكاليف النقل:</span>
+                            <span class="car-meta-label">{% ui 'تكاليف النقل' %}:</span>
                             <span class="car-meta-value">{{ car.transport_cost|intcomma }} {{ car.currency }}</span>
                         </div>
                         <div class="car-meta-row">
-                            <span class="car-meta-label">العمولة:</span>
+                            <span class="car-meta-label">{% ui 'العمولة' %}:</span>
                             <span class="car-meta-value">{{ car.commission_cost|intcomma }} {{ car.currency }}</span>
                         </div>
                         <div class="car-meta-row">
-                            <span class="car-meta-label">إجمالي الصيانة:</span>
+                            <span class="car-meta-label">{% ui 'إجمالي الصيانة' %}:</span>
                             <span class="car-meta-value">{{ maintenance_total|intcomma }} {{ car.currency }}</span>
                         </div>
                         <div class="car-meta-row">
-                            <span class="car-meta-label">إجمالي التكلفة:</span>
+                            <span class="car-meta-label">{% ui 'إجمالي التكلفة' %}:</span>
                             <span class="car-meta-value">{{ total_cost_price|intcomma }} {{ car.currency }}</span>
                         </div>
                         <div class="car-meta-row">
-                            <span class="car-meta-label">الربح المتوقع:</span>
+                            <span class="car-meta-label">{% ui 'الربح المتوقع' %}:</span>
                             <span class="car-meta-value {% if expected_profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ expected_profit|intcomma }} {{ car.currency }}</span>
                         </div>
                         <div class="car-meta-row">
-                            <span class="car-meta-label">تاريخ الإضافة:</span>
+                            <span class="car-meta-label">{% ui 'تاريخ الإضافة' %}:</span>
                             <span class="car-meta-value">{{ car.created_at|date:"Y-m-d" }}</span>
                         </div>
                     </div>
@@ -308,12 +309,12 @@
                         {% if not car.is_sold %}
                         <a href="{% url 'process_sale' %}?car_id={{ car.id }}" class="btn btn-success rounded-pill mb-2">
                             <i class="bi bi-cash-stack"></i>
-                            إتمام البيع
+                            {% ui 'إتمام البيع' %}
                         </a>
                         {% endif %}
                         <a href="/admin/sales/car/{{ car.id }}/change/" class="btn rounded-pill car-edit-btn">
                             <i class="bi bi-pencil-square"></i>
-                            تعديل بيانات السيارة
+                            {% ui 'تعديل بيانات السيارة' %}
                         </a>
                     </div>
                 </div>
@@ -325,13 +326,13 @@
         <div class="card-body">
             <ul class="nav nav-tabs mb-4" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {% if selected_tab != 'maintenance' and selected_tab != 'documents' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-basic-tab" type="button" role="tab">البيانات الأساسية</button>
+                    <button class="nav-link {% if selected_tab != 'maintenance' and selected_tab != 'documents' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-basic-tab" type="button" role="tab">{% ui 'البيانات الأساسية' %}</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {% if selected_tab == 'maintenance' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-maintenance-tab" type="button" role="tab">سجل الصيانة</button>
+                    <button class="nav-link {% if selected_tab == 'maintenance' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-maintenance-tab" type="button" role="tab">{% ui 'سجل الصيانة' %}</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {% if selected_tab == 'documents' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-documents-tab" type="button" role="tab">الأرشيف الرقمي</button>
+                    <button class="nav-link {% if selected_tab == 'documents' %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#car-documents-tab" type="button" role="tab">{% ui 'الأرشيف الرقمي' %}</button>
                 </li>
             </ul>
 
@@ -340,21 +341,21 @@
                 <div class="car-basic-table table-responsive">
                     <table class="table table-hover align-middle">
                         <tbody>
-                            <tr><th style="width: 220px;">المعرف</th><td>{{ car.id }}</td></tr>
-                            <tr><th>الماركة</th><td>{{ car.brand }}</td></tr>
-                            <tr><th>الموديل</th><td>{{ car.model_name }}</td></tr>
-                            <tr><th>رقم الشاسيه</th><td>{{ car.vin }}</td></tr>
-                            <tr><th>سنة الصنع</th><td>{{ car.year }}</td></tr>
-                            <tr><th>انتهاء التأمين</th><td>{% if car.insurance_expiry %}{{ car.insurance_expiry|date:'Y-m-d' }}{% else %}-{% endif %}</td></tr>
-                            <tr><th>انتهاء الاستمارة</th><td>{% if car.registration_expiry %}{{ car.registration_expiry|date:'Y-m-d' }}{% else %}-{% endif %}</td></tr>
-                            <tr><th>سعر التكلفة الأساسي</th><td>{{ car.cost_price|intcomma }} {{ car.currency }}</td></tr>
-                            <tr><th>رسوم الجمارك</th><td>{{ car.customs_cost|intcomma }} {{ car.currency }}</td></tr>
-                            <tr><th>تكاليف النقل</th><td>{{ car.transport_cost|intcomma }} {{ car.currency }}</td></tr>
-                            <tr><th>العمولة</th><td>{{ car.commission_cost|intcomma }} {{ car.currency }}</td></tr>
-                            <tr><th>إجمالي الصيانة</th><td>{{ maintenance_total|intcomma }} {{ car.currency }}</td></tr>
-                            <tr><th>إجمالي التكلفة</th><td>{{ total_cost_price|intcomma }} {{ car.currency }}</td></tr>
-                            <tr><th>سعر البيع</th><td>{{ car.selling_price|intcomma }} {{ car.currency }}</td></tr>
-                            <tr><th>الحالة</th><td>{% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}</td></tr>
+                            <tr><th style="width: 220px;">{% ui 'المعرف' %}</th><td>{{ car.id }}</td></tr>
+                            <tr><th>{% ui 'الماركة' %}</th><td>{{ car.brand }}</td></tr>
+                            <tr><th>{% ui 'الموديل' %}</th><td>{{ car.model_name }}</td></tr>
+                            <tr><th>{% ui 'رقم الشاسيه' %}</th><td>{{ car.vin }}</td></tr>
+                            <tr><th>{% ui 'سنة الصنع' %}</th><td>{{ car.year }}</td></tr>
+                            <tr><th>{% ui 'انتهاء التأمين' %}</th><td>{% if car.insurance_expiry %}{{ car.insurance_expiry|date:'Y-m-d' }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>{% ui 'انتهاء الاستمارة' %}</th><td>{% if car.registration_expiry %}{{ car.registration_expiry|date:'Y-m-d' }}{% else %}-{% endif %}</td></tr>
+                            <tr><th>{% ui 'سعر التكلفة الأساسي' %}</th><td>{{ car.cost_price|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>{% ui 'رسوم الجمارك' %}</th><td>{{ car.customs_cost|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>{% ui 'تكاليف النقل' %}</th><td>{{ car.transport_cost|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>{% ui 'العمولة' %}</th><td>{{ car.commission_cost|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>{% ui 'إجمالي الصيانة' %}</th><td>{{ maintenance_total|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>{% ui 'إجمالي التكلفة' %}</th><td>{{ total_cost_price|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>{% ui 'سعر البيع' %}</th><td>{{ car.selling_price|intcomma }} {{ car.currency }}</td></tr>
+                            <tr><th>{% ui 'الحالة' %}</th><td>{% if car.is_sold %}{% ui 'مباعة' %}{% else %}{% ui 'متوفرة' %}{% endif %}</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -362,7 +363,7 @@
                 <div class="car-facts-mobile">
                     <div class="car-mobile-card">
                         <div class="car-mobile-grid">
-                            <div><small>المعرف</small><strong>{{ car.id }}</strong></div>
+                            <div><small>{% ui 'المعرف' %}</small><strong>{{ car.id }}</strong></div>
                             <div><small>الماركة</small><strong>{{ car.brand }}</strong></div>
                             <div><small>الموديل</small><strong>{{ car.model_name }}</strong></div>
                             <div><small>رقم الشاسيه</small><strong>{{ car.vin }}</strong></div>
@@ -371,7 +372,7 @@
                             <div><small>التكلفة الأساسية</small><strong>{{ car.cost_price|intcomma }} {{ car.currency }}</strong></div>
                             <div><small>إجمالي التكلفة</small><strong>{{ total_cost_price|intcomma }} {{ car.currency }}</strong></div>
                             <div><small>سعر البيع</small><strong>{{ car.selling_price|intcomma }} {{ car.currency }}</strong></div>
-                            <div><small>الربح المتوقع</small><strong class="{% if expected_profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ expected_profit|intcomma }} {{ car.currency }}</strong></div>
+                            <div><small>{% ui 'الربح المتوقع' %}</small><strong class="{% if expected_profit >= 0 %}text-success{% else %}text-danger{% endif %}">{{ expected_profit|intcomma }} {{ car.currency }}</strong></div>
                         </div>
                     </div>
                 </div>
@@ -382,14 +383,14 @@
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>التاريخ</th>
-                                <th>نوع الصيانة</th>
-                                <th>المبلغ</th>
-                                <th>الورشة/المورد</th>
-                                <th>طريقة الدفع</th>
-                                <th>أضافه</th>
-                                <th>الفاتورة</th>
-                                <th>القيد المحاسبي</th>
+                                <th>{% ui 'التاريخ' %}</th>
+                                <th>{% ui 'نوع الصيانة' %}</th>
+                                <th>{% ui 'المبلغ' %}</th>
+                                <th>{% ui 'الورشة/المورد' %}</th>
+                                <th>{% ui 'طريقة الدفع' %}</th>
+                                <th>{% ui 'أضيف بواسطة' %}</th>
+                                <th>{% ui 'الفاتورة' %}</th>
+                                <th>{% ui 'القيد المحاسبي' %}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -403,7 +404,7 @@
                                 <td>{% if record.added_by %}{{ record.added_by.username }}{% else %}-{% endif %}</td>
                                 <td>
                                     {% if record.invoice_image %}
-                                    <a href="{{ record.invoice_image.url }}" class="btn btn-sm btn-outline-secondary" target="_blank">عرض</a>
+                                    <a href="{{ record.invoice_image.url }}" class="btn btn-sm btn-outline-secondary" target="_blank">{% ui 'عرض' %}</a>
                                     {% else %}
                                     -
                                     {% endif %}
@@ -411,8 +412,8 @@
                                 <td>
                                     {% if record.journal_voucher %}
                                         <div class="small fw-bold">{{ record.journal_voucher.voucher_number }}</div>
-                                        <div class="small text-muted">مدين: {{ record.journal_voucher.get_debit_account_display }}</div>
-                                        <div class="small text-muted">دائن: {{ record.journal_voucher.get_credit_account_display }}</div>
+                                        <div class="small text-muted">{% ui 'مدين' %}: {{ record.journal_voucher.get_debit_account_display }}</div>
+                                        <div class="small text-muted">{% ui 'دائن' %}: {{ record.journal_voucher.get_credit_account_display }}</div>
                                     {% else %}
                                         -
                                     {% endif %}
@@ -420,7 +421,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center text-muted">لا توجد عمليات صيانة مسجلة لهذه السيارة.</td>
+                                <td colspan="8" class="text-center text-muted">{% ui 'لا توجد عمليات صيانة مسجلة لهذه السيارة' %}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -442,23 +443,23 @@
                         </div>
                     </div>
                     {% empty %}
-                    <div class="car-mobile-card text-center text-muted">لا توجد عمليات صيانة مسجلة لهذه السيارة.</div>
+                    <div class="car-mobile-card text-center text-muted">{% ui 'لا توجد عمليات صيانة مسجلة لهذه السيارة' %}</div>
                     {% endfor %}
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="fw-bold">إجمالي الصيانة: {{ maintenance_total|intcomma }} {{ car.currency }}</div>
+                    <div class="fw-bold">{% ui 'إجمالي الصيانة' %}: {{ maintenance_total|intcomma }} {{ car.currency }}</div>
                     {% if can_add_maintenance and not car.is_sold %}
                     <button class="btn btn-primary rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#maintenanceAddForm" aria-expanded="false" aria-controls="maintenanceAddForm">
-                        + إضافة مصروف صيانة
+                        + {% ui 'إضافة مصروف صيانة' %}
                     </button>
                     {% endif %}
                 </div>
 
                 {% if car.is_sold %}
-                <div class="alert alert-warning">هذه السيارة مباعة، وتم إغلاق إضافة مصروفات الصيانة عليها.</div>
+                <div class="alert alert-warning">{% ui 'هذه السيارة مباعة، وتم إغلاق إضافة مصروفات الصيانة عليها.' %}</div>
                 {% elif not can_add_maintenance %}
-                <div class="alert alert-info">يمكنك الاطلاع على سجل الصيانة فقط. لا تملك صلاحية إضافة مصروفات صيانة.</div>
+                <div class="alert alert-info">{% ui 'يمكنك الاطلاع على سجل الصيانة فقط. لا تملك صلاحية إضافة مصروفات صيانة.' %}</div>
                 {% endif %}
 
                 {% if can_add_maintenance and not car.is_sold %}
@@ -501,7 +502,7 @@
                             {% endif %}
 
                             <div class="mt-3">
-                                <button type="submit" class="btn btn-primary">حفظ وترحيل القيد المحاسبي</button>
+                                <button type="submit" class="btn btn-primary">{% ui 'حفظ وترحيل القيد المحاسبي' %}</button>
                             </div>
                         </form>
                     </div>
@@ -513,27 +514,27 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <div class="border rounded p-3 h-100">
-                            <div class="fw-bold mb-2">التأمين</div>
+                            <div class="fw-bold mb-2">{% ui 'التأمين' %}</div>
                             {% if car.insurance_expiry %}
                                 <div>{{ car.insurance_expiry|date:'Y-m-d' }}</div>
                                 {% if insurance_days_left is not None %}
-                                <small class="text-muted">المتبقي: {{ insurance_days_left }} يوم</small>
+                                <small class="text-muted">{% ui 'المتبقي' %}: {{ insurance_days_left }} {% ui 'يوم' %}</small>
                                 {% endif %}
                             {% else %}
-                                <div class="text-muted">غير مسجل</div>
+                                <div class="text-muted">{% ui 'غير مسجل' %}</div>
                             {% endif %}
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="border rounded p-3 h-100">
-                            <div class="fw-bold mb-2">الاستمارة</div>
+                            <div class="fw-bold mb-2">{% ui 'الاستمارة' %}</div>
                             {% if car.registration_expiry %}
                                 <div>{{ car.registration_expiry|date:'Y-m-d' }}</div>
                                 {% if registration_days_left is not None %}
-                                <small class="text-muted">المتبقي: {{ registration_days_left }} يوم</small>
+                                <small class="text-muted">{% ui 'المتبقي' %}: {{ registration_days_left }} {% ui 'يوم' %}</small>
                                 {% endif %}
                             {% else %}
-                                <div class="text-muted">غير مسجل</div>
+                                <div class="text-muted">{% ui 'غير مسجل' %}</div>
                             {% endif %}
                         </div>
                     </div>
@@ -543,23 +544,23 @@
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>النوع</th>
-                                <th>الملف</th>
-                                <th>تاريخ الرفع</th>
-                                <th>أضيف بواسطة</th>
+                                <th>{% ui 'النوع' %}</th>
+                                <th>{% ui 'الملف' %}</th>
+                                <th>{% ui 'تاريخ الرفع' %}</th>
+                                <th>{% ui 'أضيف بواسطة' %}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for document in document_records %}
                             <tr>
                                 <td>{{ document.get_document_type_display }}</td>
-                                <td><a href="{{ document.file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">عرض</a></td>
+                                <td><a href="{{ document.file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">{% ui 'عرض' %}</a></td>
                                 <td>{{ document.upload_date|date:'Y-m-d H:i' }}</td>
                                 <td>{% if document.uploaded_by %}{{ document.uploaded_by.username }}{% else %}-{% endif %}</td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="4" class="text-center text-muted">لا توجد مستندات مرفوعة لهذه السيارة.</td>
+                                <td colspan="4" class="text-center text-muted">{% ui 'لا توجد مستندات مرفوعة لهذه السيارة' %}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -571,15 +572,15 @@
                     <div class="car-mobile-card">
                         <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
                             <strong>{{ document.get_document_type_display }}</strong>
-                            <a href="{{ document.file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">عرض</a>
+                            <a href="{{ document.file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">{% ui 'عرض' %}</a>
                         </div>
                         <div class="car-mobile-grid">
-                            <div><small>تاريخ الرفع</small><strong>{{ document.upload_date|date:'Y-m-d H:i' }}</strong></div>
-                            <div><small>أضيف بواسطة</small><strong>{% if document.uploaded_by %}{{ document.uploaded_by.username }}{% else %}-{% endif %}</strong></div>
+                            <div><small>{% ui 'تاريخ الرفع' %}</small><strong>{{ document.upload_date|date:'Y-m-d H:i' }}</strong></div>
+                            <div><small>{% ui 'أضيف بواسطة' %}</small><strong>{% if document.uploaded_by %}{{ document.uploaded_by.username }}{% else %}-{% endif %}</strong></div>
                         </div>
                     </div>
                     {% empty %}
-                    <div class="car-mobile-card text-center text-muted">لا توجد مستندات مرفوعة لهذه السيارة.</div>
+                    <div class="car-mobile-card text-center text-muted">{% ui 'لا توجد مستندات مرفوعة لهذه السيارة' %}</div>
                     {% endfor %}
                 </div>
 
@@ -597,7 +598,7 @@
                                 {{ document_form.file }}
                             </div>
                             <div class="col-md-3 d-grid">
-                                <button type="submit" class="btn btn-primary">رفع المستند</button>
+                                <button type="submit" class="btn btn-primary">{% ui 'رفع المستند' %}</button>
                             </div>
                         </div>
 

@@ -1,4 +1,5 @@
-{% extends 'sales/base.html' %}
+﻿{% extends 'sales/base.html' %}
+{% load ui_i18n %}
 
 {% block extrastyle %}
 {{ block.super }}
@@ -53,7 +54,7 @@
     .audit-diff-list {
         margin-top: 0.6rem;
         padding-top: 0.55rem;
-        border-top: 1px solid rgba(201, 164, 106, 0.24);
+        border-top: 1px solid rgba(33, 46, 63, 0.24);
     }
 
     .audit-diff-head {
@@ -243,13 +244,13 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>وقت العملية</th>
-                            <th>المستخدم</th>
-                            <th>الإجراء</th>
-                            <th>النموذج</th>
-                            <th>معرف السجل</th>
-                            <th>المسار / IP</th>
-                            <th>قبل / بعد</th>
+                            <th>{% ui 'وقت العملية' %}</th>
+                            <th>{% ui 'المستخدم' %}</th>
+                            <th>{% ui 'الإجراء' %}</th>
+                            <th>{% ui 'النموذج' %}</th>
+                            <th>{% ui 'معرف السجل' %}</th>
+                            <th>{% ui 'المسار / IP' %}</th>
+                            <th>{% ui 'قبل / بعد' %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -276,16 +277,16 @@
                             </td>
                             <td class="audit-log-details">
                                 <details>
-                                    <summary class="small">القيم السابقة</summary>
+                                    <summary class="small">{% ui 'القيم السابقة' %}</summary>
                                     <pre>{{ log.before_data|default_if_none:'-' }}</pre>
                                 </details>
                                 <details class="mt-2">
-                                    <summary class="small">القيم الجديدة</summary>
+                                    <summary class="small">{% ui 'القيم الجديدة' %}</summary>
                                     <pre>{{ log.after_data|default_if_none:'-' }}</pre>
                                 </details>
                                 {% if log.field_changes %}
                                 <div class="audit-diff-list">
-                                    <div class="audit-diff-head">الحقول المتغيرة</div>
+                                    <div class="audit-diff-head">{% ui 'الحقول المتغيرة' %}</div>
                                     {% for change in log.field_changes %}
                                     <div class="audit-diff-row">
                                         <span class="audit-diff-field">{{ change.field }}</span>
@@ -300,7 +301,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="7" class="text-center py-4">لا توجد سجلات مطابقة للفلاتر الحالية.</td>
+                            <td colspan="7" class="text-center py-4">{% ui 'لا توجد سجلات مطابقة للفلاتر الحالية' %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -326,13 +327,13 @@
                         {% endif %}
                     </div>
                     <div class="audit-logs-mobile-grid">
-                        <div><small>المستخدم</small><strong>{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</strong></div>
-                        <div><small>معرف السجل</small><strong>{{ log.target_pk|default:'-' }}</strong></div>
-                        <div><small>المسار</small><strong>{{ log.request_path|default:'-' }}</strong></div>
+                        <div><small>{% ui 'المستخدم' %}</small><strong>{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</strong></div>
+                        <div><small>{% ui 'معرف السجل' %}</small><strong>{{ log.target_pk|default:'-' }}</strong></div>
+                        <div><small>{% ui 'المسار' %}</small><strong>{{ log.request_path|default:'-' }}</strong></div>
                         <div><small>IP</small><strong>{{ log.ip_address|default:'-' }}</strong></div>
                     </div>
                     <details class="mt-3">
-                        <summary class="small">عرض القيم قبل/بعد</summary>
+                        <summary class="small">{% ui 'عرض القيم قبل/بعد' %}</summary>
                         <div class="mt-2">
                             <pre>{{ log.before_data|default_if_none:'-' }}</pre>
                             <hr>
@@ -341,7 +342,7 @@
                     </details>
                 </div>
                 {% empty %}
-                <div class="audit-logs-mobile-card text-center">لا توجد سجلات مطابقة للفلاتر الحالية.</div>
+                <div class="audit-logs-mobile-card text-center">{% ui 'لا توجد سجلات مطابقة للفلاتر الحالية' %}</div>
                 {% endfor %}
             </div>
         </div>

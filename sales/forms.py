@@ -570,13 +570,8 @@ class TenantLoginForm(forms.Form):
     tenant_id = forms.CharField(
         label='معرف المعرض',
         max_length=50,
-        required=False,
+        required=True,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'مثال: showroom-alfa'})
-    )
-    tenant_key = forms.CharField(
-        label='كلمة مرور المعرض',
-        required=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
     username = forms.CharField(
         label='اسم المستخدم',
@@ -600,14 +595,10 @@ class TenantRegisterForm(UserCreationForm):
         max_length=50,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'مثال: showroom-alfa'})
     )
-    tenant_key = forms.CharField(
-        label='كلمة مرور المعرض',
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
-    )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('showroom_name', 'tenant_id', 'tenant_key', 'username', 'password1', 'password2')
+        fields = ('showroom_name', 'tenant_id', 'username', 'password1', 'password2')
 
 
 class PlatformOwnerLoginForm(forms.Form):

@@ -30,7 +30,6 @@ from sales.tenant_database import ensure_tenant_connection, migrate_tenant_datab
 
 
 TENANT_ID = 'audit-flow-scan'
-TENANT_KEY = 'AuditFlow#2026'
 PLATFORM_OWNER_USERNAME = 'platform_audit_owner'
 PLATFORM_OWNER_PASSWORD = 'Platform#Audit2026'
 
@@ -52,13 +51,11 @@ def ensure_tenant():
     tenant = PlatformTenant.objects.using('default').filter(tenant_id=TENANT_ID).first()
     if tenant is None:
         tenant = PlatformTenant(name='Audit Flow Tenant', tenant_id=TENANT_ID)
-        tenant.set_access_key(TENANT_KEY)
         tenant.save(using='default')
     else:
-        tenant.set_access_key(TENANT_KEY)
         tenant.is_active = True
         tenant.is_deleted = False
-        tenant.save(using='default', update_fields=['access_key_hash', 'is_active', 'is_deleted'])
+        tenant.save(using='default', update_fields=['is_active', 'is_deleted'])
 
     alias = migrate_tenant_database(TENANT_ID)
     ensure_tenant_connection(TENANT_ID)
@@ -243,7 +240,6 @@ def login_tenant(client, username, password, next_url='/dashboard/'):
         '/login/',
         {
             'tenant_id': TENANT_ID,
-            'tenant_key': TENANT_KEY,
             'username': username,
             'password': password,
             'next': next_url,

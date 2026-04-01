@@ -1,0 +1,511 @@
+{
+  "generated_at": "2026-03-29T19:02:48.020774",
+  "default_db_path": "C:\\Users\\ComputerWorld\\car_sales_system\\db.sqlite3",
+  "tenant_db_directory": "C:\\Users\\ComputerWorld\\car_sales_system\\tenant_dbs",
+  "active_platform_tenants": 23,
+  "default_auth_user_count": 4,
+  "before_cleanup": [
+    {
+      "model": "AccountLedger",
+      "table": "sales_accountledger",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "AuditLog",
+      "table": "sales_auditlog",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Car",
+      "table": "sales_car",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarDocument",
+      "table": "sales_cardocument",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarEvaluation",
+      "table": "sales_carevaluation",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "CarHistory",
+      "table": "sales_carhistory",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "CarLocation",
+      "table": "sales_carlocation",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "CarMaintenance",
+      "table": "sales_carmaintenance",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarReservation",
+      "table": "sales_carreservation",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Currency",
+      "table": "sales_currency",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Customer",
+      "table": "sales_customer",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CustomerAccount",
+      "table": "sales_customeraccount",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "DailyClosing",
+      "table": "sales_dailyclosing",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "DebtPayment",
+      "table": "sales_debtpayment",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Employee",
+      "table": "sales_employee",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "EmployeeCommission",
+      "table": "sales_employeecommission",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "EmployeeRole",
+      "table": "sales_employeerole",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "ExchangeRate",
+      "table": "sales_exchangerate",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Expense",
+      "table": "sales_expense",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "FinanceVoucher",
+      "table": "sales_financevoucher",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "FinancialAccount",
+      "table": "sales_financialaccount",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "FinancialContainer",
+      "table": "sales_financialcontainer",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "FiscalPeriodClosing",
+      "table": "sales_fiscalperiodclosing",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "FiscalUnlockRequest",
+      "table": "sales_fiscalunlockrequest",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "GeneralExpense",
+      "table": "sales_generalexpense",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "InterfaceAccess",
+      "table": "sales_interfaceaccess",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "InventoryTransaction",
+      "table": "sales_inventorytransaction",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Invoice",
+      "table": "sales_invoice",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "InvoiceLine",
+      "table": "sales_invoiceline",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "JournalEntry",
+      "table": "sales_journalentry",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "JournalEntryLine",
+      "table": "sales_journalentryline",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Notification",
+      "table": "sales_notification",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "OperationLog",
+      "table": "sales_operationlog",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Sale",
+      "table": "sales_sale",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "SaleInstallment",
+      "table": "sales_saleinstallment",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "SalesCommission",
+      "table": "sales_salescommission",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Supplier",
+      "table": "sales_supplier",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "SupplierInvoice",
+      "table": "sales_supplierinvoice",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "SupplierPayment",
+      "table": "sales_supplierpayment",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "TaxRate",
+      "table": "sales_taxrate",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "TenantUserGoogleIdentity",
+      "table": "sales_tenantusergoogleidentity",
+      "row_count": 0,
+      "table_exists": false
+    }
+  ],
+  "after_cleanup": [
+    {
+      "model": "AccountLedger",
+      "table": "sales_accountledger",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "AuditLog",
+      "table": "sales_auditlog",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Car",
+      "table": "sales_car",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarDocument",
+      "table": "sales_cardocument",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarEvaluation",
+      "table": "sales_carevaluation",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "CarHistory",
+      "table": "sales_carhistory",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "CarLocation",
+      "table": "sales_carlocation",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "CarMaintenance",
+      "table": "sales_carmaintenance",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CarReservation",
+      "table": "sales_carreservation",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Currency",
+      "table": "sales_currency",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Customer",
+      "table": "sales_customer",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "CustomerAccount",
+      "table": "sales_customeraccount",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "DailyClosing",
+      "table": "sales_dailyclosing",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "DebtPayment",
+      "table": "sales_debtpayment",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Employee",
+      "table": "sales_employee",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "EmployeeCommission",
+      "table": "sales_employeecommission",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "EmployeeRole",
+      "table": "sales_employeerole",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "ExchangeRate",
+      "table": "sales_exchangerate",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Expense",
+      "table": "sales_expense",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "FinanceVoucher",
+      "table": "sales_financevoucher",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "FinancialAccount",
+      "table": "sales_financialaccount",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "FinancialContainer",
+      "table": "sales_financialcontainer",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "FiscalPeriodClosing",
+      "table": "sales_fiscalperiodclosing",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "FiscalUnlockRequest",
+      "table": "sales_fiscalunlockrequest",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "GeneralExpense",
+      "table": "sales_generalexpense",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "InterfaceAccess",
+      "table": "sales_interfaceaccess",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "InventoryTransaction",
+      "table": "sales_inventorytransaction",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Invoice",
+      "table": "sales_invoice",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "InvoiceLine",
+      "table": "sales_invoiceline",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "JournalEntry",
+      "table": "sales_journalentry",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "JournalEntryLine",
+      "table": "sales_journalentryline",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Notification",
+      "table": "sales_notification",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "OperationLog",
+      "table": "sales_operationlog",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "Sale",
+      "table": "sales_sale",
+      "row_count": 0,
+      "table_exists": true
+    },
+    {
+      "model": "SaleInstallment",
+      "table": "sales_saleinstallment",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "SalesCommission",
+      "table": "sales_salescommission",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "Supplier",
+      "table": "sales_supplier",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "SupplierInvoice",
+      "table": "sales_supplierinvoice",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "SupplierPayment",
+      "table": "sales_supplierpayment",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "TaxRate",
+      "table": "sales_taxrate",
+      "row_count": 0,
+      "table_exists": false
+    },
+    {
+      "model": "TenantUserGoogleIdentity",
+      "table": "sales_tenantusergoogleidentity",
+      "row_count": 0,
+      "table_exists": false
+    }
+  ],
+  "cleanup": {
+    "requested": false,
+    "performed": false,
+    "backup_file": null,
+    "deleted_tables": [],
+    "rows_before_cleanup": 0,
+    "rows_after_cleanup": 0
+  }
+}

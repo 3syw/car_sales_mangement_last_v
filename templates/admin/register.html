@@ -1,17 +1,11 @@
-{% extends 'sales/base.html' %}
-
-{% block navbar %}{% endblock %}
+﻿{% extends 'sales/base.html' %}
 
 {% block extrastyle %}
 {{ block.super }}
 <style>
     body {
-        padding-top: 0 !important;
         min-height: 100vh;
         overflow-x: hidden;
-    }
-
-    #particles-js {
         background-image:
             linear-gradient(rgba(9, 12, 18, 0.72), rgba(13, 11, 14, 0.78)),
             radial-gradient(circle at 18% 22%, rgba(32, 45, 72, 0.38) 0%, transparent 45%),
@@ -19,15 +13,17 @@
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+        position: relative;
     }
 
-    #particles-js::before {
+    body::before {
         content: '';
-        position: absolute;
+        position: fixed;
         inset: 0;
         pointer-events: none;
+        z-index: -1;
         background:
-            radial-gradient(circle at 14% 16%, rgba(212, 175, 55, 0.14) 0%, transparent 46%),
+            radial-gradient(circle at 14% 16%, rgba(33, 46, 63, 0.14) 0%, transparent 46%),
             radial-gradient(circle at 88% 84%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
             linear-gradient(rgba(2, 4, 7, 0.18), rgba(2, 4, 7, 0.4));
     }
@@ -36,35 +32,14 @@
         display: none;
     }
 
-    .floating-theme-toggle {
-        position: fixed;
-        top: 1.2rem;
-        inset-inline-start: 1.2rem;
-        z-index: 30;
-    }
-
-    .floating-theme-toggle .theme-toggle-btn {
-        border: 1px solid rgba(255, 255, 255, 0.42);
-        background: rgba(0, 0, 0, 0.25);
-        color: #f5f5f5 !important;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-    }
-
-    .floating-theme-toggle .theme-toggle-btn:hover {
-        border-color: rgba(212, 175, 55, 0.75);
-        background: rgba(212, 175, 55, 0.22);
-        color: #fff !important;
-    }
-
-    [data-theme="light"] #particles-js {
+    [data-theme="light"] body {
         background-image:
             linear-gradient(rgba(255, 249, 240, 0.86), rgba(252, 244, 232, 0.9)),
             radial-gradient(circle at 18% 22%, rgba(164, 110, 42, 0.18) 0%, transparent 45%),
             radial-gradient(circle at 82% 78%, rgba(189, 136, 71, 0.16) 0%, transparent 42%);
     }
 
-    [data-theme="light"] #particles-js::before {
+    [data-theme="light"] body::before {
         background:
             radial-gradient(circle at 14% 16%, rgba(164, 110, 42, 0.14) 0%, transparent 46%),
             radial-gradient(circle at 88% 84%, rgba(122, 79, 30, 0.1) 0%, transparent 40%),
@@ -78,7 +53,7 @@
     }
 
     [data-theme="light"] .auth-title {
-        color: #7a4f1e;
+        color: #0F141A;
     }
 
     [data-theme="light"] .auth-subtitle,
@@ -106,7 +81,7 @@
     }
 
     .auth-wrap {
-        min-height: 100vh;
+        min-height: calc(100vh - 92px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -133,14 +108,14 @@
     }
 
     .auth-card::-webkit-scrollbar-thumb {
-        background: rgba(212, 175, 55, 0.45);
+        background: rgba(33, 46, 63, 0.45);
         border-radius: 999px;
     }
 
     .auth-title {
         text-align: center;
         font-weight: 700;
-        color: #d4af37;
+        color: #2C3440;
         margin-bottom: 0.55rem;
     }
 
@@ -191,8 +166,8 @@
     }
 
     .auth-card input:focus {
-        border-color: #d4af37 !important;
-        box-shadow: 0 0 10px rgba(212, 175, 55, 0.32) !important;
+        border-color: #2C3440 !important;
+        box-shadow: 0 0 10px rgba(33, 46, 63, 0.32) !important;
         background: rgba(0, 0, 0, 0.28) !important;
     }
 
@@ -235,15 +210,15 @@
         padding: 0.74rem;
         font-weight: 800;
         color: #1a1a1a;
-        background: #d4af37;
-        box-shadow: 0 8px 22px rgba(212, 175, 55, 0.3);
+        background: #2C3440;
+        box-shadow: 0 8px 22px rgba(33, 46, 63, 0.3);
         transition: all 0.23s ease;
     }
 
     .btn-register-primary:hover {
         transform: translateY(-1px);
         background: #e1c160;
-        box-shadow: 0 0 18px rgba(212, 175, 55, 0.45);
+        box-shadow: 0 0 18px rgba(33, 46, 63, 0.45);
     }
 
     .btn-register-secondary {
@@ -264,6 +239,7 @@
 
     @media (max-width: 767.98px) {
         .auth-wrap {
+            min-height: calc(100vh - 78px);
             align-items: stretch;
             padding: 1.15rem 0.55rem 1.4rem;
         }
@@ -290,11 +266,6 @@
             padding: 1rem 0.35rem;
         }
 
-        .floating-theme-toggle {
-            top: 0.8rem;
-            inset-inline-start: 0.8rem;
-        }
-
         .auth-card {
             max-height: calc(100vh - 2rem);
             padding: 1.25rem 1rem;
@@ -315,18 +286,6 @@
 {% endblock %}
 
 {% block content %}
-<div class="floating-theme-toggle">
-    <button
-        id="themeToggleBtn"
-        class="nav-icon-circle theme-toggle-btn"
-        type="button"
-        title="تبديل الوضع المشمس والمظلم"
-        aria-label="تبديل الوضع المشمس والمظلم">
-        <i class="bi bi-sun-fill" aria-hidden="true"></i>
-        <span class="theme-label">مشمس</span>
-    </button>
-</div>
-
 <div class="auth-wrap">
     <div class="auth-card">
         <h3 class="auth-title">إنشاء حساب جديد</h3>
@@ -352,13 +311,6 @@
                     {{ form.tenant_id }}
                     {% if form.tenant_id.help_text %}<small class="helptext">{{ form.tenant_id.help_text|safe }}</small>{% endif %}
                     {{ form.tenant_id.errors }}
-                </div>
-
-                <div class="auth-field">
-                    {{ form.tenant_key.label_tag }}
-                    {{ form.tenant_key }}
-                    {% if form.tenant_key.help_text %}<small class="helptext">{{ form.tenant_key.help_text|safe }}</small>{% endif %}
-                    {{ form.tenant_key.errors }}
                 </div>
             </div>
 

@@ -1,4 +1,5 @@
 {% extends 'sales/base.html' %}
+{% load ui_i18n %}
 
 {% block extrastyle %}
 {{ block.super }}
@@ -10,11 +11,11 @@
     <div class="lux-shell mt-4 mb-4">
         <div class="row g-3 align-items-center">
             <div class="col-md-8">
-                <h3 class="lux-title h4 mb-1">مطابقة المخزون</h3>
-                <p class="lux-subtitle">تحقق فعلي من وجود السيارات في المعرض ومقارنة VIN مع البيانات المسجلة.</p>
+                <h3 class="lux-title h4 mb-1">{% ui 'مطابقة المخزون' %}</h3>
+                <p class="lux-subtitle">{% ui 'تحقق فعلي من وجود السيارات في المعرض ومقارنة VIN مع البيانات المسجلة.' %}</p>
             </div>
             <div class="col-md-4 text-md-end">
-                <a href="{% url 'car_list' %}" class="lux-outline-btn">عودة للمعرض</a>
+                <a href="{% url 'car_list' %}" class="lux-outline-btn">{% ui 'عودة للمعرض' %}</a>
             </div>
         </div>
     </div>
@@ -23,8 +24,8 @@
         <div class="card-body">
             {% csrf_token %}
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="lux-label mb-0">قائمة VIN المسجلة (غير المباعة)</h5>
-                <button type="button" id="check-all-cars" class="lux-outline-btn lux-outline-btn-sm">تحديد الكل</button>
+                <h5 class="lux-label mb-0">{% ui 'قائمة VIN المسجلة (غير المباعة)' %}</h5>
+                <button type="button" id="check-all-cars" class="lux-outline-btn lux-outline-btn-sm">{% ui 'تحديد الكل' %}</button>
             </div>
 
             <div class="table-responsive mb-3" style="max-height: 380px; overflow-y: auto;">
@@ -33,8 +34,8 @@
                         <tr>
                             <th style="width: 90px;">Check</th>
                             <th>VIN</th>
-                            <th>السيارة</th>
-                            <th>السنة</th>
+                            <th>{% ui 'السيارة' %}</th>
+                            <th>{% ui 'السنة' %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +56,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="text-center py-4">لا توجد سيارات متاحة للجرد.</td>
+                            <td colspan="4" class="text-center py-4">{% ui 'لا توجد سيارات متاحة للجرد.' %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -63,11 +64,11 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">VIN إضافية موجودة فعليًا وليست في النظام (واحدة بكل سطر أو مفصولة بفاصلة)</label>
+                <label class="form-label">{% ui 'VIN إضافية موجودة فعليًا وليست في النظام (واحدة بكل سطر أو مفصولة بفاصلة)' %}</label>
                 <textarea name="extra_vins" class="form-control" rows="3" placeholder="مثال: JTDBR32E720052145">{{ extra_vins_text }}</textarea>
             </div>
 
-            <button type="submit" class="lux-outline-btn">توليد تقرير الفوارق</button>
+            <button type="submit" class="lux-outline-btn">{% ui 'توليد تقرير الفوارق' %}</button>
         </div>
     </form>
 
@@ -76,7 +77,7 @@
         <div class="col-md-4">
             <div class="card p-3 h-100">
                 <div class="card-body text-center">
-                    <h6 class="lux-label">السيارات التي تم التحقق منها</h6>
+                    <h6 class="lux-label">{% ui 'السيارات التي تم التحقق منها' %}</h6>
                     <h4 class="lux-value">{{ report.checked_count }}</h4>
                 </div>
             </div>
@@ -84,7 +85,7 @@
         <div class="col-md-4">
             <div class="card p-3 h-100">
                 <div class="card-body text-center">
-                    <h6 class="lux-label">سيارات ناقصة من الواقع</h6>
+                    <h6 class="lux-label">{% ui 'سيارات ناقصة من الواقع' %}</h6>
                     <h4 class="lux-value">{{ report.missing_cars|length }}</h4>
                 </div>
             </div>
@@ -92,7 +93,7 @@
         <div class="col-md-4">
             <div class="card p-3 h-100">
                 <div class="card-body text-center">
-                    <h6 class="lux-label">VIN غير موجودة بالنظام</h6>
+                    <h6 class="lux-label">{% ui 'VIN غير موجودة بالنظام' %}</h6>
                     <h4 class="lux-value">{{ report.extra_vins|length }}</h4>
                 </div>
             </div>
@@ -101,13 +102,13 @@
 
     <div class="card p-3 mt-4">
         <div class="card-body">
-            <h5 class="lux-label mb-3">تفاصيل الفوارق</h5>
+            <h5 class="lux-label mb-3">{% ui 'تفاصيل الفوارق' %}</h5>
             {% if report.discrepancy_count == 0 %}
-                <div class="alert alert-success mb-0">لا توجد فوارق. الجرد متطابق.</div>
+                <div class="alert alert-success mb-0">{% ui 'لا توجد فوارق. الجرد متطابق.' %}</div>
             {% else %}
                 <div class="row g-3">
                     <div class="col-lg-6">
-                        <h6 class="lux-label">موجودة بالنظام وغير موجودة فعليًا</h6>
+                        <h6 class="lux-label">{% ui 'موجودة بالنظام وغير موجودة فعليًا' %}</h6>
                         <ul class="list-group">
                             {% for car in report.missing_cars %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -115,17 +116,17 @@
                                 <span class="text-uppercase">{{ car.vin }}</span>
                             </li>
                             {% empty %}
-                            <li class="list-group-item">لا يوجد</li>
+                            <li class="list-group-item">{% ui 'لا يوجد' %}</li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div class="col-lg-6">
-                        <h6 class="lux-label">موجودة فعليًا وغير موجودة بالنظام</h6>
+                        <h6 class="lux-label">{% ui 'موجودة فعليًا وغير موجودة بالنظام' %}</h6>
                         <ul class="list-group">
                             {% for vin in report.extra_vins %}
                             <li class="list-group-item text-uppercase">{{ vin }}</li>
                             {% empty %}
-                            <li class="list-group-item">لا يوجد</li>
+                            <li class="list-group-item">{% ui 'لا يوجد' %}</li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -153,7 +154,7 @@
             checkboxes.forEach((checkbox) => {
                 checkbox.checked = !allChecked;
             });
-            toggleButton.textContent = allChecked ? 'تحديد الكل' : 'إلغاء تحديد الكل';
+            toggleButton.textContent = allChecked ? "{% ui 'تحديد الكل' %}" : "{% ui 'إلغاء تحديد الكل' %}";
         });
     });
 </script>

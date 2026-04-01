@@ -1,6 +1,5 @@
-{% extends "sales/base.html" %}
-
-{% block navbar %}{% endblock %}
+﻿{% extends "sales/base.html" %}
+{% load ui_i18n %}
 
 {% block extrahead %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,32 +10,11 @@
 {% block extrastyle %}
 <style>
     body {
-        padding-top: 0;
-    }
-
-    .floating-theme-toggle {
-        position: fixed;
-        top: 1.2rem;
-        inset-inline-start: 1.2rem;
-        z-index: 30;
-    }
-
-    .floating-theme-toggle .theme-toggle-btn {
-        border: 1px solid rgba(255, 255, 255, 0.42);
-        background: rgba(0, 0, 0, 0.25);
-        color: #f5f5f5 !important;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-    }
-
-    .floating-theme-toggle .theme-toggle-btn:hover {
-        border-color: rgba(212, 175, 55, 0.75);
-        background: rgba(212, 175, 55, 0.22);
-        color: #fff !important;
+        padding-top: 92px;
     }
 
     .welcome-shell {
-        min-height: 100vh;
+        min-height: calc(100vh - 92px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -61,7 +39,7 @@
         flex-direction: column;
         align-items: center;
         gap: 0.3rem;
-        font-family: 'Almarai', 'Cairo', sans-serif;
+        font-family: var(--font-primary);
         line-height: 1.15;
     }
 
@@ -85,9 +63,9 @@
         font-weight: 800;
         color: #d7af6a;
         text-shadow:
-            0 0 12px rgba(201, 164, 106, 0.24),
-            0 0 28px rgba(201, 164, 106, 0.2),
-            0 0 48px rgba(201, 164, 106, 0.12);
+            0 0 12px rgba(33, 46, 63, 0.24),
+            0 0 28px rgba(33, 46, 63, 0.2),
+            0 0 48px rgba(33, 46, 63, 0.12);
         animation: soft-glow-pulse 4.6s ease-in-out infinite;
     }
 
@@ -100,11 +78,11 @@
         margin: 0.35rem 0 0;
         min-width: 180px;
         padding: 0.9rem 2.8rem;
-        border: 1px solid rgba(201, 164, 106, 0.55);
+        border: 1px solid rgba(33, 46, 63, 0.55);
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.04);
         box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
-        font-family: 'Almarai', 'Cairo', sans-serif;
+        font-family: var(--font-primary);
         font-size: clamp(1.78rem, 4vw, 3.42rem);
         font-weight: 700;
         color: rgba(242, 238, 232, 0.82);
@@ -115,15 +93,15 @@
 
     .welcome-start:hover {
         color: #fff;
-        background: linear-gradient(135deg, rgba(201, 164, 106, 0.92), rgba(219, 192, 144, 0.96));
+        background: linear-gradient(135deg, rgba(33, 46, 63, 0.92), rgba(219, 192, 144, 0.96));
         border-color: rgba(219, 192, 144, 0.9);
         transform: translateY(-6px);
         text-shadow: 0 0 18px rgba(255, 255, 255, 0.16);
-        box-shadow: 0 24px 50px rgba(201, 164, 106, 0.24);
+        box-shadow: 0 24px 50px rgba(33, 46, 63, 0.24);
     }
 
     .welcome-start:focus-visible {
-        outline: 2px solid rgba(201, 164, 106, 0.72);
+        outline: 2px solid rgba(33, 46, 63, 0.72);
         outline-offset: 8px;
         border-radius: 12px;
     }
@@ -172,21 +150,26 @@
         0%,
         100% {
             text-shadow:
-                0 0 10px rgba(201, 164, 106, 0.2),
-                0 0 22px rgba(201, 164, 106, 0.16),
-                0 0 34px rgba(201, 164, 106, 0.08);
+                0 0 10px rgba(33, 46, 63, 0.2),
+                0 0 22px rgba(33, 46, 63, 0.16),
+                0 0 34px rgba(33, 46, 63, 0.08);
         }
 
         50% {
             text-shadow:
                 0 0 14px rgba(219, 192, 144, 0.32),
-                0 0 32px rgba(201, 164, 106, 0.24),
-                0 0 54px rgba(201, 164, 106, 0.14);
+                0 0 32px rgba(33, 46, 63, 0.24),
+                0 0 54px rgba(33, 46, 63, 0.14);
         }
     }
 
     @media (max-width: 640px) {
+        body {
+            padding-top: 78px;
+        }
+
         .welcome-shell {
+            min-height: calc(100vh - 78px);
             padding: 1.25rem 0.9rem;
         }
 
@@ -215,11 +198,6 @@
             padding: 1rem 0.65rem;
         }
 
-        .floating-theme-toggle {
-            top: 0.75rem;
-            inset-inline-start: 0.75rem;
-        }
-
         .welcome-stack {
             gap: 0.8rem;
         }
@@ -233,25 +211,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="floating-theme-toggle">
-    <button
-        id="themeToggleBtn"
-        class="nav-icon-circle theme-toggle-btn"
-        type="button"
-        title="تبديل الوضع المشمس والمظلم"
-        aria-label="تبديل الوضع المشمس والمظلم">
-        <i class="bi bi-sun-fill" aria-hidden="true"></i>
-        <span class="theme-label">مشمس</span>
-    </button>
-</div>
-
 <section class="welcome-shell">
     <div class="welcome-stack">
         <h1 class="welcome-title">
-            <span class="welcome-greeting">مرحباً بك</span>
-            <span class="welcome-system">في نظام <span class="welcome-system-name">المحاسب الذكي</span></span>
+            <span class="welcome-greeting">{% ui 'مرحباً بك' %}</span>
+            <span class="welcome-system">{% ui 'في نظام' %} <span class="welcome-system-name">{% ui 'المحاسب الذكي' %}</span></span>
         </h1>
-        <a class="welcome-start" href="{% url 'login' %}">البدء</a>
+        <a class="welcome-start" href="{% url 'login' %}">{% ui 'البدء' %}</a>
     </div>
 </section>
 {% endblock %}

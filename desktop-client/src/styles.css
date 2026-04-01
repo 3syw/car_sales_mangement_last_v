@@ -1,14 +1,14 @@
 :root {
-    --charcoal: #0f141c;
-    --charcoal-soft: #171e29;
-    --charcoal-muted: #202a38;
+    --charcoal: #101010;
+    --charcoal-soft: #1d1d1d;
+    --charcoal-muted: #2a2a2a;
     --surface-glass: rgba(255, 255, 255, 0.08);
     --surface-glass-strong: rgba(255, 255, 255, 0.12);
-    --text-main: #f2eee8;
-    --text-soft: #d4cec5;
-    --champagne: #c9a46a;
-    --champagne-light: #dbc090;
-    --champagne-dark: #a9854f;
+    --text-main: #f2f2f2;
+    --text-soft: #b8b8b8;
+    --champagne: #8a8a8a;
+    --champagne-light: #d8d8d8;
+    --champagne-dark: #4e4e4e;
 }
 
 * {
@@ -36,13 +36,6 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-#particles-js {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    background: radial-gradient(circle at 30% 20%, #1c2430 0%, var(--charcoal) 62%, #0b1017 100%);
 }
 
 .desktop-navbar {

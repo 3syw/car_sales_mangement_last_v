@@ -14,7 +14,6 @@ const elements = {
     appVersion: document.getElementById('appVersion'),
     serverUrl: document.getElementById('serverUrl'),
     tenantId: document.getElementById('tenantId'),
-    tenantKey: document.getElementById('tenantKey'),
     username: document.getElementById('username'),
     password: document.getElementById('password'),
     loginForm: document.getElementById('loginForm'),
@@ -177,7 +176,6 @@ async function login(event) {
             },
             body: JSON.stringify({
                 tenant_id: state.tenantId,
-                tenant_key: elements.tenantKey.value,
                 username: elements.username.value,
                 password: elements.password.value,
             }),

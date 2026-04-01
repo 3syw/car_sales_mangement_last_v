@@ -26,4 +26,4 @@ Default backend URL for local use:
 
 - `http://127.0.0.1:8000`
 
-The tenant access key, tenant id, username, and password must match a real tenant user in the Django backend.
+The tenant id, username, and password must match a real tenant user in the Django backend.

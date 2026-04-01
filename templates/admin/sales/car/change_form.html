@@ -1,4 +1,4 @@
-{% extends "admin/change_form.html" %}
+﻿{% extends "admin/change_form.html" %}
 {% load i18n admin_urls static admin_modify %}
 
 {% block extrastyle %}
@@ -20,7 +20,7 @@
         margin: 0 auto;
         padding: 1.75rem;
         border-radius: 24px;
-        border: 1px solid rgba(201, 164, 106, 0.42);
+        border: 1px solid rgba(33, 46, 63, 0.42);
         background: linear-gradient(145deg, rgba(23, 30, 41, 0.86), rgba(15, 20, 28, 0.78));
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
@@ -57,7 +57,7 @@
 
     .car-add-page fieldset.module.aligned {
         background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(201, 164, 106, 0.30);
+        border: 1px solid rgba(33, 46, 63, 0.30);
         border-radius: 18px;
         padding: 1.2rem 1rem !important;
         margin-bottom: 25px;
@@ -136,7 +136,7 @@
         max-width: 100% !important;
         min-height: 44px;
         border: 0 !important;
-        border-bottom: 1px solid rgba(201, 164, 106, 0.52) !important;
+        border-bottom: 1px solid rgba(33, 46, 63, 0.52) !important;
         border-radius: 0 !important;
         background: rgba(255, 255, 255, 0.03) !important;
         color: var(--text-main) !important;
@@ -178,7 +178,7 @@
     .car-add-page #car_form textarea:focus {
         border-color: transparent;
         border-bottom-color: var(--champagne-light);
-        box-shadow: 0 2px 0 0 rgba(201, 164, 106, 0.30);
+        box-shadow: 0 2px 0 0 rgba(33, 46, 63, 0.30);
         outline: none;
     }
 
@@ -209,7 +209,7 @@
         max-height: 220px;
         overflow-y: auto;
         border-radius: 12px;
-        border: 1px solid rgba(201, 164, 106, 0.42);
+        border: 1px solid rgba(33, 46, 63, 0.42);
         background: rgba(15, 20, 28, 0.98);
         box-shadow: 0 16px 26px rgba(0, 0, 0, 0.38);
         opacity: 0;
@@ -237,7 +237,7 @@
     }
 
     .car-add-page .car-elegant-option:hover {
-        background: rgba(201, 164, 106, 0.20);
+        background: rgba(33, 46, 63, 0.20);
         color: var(--champagne-light);
     }
 
@@ -271,7 +271,7 @@
     .car-add-page .car-price-currency-row .fieldBox.field-cost_currency select,
     .car-add-page .car-price-currency-row .fieldBox.field-currency select {
         min-height: 42px;
-        border: 1px solid rgba(201, 164, 106, 0.38);
+        border: 1px solid rgba(33, 46, 63, 0.38);
         border-radius: 10px;
         background: rgba(255, 255, 255, 0.09);
         padding: 0.45rem 0.5rem;
@@ -279,13 +279,13 @@
 
     .car-add-page .car-price-currency-row .fieldBox.field-cost_price input,
     .car-add-page .car-price-currency-row .fieldBox.field-selling_price input {
-        border-bottom: 1px solid rgba(201, 164, 106, 0.52);
+        border-bottom: 1px solid rgba(33, 46, 63, 0.52);
     }
 
     .car-add-page .car-upload-dropzone {
         position: relative;
         min-height: 142px;
-        border: 1px dashed rgba(201, 164, 106, 0.52);
+        border: 1px dashed rgba(33, 46, 63, 0.52);
         border-radius: 14px;
         background: rgba(255, 255, 255, 0.04);
         padding: 1rem;
@@ -299,7 +299,7 @@
 
     .car-add-page .car-upload-dropzone.is-dragover {
         border-color: var(--champagne-light);
-        background: rgba(201, 164, 106, 0.12);
+        background: rgba(33, 46, 63, 0.12);
     }
 
     .car-add-page .car-upload-dropzone .drop-icon {
@@ -333,14 +333,14 @@
         margin-top: 0.35rem;
         object-fit: cover;
         border-radius: 12px;
-        border: 1px solid rgba(201, 164, 106, 0.36);
+        border: 1px solid rgba(33, 46, 63, 0.36);
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.30);
     }
 
     .car-add-page .submit-row {
         margin-top: 1.4rem;
         padding-top: 1rem;
-        border-top: 1px solid rgba(201, 164, 106, 0.32);
+        border-top: 1px solid rgba(33, 46, 63, 0.32);
         display: flex;
         flex-wrap: wrap;
         gap: 0.55rem;
@@ -366,7 +366,7 @@
     .car-add-page .submit-row input:not([name="_save"]) {
         order: 2;
         border-radius: 10px;
-        border: 1px solid rgba(201, 164, 106, 0.38);
+        border: 1px solid rgba(33, 46, 63, 0.38);
         background: rgba(255, 255, 255, 0.04);
         color: var(--text-soft);
     }
@@ -426,7 +426,7 @@
     [data-theme="light"] .car-add-page #car_form input[type="tel"]:focus,
     [data-theme="light"] .car-add-page #car_form select:focus,
     [data-theme="light"] .car-add-page #car_form textarea:focus {
-        border-bottom-color: #A46E2A;
+        border-bottom-color: #2C3440;
         box-shadow: 0 2px 0 0 rgba(164, 110, 42, 0.28);
     }
 
@@ -468,7 +468,7 @@
 
     [data-theme="light"] .car-add-page .car-upload-dropzone.is-dragover {
         background: rgba(164, 110, 42, 0.16);
-        border-color: #A46E2A;
+        border-color: #2C3440;
     }
 
     [data-theme="light"] .car-add-page .car-upload-dropzone .drop-label {

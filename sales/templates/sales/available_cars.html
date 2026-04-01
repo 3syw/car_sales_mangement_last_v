@@ -1,168 +1,240 @@
-{% extends "sales/base.html" %}
+﻿{% extends "sales/base.html" %}
+{% load ui_i18n %}
 
 {% block extrastyle %}
 {{ block.super }}
 <style>
+    .available-cars-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.9rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+
+    .brand-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .brand-card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .brand-card .card {
+        border-radius: 1rem;
+        border: 1px solid rgba(33, 46, 63, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        background: rgba(255, 255, 255, 0.94);
+    }
+
+    .brand-card:hover .card {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 30px rgba(15, 23, 42, 0.14);
+    }
+
+    .brand-card.active .card {
+        border-color: rgba(33, 46, 63, 0.5);
+        box-shadow: 0 0 0 0.22rem rgba(33, 46, 63, 0.12);
+    }
+
+    .brand-logo-shell {
+        width: 62px;
+        height: 62px;
+        border-radius: 16px;
+        border: 1px solid rgba(33, 46, 63, 0.22);
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.75rem;
+        overflow: hidden;
+    }
+
+    .brand-logo-shell img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .brand-logo-fallback {
+        font-weight: 800;
+        color: #1f2937;
+        font-size: 1rem;
+    }
+
     .available-cars-summary {
         display: flex;
+        gap: 0.65rem;
         flex-wrap: wrap;
-        gap: 0.75rem;
         margin-bottom: 1rem;
     }
 
     .available-cars-chip {
         display: inline-flex;
         align-items: center;
-        gap: 0.45rem;
-        padding: 0.72rem 1rem;
+        gap: 0.4rem;
         border-radius: 999px;
-        background: rgba(212, 175, 55, 0.12);
-        color: #0f172a;
+        padding: 0.55rem 0.9rem;
+        border: 1px solid rgba(33, 46, 63, 0.22);
+        background: rgba(255, 255, 255, 0.85);
+        color: #172230;
         font-weight: 700;
     }
 
-    .available-cars-mobile-list {
-        display: none;
-    }
-
-    .available-car-mobile-card {
-        padding: 1rem;
-        border-radius: 1rem;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        background: rgba(255, 255, 255, 0.94);
-        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
-    }
-
-    .available-car-mobile-grid {
+    .available-cars-grid {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.75rem;
-        margin-top: 0.8rem;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1rem;
     }
 
-    .available-car-mobile-grid div {
-        padding: 0.7rem 0.8rem;
-        border-radius: 0.85rem;
+    .available-car-card {
+        border-radius: 1rem;
+        border: 1px solid rgba(33, 46, 63, 0.18);
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 14px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .available-car-cover {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(33, 46, 63, 0.18);
+    }
+
+    .available-car-cover-empty {
+        width: 100%;
+        height: 150px;
+        border-radius: 0.9rem;
+        border: 1px dashed rgba(33, 46, 63, 0.24);
         background: rgba(15, 23, 42, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #556274;
+        font-weight: 700;
     }
 
-    .available-car-mobile-grid small {
+    .available-car-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.55rem;
+        margin-top: 0.85rem;
+    }
+
+    .available-car-meta div {
+        border-radius: 0.7rem;
+        background: rgba(15, 23, 42, 0.04);
+        padding: 0.5rem 0.6rem;
+    }
+
+    .available-car-meta small {
+        color: #667388;
         display: block;
-        color: #64748b;
-        margin-bottom: 0.15rem;
+        margin-bottom: 0.12rem;
     }
 
     @media (max-width: 767.98px) {
-        .available-cars-chip {
+        .available-cars-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .available-cars-toolbar .d-flex {
             width: 100%;
-            justify-content: center;
         }
 
-        .available-cars-table-shell {
-            display: none;
-        }
-
-        .available-cars-mobile-list {
-            display: grid;
-            gap: 0.9rem;
-        }
-
-        .available-car-mobile-grid {
-            grid-template-columns: 1fr;
+        .available-cars-toolbar .btn {
+            flex: 1;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="mb-0 text-primary">السيارات المتاحة</h3>
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'admin:sales_car_changelist' %}" class="btn btn-sm btn-outline-secondary">لوحة السيارات</a>
-                        <a href="{% url 'admin:sales_car_add' %}" class="btn btn-sm btn-outline-light" style="color:var(--gold); font-weight:700; border:1px solid rgba(212,175,55,0.25);">إضافة سيارة</a>
-                    </div>
-                </div>
-
-                <div class="available-cars-summary">
-                    <span class="available-cars-chip"><i class="fas fa-car"></i> المتاح حاليًا: {{ cars|length }}</span>
-                    <span class="available-cars-chip"><i class="fas fa-bolt"></i> تنفيذ البيع مباشرة من نفس الصفحة</span>
-                </div>
-
-                <div class="available-cars-table-shell table-responsive">
-                    <table class="table table-hover table-light align-middle">
-                        <thead>
-                            <tr>
-                                <th>المعرف</th>
-                                <th>الصورة</th>
-                                <th>الماركة</th>
-                                <th>الموديل</th>
-                                <th>رقم الشاسيه</th>
-                                <th>سنة الصنع</th>
-                                <th>سعر البيع</th>
-                                <th>العملة</th>
-                                <th>إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for car in cars %}
-                            <tr>
-                                <td>{{ car.id }}</td>
-                                <td>
-                                    {% if car.image %}
-                                        <img src="{{ car.image.url }}" alt="{{ car.brand }}" style="width:64px; height:44px; object-fit:cover; border-radius:6px; border:1px solid rgba(212,175,55,0.35);">
-                                    {% else %}
-                                        <span class="text-muted">لا توجد</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ car.brand }}</td>
-                                <td>{{ car.model_name }}</td>
-                                <td>{{ car.vin }}</td>
-                                <td>{{ car.year }}</td>
-                                <td>{{ car.selling_price }}</td>
-                                <td>{{ car.currency }}</td>
-                                <td>
-                                    <a class="btn btn-sm btn-success" href="{% url 'process_sale' %}?car_id={{ car.id }}">إتمام البيع</a>
-                                    <a class="btn btn-sm btn-outline-primary" href="{% url 'admin:sales_car_change' car.id %}" style="color: var(--gold) !important; font-weight:700; border-color: rgba(212,175,55,0.35);">تحرير</a>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="9" class="text-center text-muted">لا توجد سيارات متاحة حالياً.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="available-cars-mobile-list">
-                    {% for car in cars %}
-                    <div class="available-car-mobile-card">
-                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
-                            <div>
-                                <strong class="d-block">{{ car.brand }} {{ car.model_name }}</strong>
-                                <small class="text-muted">{{ car.vin }}</small>
-                            </div>
-                            <span class="badge text-bg-light">#{{ car.id }}</span>
-                        </div>
-                        <div class="available-car-mobile-grid">
-                            <div><small>سنة الصنع</small><strong>{{ car.year }}</strong></div>
-                            <div><small>سعر البيع</small><strong>{{ car.selling_price }} {{ car.currency }}</strong></div>
-                        </div>
-                        <div class="d-flex gap-2 flex-wrap mt-3">
-                            <a class="btn btn-sm btn-success" href="{% url 'process_sale' %}?car_id={{ car.id }}">إتمام البيع</a>
-                            <a class="btn btn-sm btn-outline-primary" href="{% url 'admin:sales_car_change' car.id %}" style="color: var(--gold) !important; font-weight:700; border-color: rgba(212,175,55,0.35);">تحرير</a>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="available-car-mobile-card text-center text-muted">لا توجد سيارات متاحة حالياً.</div>
-                    {% endfor %}
-                </div>
-
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="available-cars-toolbar">
+            <h3 class="mb-0 text-primary">{% ui 'السيارات المتاحة حسب البراند' %}</h3>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{% url 'admin:sales_car_changelist' %}" class="btn btn-sm btn-outline-secondary">{% ui 'لوحة السيارات' %}</a>
+                <a href="{% url 'admin:sales_car_add' %}" class="btn btn-sm btn-outline-primary">{% ui 'إضافة سيارة' %}</a>
             </div>
+        </div>
+
+        <div class="brand-cards-grid">
+            <a href="{% url 'available_cars_table' %}" class="brand-card {% if not selected_brand %}active{% endif %}">
+                <div class="card h-100 p-3 text-center">
+                    <div class="brand-logo-shell">
+                        <span class="brand-logo-fallback"><i class="fas fa-layer-group"></i></span>
+                    </div>
+                    <h6 class="mb-1 fw-bold">{% ui 'كل البراندات' %}</h6>
+                    <small class="text-muted">{{ available_total }} {% ui 'سيارة متاحة' %}</small>
+                </div>
+            </a>
+
+            {% for card in brand_cards %}
+            <a href="{% url 'available_cars_table' %}?brand={{ card.brand|urlencode }}" class="brand-card {% if selected_brand and selected_brand|lower == card.brand|lower %}active{% endif %}">
+                <div class="card h-100 p-3 text-center">
+                    <div class="brand-logo-shell">
+                        {% if card.logo_url %}
+                        <img src="{{ card.logo_url }}" alt="{{ card.brand }}">
+                        {% else %}
+                        <span class="brand-logo-fallback">{{ card.brand|slice:":2" }}</span>
+                        {% endif %}
+                    </div>
+                    <h6 class="mb-1 fw-bold">{{ card.brand }}</h6>
+                    <small class="text-muted">{{ card.total }} {% ui 'سيارة متاحة' %}</small>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="available-cars-summary">
+            <span class="available-cars-chip"><i class="fas fa-car"></i> {% ui 'نتيجة العرض' %}: {{ cars|length }} {% ui 'سيارة' %}</span>
+            {% if selected_brand %}
+            <span class="available-cars-chip"><i class="fas fa-filter"></i> {% ui 'الفلتر الحالي' %}: {{ selected_brand }}</span>
+            {% else %}
+            <span class="available-cars-chip"><i class="fas fa-globe"></i> {% ui 'عرض جميع البراندات' %}</span>
+            {% endif %}
+        </div>
+
+        <div class="available-cars-grid">
+            {% for car in cars %}
+            <article class="available-car-card p-3">
+                {% if car.image %}
+                <img src="{{ car.image.url }}" alt="{{ car.brand }}" class="available-car-cover">
+                {% else %}
+                <div class="available-car-cover-empty">{% ui 'لا توجد صورة' %}</div>
+                {% endif %}
+
+                <div class="mt-3 d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        <h6 class="mb-1 fw-bold">{{ car.brand }} {{ car.model_name }}</h6>
+                        <small class="text-muted">{{ car.vin }}</small>
+                    </div>
+                    <span class="badge text-bg-light">#{{ car.id }}</span>
+                </div>
+
+                <div class="available-car-meta">
+                    <div><small>{% ui 'سنة الصنع' %}</small><strong>{{ car.year }}</strong></div>
+                    <div><small>{% ui 'السعر' %}</small><strong>{{ car.selling_price }} {{ car.currency }}</strong></div>
+                </div>
+
+                <div class="d-flex gap-2 flex-wrap mt-3">
+                    <a class="btn btn-sm btn-success" href="{% url 'process_sale' %}?car_id={{ car.id }}">{% ui 'إتمام البيع' %}</a>
+                    <a class="btn btn-sm btn-outline-primary" href="{% url 'admin:sales_car_change' car.id %}">{% ui 'تحرير' %}</a>
+                </div>
+            </article>
+            {% empty %}
+            <div class="card p-4 text-center text-muted">{% ui 'لا توجد سيارات متاحة ضمن هذا البراند حالياً.' %}</div>
+            {% endfor %}
         </div>
     </div>
 </div>

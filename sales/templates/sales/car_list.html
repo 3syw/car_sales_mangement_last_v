@@ -56,30 +56,72 @@
         font-weight: 700;
     }
 
-    .showcase-card {
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    .showcase-brand-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 0.9rem;
+        margin-bottom: 1.4rem;
     }
 
-    .showcase-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 26px 60px rgba(15, 23, 42, 0.16);
+    .showcase-brand-card {
+        text-decoration: none;
+        color: inherit;
     }
 
-    .showcase-status {
-        letter-spacing: 0.01em;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+    .showcase-brand-card .card {
+        border-radius: 18px;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        background: rgba(255, 255, 255, 0.92);
+        color: #0f172a;
+        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
     }
 
-    .showcase-price-row {
-        gap: 0.75rem;
+    .showcase-brand-card .card h6 {
+        color: #111827;
     }
 
-    .showcase-actions {
-        display: flex;
+    .showcase-brand-card .card small {
+        color: #4b5563 !important;
+    }
+
+    .showcase-brand-card:hover .card {
+        transform: translateY(-4px);
+        box-shadow: 0 22px 45px rgba(15, 23, 42, 0.14);
+    }
+
+    .showcase-brand-card.active .card {
+        border-color: rgba(15, 23, 42, 0.42);
+        box-shadow: 0 0 0 0.2rem rgba(15, 23, 42, 0.12);
+    }
+
+    .showcase-brand-logo {
+        width: 58px;
+        height: 58px;
+        border-radius: 14px;
+        border: 1px solid rgba(15, 23, 42, 0.16);
+        background: #fff;
+        display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        justify-content: flex-end;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.65rem;
+    }
+
+    .showcase-brand-logo img {
+        width: 38px;
+        height: 38px;
+        object-fit: contain;
+    }
+
+    .showcase-brand-fallback {
+        font-size: 0.96rem;
+        font-weight: 800;
+        color: #111827;
+        display: inline-flex;
+    }
+
+    .showcase-brand-logo.has-image .showcase-brand-fallback {
+        display: none;
     }
 
     @media (max-width: 991.98px) {
@@ -116,21 +158,58 @@
             justify-content: center;
         }
 
-        .showcase-price-row {
-            flex-direction: column;
-            align-items: stretch !important;
+        .showcase-brand-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
+    }
 
-        .showcase-actions {
-            width: 100%;
-            justify-content: stretch;
-        }
+    [data-theme="dark"] .showcase-toolbar h3,
+    [data-theme="dark"] .showcase-summary,
+    [data-theme="dark"] .showcase-pill {
+        color: #e6edf7;
+    }
 
-        .showcase-actions a {
-            flex: 1 1 0;
-            text-align: center;
-            justify-content: center;
-        }
+    [data-theme="dark"] .showcase-search {
+        background: rgba(17, 24, 39, 0.84);
+        border-color: rgba(148, 163, 184, 0.34);
+        box-shadow: 0 16px 34px rgba(2, 6, 23, 0.45);
+    }
+
+    [data-theme="dark"] .showcase-search input {
+        color: #f8fafc;
+    }
+
+    [data-theme="dark"] .showcase-search input::placeholder {
+        color: #b8c3d7;
+    }
+
+    [data-theme="dark"] .showcase-pill {
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.22), rgba(217, 119, 6, 0.22));
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    [data-theme="dark"] .showcase-brand-card .card {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(17, 24, 39, 0.95) 100%);
+        border-color: rgba(148, 163, 184, 0.32);
+        color: #e6edf7;
+        box-shadow: 0 14px 28px rgba(2, 6, 23, 0.36);
+    }
+
+    [data-theme="dark"] .showcase-brand-card .card h6 {
+        color: #f8fafc;
+    }
+
+    [data-theme="dark"] .showcase-brand-card .card small,
+    [data-theme="dark"] .text-muted {
+        color: #b8c3d7 !important;
+    }
+
+    [data-theme="dark"] .showcase-brand-logo {
+        background: rgba(248, 250, 252, 0.96);
+    }
+
+    [data-theme="dark"] .showcase-brand-fallback {
+        color: #0f172a;
     }
 </style>
 {% endblock %}
@@ -143,12 +222,12 @@
 
 <div class="showcase-toolbar mb-4">
     <div>
-        <h3><i class="fas fa-th-large text-primary"></i> المعرض الرقمي</h3>
+        <h3><i class="fas fa-th-large text-primary"></i> اختر البراند</h3>
     </div>
 
     <form method="GET" action="{% url 'car_list' %}" class="showcase-search">
         <input type="text" name="search" class="form-control me-2 rounded-pill" 
-               placeholder="ابحث بالماركة، الموديل أو الشاسيه..." 
+               placeholder="ابحث باسم البراند..." 
                value="{{ query|default:'' }}">
         <button class="btn btn-primary rounded-pill px-4" type="submit">بحث</button>
     </form>
@@ -159,64 +238,38 @@
 </div>
 
 <div class="showcase-summary">
-    <span class="showcase-pill"><i class="fas fa-car-side"></i> {{ cars|length }} سيارة ظاهرة</span>
+    <span class="showcase-pill"><i class="fas fa-car-side"></i> إجمالي المتاح: {{ available_total }} سيارة</span>
     {% if query %}
-    <span class="showcase-pill"><i class="fas fa-filter"></i> نتيجة البحث: {{ query }}</span>
+    <span class="showcase-pill"><i class="fas fa-filter"></i> تصفية البراندات: {{ query }}</span>
     {% endif %}
 </div>
 
-<div class="row">
-    {% for car in cars %}
-    <div class="col-md-4 mb-4">
-        <div class="card showcase-card h-100 shadow-sm border-0 overflow-hidden" style="border-radius: 20px;">
-            
-            <div style="height: 200px; overflow: hidden; position: relative;">
-                {% if car.image %}
-                    <img src="{{ car.image.url }}" class="card-img-top w-100 h-100" style="object-fit: cover;" alt="{{ car.brand }}">
-                {% else %}
-                    <div class="bg-light w-100 h-100 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-car fa-4x text-secondary opacity-25"></i>
-                    </div>
-                {% endif %}
-                
-                <span class="showcase-status position-absolute top-0 start-0 m-3 badge {% if car.is_sold %}bg-danger{% else %}bg-success{% endif %} rounded-pill p-2 px-3">
-                    {% if car.is_sold %}مباعة{% else %}متوفرة{% endif %}
-                </span>
+<div class="showcase-brand-grid">
+    <a href="{% url 'car_available_results' %}" class="showcase-brand-card active">
+        <div class="card h-100 p-3 text-center">
+            <div class="showcase-brand-logo">
+                <span class="showcase-brand-fallback"><i class="fas fa-th-large"></i></span>
             </div>
-
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h5 class="card-title fw-bold mb-0">{{ car.brand }}</h5>
-                    <span class="text-muted fw-bold">{{ car.year }}</span>
-                </div>
-                <p class="text-secondary mb-3">{{ car.model_name }}</p>
-                
-                <div class="d-flex align-items-center mb-3">
-                    <i class="fas fa-fingerprint text-primary me-2 ms-2"></i>
-                    <small class="text-muted">الشاسيه: <code>{{ car.vin|truncatechars:10 }}</code></small>
-                </div>
-
-                <div class="showcase-price-row border-top pt-3 d-flex justify-content-between align-items-center">
-                    <span class="fs-4 fw-bold text-dark">
-                        {{ car.selling_price|intcomma }} <small class="fs-6">{{ car.currency }}</small>
-                    </span>
-                    <div class="showcase-actions">
-                        {% if user.is_authenticated %}
-                        <a href="/admin/sales/car/{{ car.id }}/change/" class="btn btn-outline-secondary btn-sm rounded-circle">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        {% endif %}
-                        <a href="{% url 'car_detail' car.id %}" class="text-decoration-none btn btn-outline-primary btn-sm rounded-pill px-3">تفاصيل</a>
-                    </div>
-                </div>
-            </div>
+            <h6 class="fw-bold mb-1">كل البراندات</h6>
+            <small class="text-muted">عرض كل السيارات المتاحة</small>
         </div>
-    </div>
+    </a>
+
+    {% for item in brand_cards %}
+    <a href="{% url 'car_available_results' %}?brand={{ item.brand|urlencode }}" class="showcase-brand-card">
+        <div class="card h-100 p-3 text-center">
+            <div class="showcase-brand-logo {% if item.logo_url %}has-image{% endif %}">
+                {% if item.logo_url %}
+                <img src="{{ item.logo_url }}" alt="{{ item.brand }}" onerror="this.remove(); this.parentElement.classList.remove('has-image');">
+                {% endif %}
+                <span class="showcase-brand-fallback">{{ item.brand|slice:":2" }}</span>
+            </div>
+            <h6 class="fw-bold mb-1">{{ item.brand }}</h6>
+            <small class="text-muted">{{ item.total }} سيارة</small>
+        </div>
+    </a>
     {% empty %}
-    <div class="col-12 text-center py-5">
-        <i class="fas fa-car-crash fa-5x text-light mb-3"></i>
-        <h4 class="text-muted">لا توجد سيارات مطابقة لبحثك..</h4>
-    </div>
+    <div class="card p-4 text-center text-muted" style="grid-column: 1 / -1; border-radius: 18px;">لا توجد براندات مطابقة لبحثك.</div>
     {% endfor %}
 </div>
 {% endblock %}

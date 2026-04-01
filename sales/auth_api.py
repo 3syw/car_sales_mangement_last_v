@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .tenant_context import set_current_tenant
 from .tenant_database import ensure_tenant_connection, normalize_tenant_id
-from .tenant_registry import get_cached_tenant_metadata, is_valid_tenant_access_key
+from .tenant_registry import get_cached_tenant_metadata
 from .models import AuditLog
 from .realtime import publish_tenant_event
 
@@ -97,23 +97,18 @@ def _write_geo_change_alert(request, *, tenant_alias, tenant_id, user):
 
 class TenantTokenObtainPairSerializer(TokenObtainPairSerializer):
     tenant_id = serializers.CharField(write_only=True)
-    tenant_key = serializers.CharField(write_only=True, trim_whitespace=False)
 
     def validate(self, attrs):
         tenant_id = normalize_tenant_id(self.initial_data.get('tenant_id'))
-        tenant_key = (self.initial_data.get('tenant_key') or '').strip()
         username = (attrs.get('username') or self.initial_data.get('username') or '').strip()
         password = attrs.get('password')
 
-        if not tenant_id or not tenant_key or not username or not password:
-            raise AuthenticationFailed('يجب إدخال معرف المعرض ومفتاحه وبيانات المستخدم.')
+        if not tenant_id or not username or not password:
+            raise AuthenticationFailed('يجب إدخال معرف المعرض وبيانات المستخدم.')
 
         tenant_metadata = get_cached_tenant_metadata(tenant_id)
         if tenant_metadata is None or not tenant_metadata.get('is_active') or tenant_metadata.get('is_deleted'):
             raise AuthenticationFailed('بيئة المعرض غير صالحة أو غير نشطة.')
-
-        if not is_valid_tenant_access_key(tenant_metadata, tenant_key):
-            raise AuthenticationFailed('مفتاح الوصول للمعرض غير صحيح.')
 
         tenant_alias = ensure_tenant_connection(tenant_id)
         if not tenant_alias:

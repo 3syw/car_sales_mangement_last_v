@@ -1,4 +1,5 @@
 {% extends "sales/base.html" %}
+{% load ui_i18n %}
 
 {% block extrastyle %}
 {{ block.super }}
@@ -62,24 +63,24 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <h3 class="mb-0 text-primary">إدارة صلاحيات الواجهات</h3>
-                    <span class="text-muted">يمكنك تعديل وصول كل حساب إلى واجهات النظام</span>
+                    <h3 class="mb-0 text-primary">{% ui 'إدارة صلاحيات الواجهات' %}</h3>
+                    <span class="text-muted">{% ui 'يمكنك تعديل وصول كل حساب إلى واجهات النظام' %}</span>
                 </div>
 
                 <div class="permissions-table-shell table-responsive">
                     <table class="table table-hover table-light align-middle text-center">
                         <thead>
                             <tr>
-                                <th>اسم المستخدم</th>
-                                <th>لوحة التحكم</th>
-                                <th>المعرض</th>
-                                <th>التقارير</th>
-                                <th>الديون</th>
-                                <th>الجدول الزمني</th>
-                                <th>حسابات المستخدمين</th>
-                                <th>إضافة مصروفات صيانة</th>
-                                <th>حفظ</th>
-                                <th>حذف</th>
+                                <th>{% ui 'اسم المستخدم' %}</th>
+                                <th>{% ui 'لوحة التحكم' %}</th>
+                                <th>{% ui 'المعرض' %}</th>
+                                <th>{% ui 'التقارير' %}</th>
+                                <th>{% ui 'الديون' %}</th>
+                                <th>{% ui 'الجدول الزمني' %}</th>
+                                <th>{% ui 'حسابات المستخدمين' %}</th>
+                                <th>{% ui 'إضافة مصروفات صيانة' %}</th>
+                                <th>{% ui 'حفظ' %}</th>
+                                <th>{% ui 'حذف' %}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,7 +108,7 @@
                                         data-username="{{ row.account.username }}"
                                         data-bs-toggle="modal"
                                         data-bs-target="#saveConfirmModal">
-                                        حفظ
+                                        {% ui 'حفظ' %}
                                     </button>
                                 </td>
                                 <td>
@@ -119,20 +120,20 @@
                                         data-username="{{ row.account.username }}"
                                         data-bs-toggle="modal"
                                         data-bs-target="#deleteUserModal">
-                                        حذف الحساب
+                                        {% ui 'حذف الحساب' %}
                                     </button>
                                     {% elif row.is_current_user %}
-                                    <span class="text-muted small">الحساب الحالي</span>
+                                    <span class="text-muted small">{% ui 'الحساب الحالي' %}</span>
                                     {% elif row.is_last_superuser %}
-                                    <span class="text-muted small">آخر سوبر أدمن</span>
+                                    <span class="text-muted small">{% ui 'آخر سوبر أدمن' %}</span>
                                     {% else %}
-                                    <span class="text-muted small">غير متاح</span>
+                                    <span class="text-muted small">{% ui 'غير متاح' %}</span>
                                     {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="10" class="text-center text-muted">لا يوجد حسابات لعرضها.</td>
+                                <td colspan="10" class="text-center text-muted">{% ui 'لا يوجد حسابات لعرضها' %}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -145,7 +146,7 @@
                         <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
                             <div>
                                 <strong class="d-block">{{ row.account.username }}</strong>
-                                <small class="text-muted">تعديل وصول الواجهات من الهاتف</small>
+                                <small class="text-muted">{% ui 'تعديل وصول الواجهات من الهاتف' %}</small>
                             </div>
                             <form method="post" id="mobile-perm-form-{{ row.account.id }}">
                                 {% csrf_token %}
@@ -154,13 +155,13 @@
                         </div>
 
                         <div class="permission-toggle-grid">
-                            <div class="permission-toggle-item"><label>لوحة التحكم</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_dashboard" {% if row.access.can_access_dashboard %}checked{% endif %}></div>
-                            <div class="permission-toggle-item"><label>المعرض</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_cars" {% if row.access.can_access_cars %}checked{% endif %}></div>
-                            <div class="permission-toggle-item"><label>التقارير</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_reports" {% if row.access.can_access_reports %}checked{% endif %}></div>
-                            <div class="permission-toggle-item"><label>الديون</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_debts" {% if row.access.can_access_debts %}checked{% endif %}></div>
-                            <div class="permission-toggle-item"><label>الجدول الزمني</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_timeline" {% if row.access.can_access_timeline %}checked{% endif %}></div>
-                            <div class="permission-toggle-item"><label>حسابات المستخدمين</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_system_users" {% if row.access.can_access_system_users %}checked{% endif %}></div>
-                            <div class="permission-toggle-item"><label>إضافة صيانة</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_add_maintenance_expenses" {% if row.access.can_add_maintenance_expenses %}checked{% endif %}></div>
+                            <div class="permission-toggle-item"><label>{% ui 'لوحة التحكم' %}</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_dashboard" {% if row.access.can_access_dashboard %}checked{% endif %}></div>
+                            <div class="permission-toggle-item"><label>{% ui 'المعرض' %}</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_cars" {% if row.access.can_access_cars %}checked{% endif %}></div>
+                            <div class="permission-toggle-item"><label>{% ui 'التقارير' %}</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_reports" {% if row.access.can_access_reports %}checked{% endif %}></div>
+                            <div class="permission-toggle-item"><label>{% ui 'الديون' %}</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_debts" {% if row.access.can_access_debts %}checked{% endif %}></div>
+                            <div class="permission-toggle-item"><label>{% ui 'الجدول الزمني' %}</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_timeline" {% if row.access.can_access_timeline %}checked{% endif %}></div>
+                            <div class="permission-toggle-item"><label>{% ui 'حسابات المستخدمين' %}</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_access_system_users" {% if row.access.can_access_system_users %}checked{% endif %}></div>
+                            <div class="permission-toggle-item"><label>{% ui 'إضافة صيانة' %}</label><input type="checkbox" class="form-check-input" form="mobile-perm-form-{{ row.account.id }}" name="can_add_maintenance_expenses" {% if row.access.can_add_maintenance_expenses %}checked{% endif %}></div>
                         </div>
 
                         <div class="d-flex gap-2 flex-wrap mt-3">
@@ -171,7 +172,7 @@
                                 data-username="{{ row.account.username }}"
                                 data-bs-toggle="modal"
                                 data-bs-target="#saveConfirmModal">
-                                حفظ
+                                {% ui 'حفظ' %}
                             </button>
                             {% if row.can_delete %}
                             <button
@@ -181,19 +182,19 @@
                                 data-username="{{ row.account.username }}"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteUserModal">
-                                حذف الحساب
+                                {% ui 'حذف الحساب' %}
                             </button>
                             {% elif row.is_current_user %}
-                            <span class="text-muted small align-self-center">الحساب الحالي</span>
+                            <span class="text-muted small align-self-center">{% ui 'الحساب الحالي' %}</span>
                             {% elif row.is_last_superuser %}
-                            <span class="text-muted small align-self-center">آخر سوبر أدمن</span>
+                            <span class="text-muted small align-self-center">{% ui 'آخر سوبر أدمن' %}</span>
                             {% else %}
-                            <span class="text-muted small align-self-center">غير متاح</span>
+                            <span class="text-muted small align-self-center">{% ui 'غير متاح' %}</span>
                             {% endif %}
                         </div>
                     </div>
                     {% empty %}
-                    <div class="permission-mobile-card text-center text-muted">لا يوجد حسابات لعرضها.</div>
+                    <div class="permission-mobile-card text-center text-muted">{% ui 'لا يوجد حسابات لعرضها' %}</div>
                     {% endfor %}
                 </div>
             </div>
@@ -205,16 +206,16 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">تأكيد الحفظ</h5>
+                <h5 class="modal-title">{% ui 'تأكيد الحفظ' %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="mb-0">هل انت متاكد من العمليه؟</p>
+                <p class="mb-0">{% ui 'هل انت متاكد من العمليه؟' %}</p>
                 <small class="text-muted" id="save-user-modal-name"></small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">لا</button>
-                <button type="button" class="btn btn-primary" id="confirm-save-btn">نعم</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% ui 'لا' %}</button>
+                <button type="button" class="btn btn-primary" id="confirm-save-btn">{% ui 'نعم' %}</button>
             </div>
         </div>
     </div>
@@ -224,18 +225,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">تأكيد الحذف</h5>
+                <h5 class="modal-title">{% ui 'تأكيد الحذف' %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="mb-0">هل انت متاكد من العمليه؟</p>
+                <p class="mb-0">{% ui 'هل انت متاكد من العمليه؟' %}</p>
                 <small class="text-muted" id="delete-user-modal-name"></small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">لا</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% ui 'لا' %}</button>
                 <form method="post" id="delete-user-form" action="">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">نعم</button>
+                    <button type="submit" class="btn btn-danger">{% ui 'نعم' %}</button>
                 </form>
             </div>
         </div>
@@ -261,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', () => {
             selectedFormId = button.getAttribute('data-form-id');
             const username = button.getAttribute('data-username') || '';
-            saveUserNameLabel.textContent = username ? `الحساب: ${username}` : '';
+            saveUserNameLabel.textContent = username ? `{% ui 'الحساب' %}: ${username}` : '';
         });
     });
 
@@ -286,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const userId = button.getAttribute('data-user-id');
             const username = button.getAttribute('data-username') || '';
             deleteForm.action = `/admin/sales/permissions/delete-user/${userId}/`;
-            userNameLabel.textContent = username ? `الحساب: ${username}` : '';
+            userNameLabel.textContent = username ? `{% ui 'الحساب' %}: ${username}` : '';
         });
     });
 

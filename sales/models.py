@@ -2,7 +2,6 @@
 import uuid
 
 from django.db import models
-from django.contrib.auth.hashers import check_password, make_password
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from decimal import Decimal
@@ -11,7 +10,6 @@ from decimal import Decimal
 class PlatformTenant(models.Model):
     name = models.CharField('اسم المعرض', max_length=120)
     tenant_id = models.SlugField('معرف المعرض', max_length=50, unique=True)
-    access_key_hash = models.CharField('تجزئة كلمة مرور المعرض', max_length=128)
     is_active = models.BooleanField('نشط', default=True)
     max_cars = models.PositiveIntegerField('الحد الأقصى للسيارات', default=500)
     max_users = models.PositiveIntegerField('الحد الأقصى للمستخدمين', default=25)
@@ -27,12 +25,6 @@ class PlatformTenant(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.tenant_id})"
-
-    def set_access_key(self, raw_key):
-        self.access_key_hash = make_password(raw_key)
-
-    def check_access_key(self, raw_key):
-        return check_password(raw_key, self.access_key_hash)
 
     def soft_delete(self, actor_username=''):
         from django.utils import timezone
@@ -301,6 +293,9 @@ class Car(models.Model):
         ('$', 'دولار ($)'),
         ('SR', 'ريال سعودي (SR)'),
         ('YER', 'ريال يمني (YER)'),
+        ('KRW', 'وون كوري (KRW)'),
+        ('CNY', 'يوان صيني (CNY)'),
+        ('EUR', 'يورو (EUR)'),
         ('£', 'جنيه إسترليني (£)'),
     ]
 

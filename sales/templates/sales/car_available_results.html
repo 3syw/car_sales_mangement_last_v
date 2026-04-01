@@ -1,0 +1,249 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .results-toolbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(300px, 1fr) auto;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .results-search {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.55rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(14px);
+    }
+
+    .results-search input {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        padding-inline: 0.75rem;
+    }
+
+    .results-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.3rem;
+    }
+
+    .results-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.7rem 1rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, rgba(9, 84, 120, 0.1), rgba(217, 119, 6, 0.14));
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .showcase-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .showcase-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 26px 60px rgba(15, 23, 42, 0.16);
+    }
+
+    .showcase-status {
+        letter-spacing: 0.01em;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+    }
+
+    .showcase-price-row {
+        gap: 0.75rem;
+    }
+
+    .showcase-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    [data-theme="dark"] .results-toolbar h3,
+    [data-theme="dark"] .results-summary,
+    [data-theme="dark"] .results-pill {
+        color: #e6edf7;
+    }
+
+    [data-theme="dark"] .results-search {
+        background: rgba(17, 24, 39, 0.84);
+        border-color: rgba(148, 163, 184, 0.34);
+        box-shadow: 0 16px 34px rgba(2, 6, 23, 0.45);
+    }
+
+    [data-theme="dark"] .results-search input {
+        color: #f8fafc;
+    }
+
+    [data-theme="dark"] .results-search input::placeholder {
+        color: #b8c3d7;
+    }
+
+    [data-theme="dark"] .results-pill {
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.22), rgba(217, 119, 6, 0.22));
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    [data-theme="dark"] .showcase-card {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(17, 24, 39, 0.95) 100%);
+        border: 1px solid rgba(148, 163, 184, 0.3) !important;
+        box-shadow: 0 16px 36px rgba(2, 6, 23, 0.42);
+    }
+
+    [data-theme="dark"] .showcase-card .card-title,
+    [data-theme="dark"] .showcase-card .fs-4,
+    [data-theme="dark"] .showcase-card p,
+    [data-theme="dark"] .showcase-card small,
+    [data-theme="dark"] .showcase-card code {
+        color: #e6edf7 !important;
+    }
+
+    [data-theme="dark"] .showcase-card .text-secondary,
+    [data-theme="dark"] .showcase-card .text-muted {
+        color: #b8c3d7 !important;
+    }
+
+    [data-theme="dark"] .showcase-price-row {
+        border-top-color: rgba(148, 163, 184, 0.25) !important;
+    }
+
+    [data-theme="dark"] .bg-light {
+        background: rgba(15, 23, 42, 0.9) !important;
+    }
+
+    [data-theme="dark"] .fa-car-crash,
+    [data-theme="dark"] .text-light {
+        color: #cbd5e1 !important;
+    }
+
+    @media (max-width: 991.98px) {
+        .results-toolbar {
+            grid-template-columns: 1fr;
+        }
+
+        .results-toolbar > * {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .results-search {
+            flex-direction: column;
+            align-items: stretch;
+            border-radius: 1.25rem;
+        }
+
+        .results-search button {
+            width: 100%;
+        }
+
+        .results-pill {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="results-toolbar">
+    <div>
+        <h3 class="mb-0"><i class="fas fa-car-side text-primary"></i> السيارات المتاحة</h3>
+    </div>
+
+    <form method="GET" action="{% url 'car_available_results' %}" class="results-search">
+        {% if selected_brand %}
+        <input type="hidden" name="brand" value="{{ selected_brand }}">
+        {% endif %}
+        <input type="text" name="search" class="form-control me-2 rounded-pill"
+               placeholder="ابحث بالماركة، الموديل أو الشاسيه..."
+               value="{{ query|default:'' }}">
+        <button class="btn btn-primary rounded-pill px-4" type="submit">بحث</button>
+    </form>
+
+    <a href="{% url 'car_list' %}" class="btn btn-outline-secondary rounded-pill">العودة للبراندات</a>
+</div>
+
+<div class="results-summary">
+    <span class="results-pill"><i class="fas fa-car"></i> {{ cars|length }} سيارة ظاهرة</span>
+    {% if selected_brand %}
+    <span class="results-pill"><i class="fas fa-tag"></i> البراند: {{ selected_brand }}</span>
+    {% else %}
+    <span class="results-pill"><i class="fas fa-layer-group"></i> كل البراندات</span>
+    {% endif %}
+</div>
+
+<div class="row">
+    {% for car in cars %}
+    <div class="col-md-4 mb-4">
+        <div class="card showcase-card h-100 shadow-sm border-0 overflow-hidden" style="border-radius: 20px;">
+            <div style="height: 200px; overflow: hidden; position: relative;">
+                {% if car.image %}
+                    <img src="{{ car.image.url }}" class="card-img-top w-100 h-100" style="object-fit: cover;" alt="{{ car.brand }}">
+                {% else %}
+                    <div class="bg-light w-100 h-100 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-car fa-4x text-secondary opacity-25"></i>
+                    </div>
+                {% endif %}
+
+                <span class="showcase-status position-absolute top-0 start-0 m-3 badge bg-success rounded-pill p-2 px-3">
+                    متوفرة
+                </span>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title fw-bold mb-0">{{ car.brand }}</h5>
+                    <span class="text-muted fw-bold">{{ car.year }}</span>
+                </div>
+                <p class="text-secondary mb-3">{{ car.model_name }}</p>
+
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-fingerprint text-primary me-2 ms-2"></i>
+                    <small class="text-muted">الشاسيه: <code>{{ car.vin|truncatechars:10 }}</code></small>
+                </div>
+
+                <div class="showcase-price-row border-top pt-3 d-flex justify-content-between align-items-center">
+                    <span class="fs-4 fw-bold text-dark">
+                        {{ car.selling_price|intcomma }} <small class="fs-6">{{ car.currency }}</small>
+                    </span>
+                    <div class="showcase-actions">
+                        {% if user.is_authenticated %}
+                        <a href="/admin/sales/car/{{ car.id }}/change/" class="btn btn-outline-secondary btn-sm rounded-circle">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'car_detail' car.id %}" class="text-decoration-none btn btn-outline-primary btn-sm rounded-pill px-3">تفاصيل</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <i class="fas fa-car-crash fa-5x text-light mb-3"></i>
+        {% if selected_brand %}
+        <h4 class="text-muted">لا يوجد سيارات بهذه العلامة التجارية.</h4>
+        {% else %}
+        <h4 class="text-muted">لا توجد سيارات مطابقة للفلاتر الحالية.</h4>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

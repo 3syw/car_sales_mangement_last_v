@@ -5,34 +5,43 @@
 {{ block.super }}
 <style>
     .dashboard-lux {
+        --dash-cobalt: #112a56;
+        --dash-charcoal: #151a24;
+        --dash-gold: #f4f7fb;
+        --dash-gold-soft: #d6dee9;
+        --dash-text-muted: #b9c5d6;
         position: relative;
         z-index: 1;
         padding-top: 0.8rem;
-        padding-bottom: 1.5rem;
+        padding-bottom: 1.7rem;
     }
 
     .dashboard-lux .dashboard-shell {
-        border-radius: 24px;
-        border: 1px solid rgba(201, 164, 106, 0.34);
-        background: linear-gradient(155deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.30));
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.30);
-        padding: clamp(1rem, 2vw, 1.7rem);
+        border-radius: 26px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: linear-gradient(165deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(20px) saturate(1.05);
+        -webkit-backdrop-filter: blur(20px) saturate(1.05);
+        box-shadow: 0 18px 46px rgba(5, 8, 14, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.19);
+        padding: clamp(1.05rem, 2vw, 1.8rem);
     }
 
     .dashboard-lux .dashboard-title {
-        color: var(--champagne-light);
+        background: linear-gradient(185deg, #ffffff 0%, var(--dash-gold) 48%, #d6dee9 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         font-weight: 800;
         letter-spacing: 0.25px;
-        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.24);
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.22);
         margin-bottom: 0.5rem;
     }
 
     .dashboard-lux .dashboard-subtitle {
-        color: #f2eee8;
-        font-size: 14px;
-        line-height: 1.9;
+        color: #f5efe6;
+        font-size: 14.5px;
+        line-height: 2;
+        font-weight: 300;
         margin-bottom: 0;
     }
 
@@ -41,8 +50,8 @@
         align-items: center;
         gap: 0.45rem;
         border-radius: 999px;
-        border: 1px solid rgba(201, 164, 106, 0.58);
-        color: var(--champagne-light);
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        color: #e7edf6;
         background: transparent;
         font-weight: 700;
         font-size: 0.9rem;
@@ -53,19 +62,20 @@
 
     .dashboard-lux .dashboard-action-btn:hover {
         border-color: transparent;
-        background: linear-gradient(45deg, var(--champagne-dark), var(--champagne-light));
-        color: #322317;
+        background: linear-gradient(55deg, #f4f8ff, #d9e2ee);
+        color: #172230;
     }
 
     .dashboard-lux .dashboard-stat-card,
-    .dashboard-lux .dashboard-panel {
-        border-radius: 20px;
-        border: 1px solid rgba(201, 164, 106, 0.27);
-        background: linear-gradient(165deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.30));
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
-        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    .dashboard-lux .dashboard-panel,
+    .dashboard-lux .dashboard-theme-card {
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: linear-gradient(162deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+        backdrop-filter: blur(18px) saturate(1.03);
+        -webkit-backdrop-filter: blur(18px) saturate(1.03);
+        box-shadow: 0 14px 30px rgba(6, 9, 16, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
     }
 
     .dashboard-lux .dashboard-stat-card {
@@ -74,55 +84,57 @@
     }
 
     .dashboard-lux .dashboard-stat-card:hover,
-    .dashboard-lux .dashboard-panel:hover {
-        transform: translateY(-5px);
-        border-color: rgba(201, 164, 106, 0.62);
-        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.34), 0 0 18px rgba(201, 164, 106, 0.22);
+    .dashboard-lux .dashboard-panel:hover,
+    .dashboard-lux .dashboard-theme-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(255, 255, 255, 0.42);
+        box-shadow: 0 24px 38px rgba(6, 10, 18, 0.44), 0 0 22px rgba(255, 255, 255, 0.12);
     }
 
     .dashboard-lux .dashboard-stat-icon {
-        width: 56px;
-        height: 56px;
+        width: 58px;
+        height: 58px;
         margin: 0 auto 0.7rem;
-        border-radius: 50%;
+        border-radius: 16px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        color: var(--champagne-light);
+        color: #e6edf7;
         font-size: 1.28rem;
-        border: 1px solid rgba(201, 164, 106, 0.40);
-        background: rgba(201, 164, 106, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(9, 14, 21, 0.2));
+        box-shadow: inset 2px 2px 7px rgba(255, 255, 255, 0.14), inset -3px -3px 10px rgba(4, 7, 13, 0.28), 0 0 14px rgba(255, 255, 255, 0.12);
         position: relative;
     }
 
     .dashboard-lux .dashboard-stat-icon::before {
         content: '';
         position: absolute;
-        inset: 10px;
-        border-radius: 50%;
-        background: rgba(201, 164, 106, 0.24);
-        filter: blur(10px);
+        inset: 9px;
+        border-radius: 12px;
+        background: linear-gradient(140deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.06));
+        filter: blur(8px);
         z-index: -1;
     }
 
     .dashboard-lux .dashboard-stat-label {
-        color: var(--champagne-light);
+        color: var(--dash-gold-soft);
         font-size: 1rem;
         font-weight: 700;
-        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.20);
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.12);
         margin-bottom: 0.35rem;
     }
 
     .dashboard-lux .dashboard-stat-value {
-        color: #f6f2ea;
+        color: #f2f6fb;
         font-size: 1.42rem;
-        font-weight: 800;
-        text-shadow: 0 0 14px rgba(255, 255, 255, 0.16);
+        font-weight: 900;
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.12);
         margin-bottom: 0;
     }
 
     .dashboard-lux .dashboard-stat-note {
-        color: #e8decb;
+        color: var(--dash-text-muted);
         opacity: 0.92;
         font-size: 0.82rem;
     }
@@ -132,11 +144,11 @@
     }
 
     .dashboard-lux .dashboard-panel-header {
-        color: var(--champagne-light);
+        color: var(--dash-gold-soft);
         font-size: 1.02rem;
         font-weight: 700;
         margin-bottom: 0.8rem;
-        text-shadow: 0 1px 2px rgba(201, 164, 106, 0.20);
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.12);
     }
 
     .dashboard-lux .dashboard-panel-header i {
@@ -145,28 +157,28 @@
 
     .dashboard-lux .dashboard-series-item {
         border-radius: 14px;
-        border: 1px solid rgba(201, 164, 106, 0.26);
-        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.09);
         padding: 0.55rem;
         text-align: center;
     }
 
     .dashboard-lux .dashboard-series-item .label {
-        color: #e8decb;
+        color: var(--dash-text-muted);
         font-size: 0.8rem;
         margin-bottom: 0.25rem;
     }
 
     .dashboard-lux .dashboard-series-item .value {
-        color: #f6f2ea;
+        color: #f4f8fd;
         font-weight: 700;
         font-size: 0.92rem;
     }
 
     .dashboard-lux .dashboard-note {
         border-radius: 12px;
-        border: 1px solid rgba(201, 164, 106, 0.25);
-        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.09);
         color: #f2eee8;
         padding: 0.72rem 0.82rem;
         margin-bottom: 0.58rem;
@@ -177,7 +189,7 @@
     }
 
     .dashboard-lux .dashboard-note-time {
-        color: #e8decb;
+        color: var(--dash-text-muted);
         opacity: 0.88;
         font-size: 0.78rem;
         white-space: nowrap;
@@ -191,12 +203,6 @@
     }
 
     .dashboard-lux .dashboard-theme-card {
-        border-radius: 20px;
-        border: 1px solid rgba(201, 164, 106, 0.27);
-        background: linear-gradient(165deg, rgba(72, 50, 37, 0.35), rgba(24, 18, 13, 0.30));
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
         padding: 1.1rem;
         height: 100%;
     }
@@ -204,6 +210,8 @@
     .dashboard-lux .dashboard-theme-help {
         color: #f2eee8;
         font-size: 0.9rem;
+        line-height: 1.85;
+        font-weight: 300;
         margin-bottom: 0.75rem;
         opacity: 0.94;
     }
@@ -211,18 +219,181 @@
     .dashboard-lux .dashboard-theme-status {
         margin-top: 0.75rem;
         padding-top: 0.7rem;
-        border-top: 1px dashed rgba(201, 164, 106, 0.22);
+        border-top: 1px dashed rgba(255, 255, 255, 0.16);
         font-size: 0.84rem;
-        color: #e8decb;
+        color: var(--dash-text-muted);
         display: grid;
         gap: 0.35rem;
     }
 
     .dashboard-lux .dashboard-theme-save-note {
         font-size: 0.78rem;
-        color: var(--champagne-light);
+        color: var(--dash-gold-soft);
         min-height: 1.2rem;
         margin-top: 0.55rem;
+    }
+
+    [data-theme="light"] .dashboard-lux {
+        --dash-cobalt: #f5f7fa;
+        --dash-charcoal: #eaf0f6;
+        --dash-gold: #253243;
+        --dash-gold-soft: #3f4f63;
+        --dash-text-muted: #5f6e81;
+    }
+
+    [data-theme="light"] .dashboard-lux .dashboard-shell,
+    [data-theme="light"] .dashboard-lux .dashboard-stat-card,
+    [data-theme="light"] .dashboard-lux .dashboard-panel,
+    [data-theme="light"] .dashboard-lux .dashboard-theme-card,
+    [data-theme="light"] .dashboard-lux .dashboard-series-item,
+    [data-theme="light"] .dashboard-lux .dashboard-note {
+        border-color: rgba(25, 37, 52, 0.12);
+        background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(245, 248, 252, 0.92));
+        box-shadow: 0 14px 30px rgba(23, 34, 48, 0.1);
+    }
+
+    [data-theme="light"] .dashboard-lux .dashboard-title {
+        background: linear-gradient(185deg, #2a3747 0%, #1b2634 56%, #0f1824 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: none;
+    }
+
+    [data-theme="light"] .dashboard-lux .dashboard-subtitle,
+    [data-theme="light"] .dashboard-lux .dashboard-stat-note,
+    [data-theme="light"] .dashboard-lux .dashboard-theme-help,
+    [data-theme="light"] .dashboard-lux .dashboard-theme-status,
+    [data-theme="light"] .dashboard-lux .dashboard-note-time,
+    [data-theme="light"] .dashboard-lux .dashboard-note {
+        color: #5b697a;
+    }
+
+    [data-theme="light"] .dashboard-lux .dashboard-stat-value,
+    [data-theme="light"] .dashboard-lux .dashboard-series-item .value,
+    [data-theme="light"] .dashboard-lux .dashboard-empty {
+        color: #1b2634;
+        text-shadow: none;
+    }
+
+    [data-theme="light"] .dashboard-lux .dashboard-stat-icon {
+        color: #2b3848;
+        border-color: rgba(27, 38, 52, 0.2);
+        background: linear-gradient(145deg, #ffffff, #edf2f8);
+        box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.8), 0 8px 16px rgba(27, 38, 52, 0.12);
+    }
+
+    [data-theme="light"] .dashboard-lux .dashboard-action-btn {
+        color: #2b3848;
+        border-color: rgba(27, 38, 52, 0.3);
+        background: rgba(27, 38, 52, 0.03);
+    }
+
+    [data-theme="light"] .dashboard-lux .dashboard-action-btn:hover {
+        border-color: rgba(27, 38, 52, 0.4);
+        background: linear-gradient(150deg, #f8fbff, #eaf0f6);
+        color: #0f1824;
+        box-shadow: 0 18px 36px rgba(23, 34, 48, 0.14);
+    }
+
+    body.dashboard-lux-active .navbar {
+        background: rgba(14, 19, 28, 0.22) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+        box-shadow: none !important;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+    }
+
+    body.dashboard-lux-active.nav-scrolled .navbar {
+        background: rgba(14, 20, 30, 0.78) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.36) !important;
+    }
+
+    [data-theme="light"] body.dashboard-lux-active .navbar,
+    [data-theme="light"] body.dashboard-lux-active.nav-scrolled .navbar {
+        background: rgba(255, 255, 255, 0.92) !important;
+        border-bottom: 1px solid rgba(23, 34, 48, 0.12) !important;
+        box-shadow: 0 10px 24px rgba(20, 30, 43, 0.1) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    @media (max-width: 991.98px) {
+        .dashboard-lux {
+            margin-inline: clamp(15px, 4.8vw, 20px);
+        }
+
+        .dashboard-lux .dashboard-shell {
+            border-radius: 30px;
+            padding: 1.45rem 1.3rem;
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+
+        .dashboard-lux .dashboard-title {
+            font-size: clamp(1.7rem, 5.8vw, 2.2rem);
+        }
+
+        .dashboard-lux .dashboard-subtitle {
+            font-size: 14.2px;
+            line-height: 1.95;
+        }
+
+        .dashboard-lux .dashboard-stat-card,
+        .dashboard-lux .dashboard-panel,
+        .dashboard-lux .dashboard-theme-card {
+            border-radius: 22px;
+        }
+
+        .dashboard-lux .dashboard-stat-card {
+            padding: 1.12rem;
+        }
+
+        .dashboard-lux .dashboard-note {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.35rem;
+        }
+
+        body.dashboard-lux-active #mainNavbar {
+            border-color: rgba(255, 255, 255, 0.24);
+            background: linear-gradient(168deg, rgba(17, 27, 43, 0.96), rgba(16, 22, 33, 0.92));
+            box-shadow: 0 22px 32px rgba(4, 7, 13, 0.45);
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .dashboard-lux {
+            margin-inline: 14px;
+        }
+
+        .dashboard-lux .dashboard-shell {
+            padding: 1.2rem 1rem;
+            border-radius: 24px;
+        }
+
+        .dashboard-lux .dashboard-stat-value {
+            font-size: 1.3rem;
+        }
+
+        .dashboard-lux .dashboard-stat-icon {
+            width: 52px;
+            height: 52px;
+            font-size: 1.12rem;
+        }
+
+        .dashboard-lux .dashboard-panel {
+            padding: 0.95rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .dashboard-lux .dashboard-stat-card,
+        .dashboard-lux .dashboard-panel,
+        .dashboard-lux .dashboard-theme-card,
+        .dashboard-lux .dashboard-action-btn {
+            transition: none;
+        }
     }
 </style>
 {% endblock %}
@@ -308,89 +479,28 @@
         {% endfor %}
     </div>
 
-    <div class="row g-4 mt-1">
-        <div class="col-12 col-lg-6">
-            <article class="dashboard-theme-card">
-                <div class="dashboard-panel-header"><i class="bi bi-palette2"></i> إعدادات المظهر</div>
-                <p class="dashboard-theme-help">يمكنك التبديل بين المظلم والمشمس أو استخدام الوضع التلقائي حسب إعداد جهازك.</p>
-
-                <label for="dashboardThemePreferenceSelect" class="form-label mb-2">وضع الواجهة</label>
-                <select id="dashboardThemePreferenceSelect" class="form-select">
-                    <option value="dark">مظلم (افتراضي)</option>
-                    <option value="light">مشمس</option>
-                    <option value="auto">تلقائي حسب الجهاز</option>
-                </select>
-
-                <div class="dashboard-theme-status">
-                    <div>الوضع الفعلي الآن: <strong id="dashboardThemeResolvedStatus">-</strong></div>
-                    <div>آخر مزامنة: <strong id="dashboardThemeUpdatedStatus">-</strong></div>
-                </div>
-
-                <div id="dashboardThemeSaveNote" class="dashboard-theme-save-note"></div>
-            </article>
-        </div>
-    </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const select = document.getElementById('dashboardThemePreferenceSelect');
-        const resolvedStatus = document.getElementById('dashboardThemeResolvedStatus');
-        const updatedStatus = document.getElementById('dashboardThemeUpdatedStatus');
-        const saveNote = document.getElementById('dashboardThemeSaveNote');
+        document.body.classList.add('dashboard-lux-active');
 
-        const formatResolved = function (value) {
-            return value === 'light' ? 'مشمس' : 'مظلم';
-        };
-
-        const formatDateTime = function (isoValue) {
-            if (!isoValue) {
-                return 'لم يتم الحفظ بعد';
-            }
-            const d = new Date(isoValue);
-            if (Number.isNaN(d.getTime())) {
-                return 'تم الحفظ';
-            }
-            return d.toLocaleString('ar-SA');
-        };
-
-        const syncPanel = function (state) {
-            if (!state) {
-                return;
-            }
-            if (select && state.preference) {
-                select.value = state.preference;
-            }
-            if (resolvedStatus) {
-                resolvedStatus.textContent = formatResolved(state.resolvedTheme || 'dark');
-            }
-            if (updatedStatus) {
-                updatedStatus.textContent = formatDateTime(state.updatedAt || null);
+        const setNavState = function () {
+            if (window.scrollY > 16) {
+                document.body.classList.add('nav-scrolled');
+            } else {
+                document.body.classList.remove('nav-scrolled');
             }
         };
 
-        if (window.themePreferenceAPI && typeof window.themePreferenceAPI.getState === 'function') {
-            syncPanel(window.themePreferenceAPI.getState());
-        }
+        setNavState();
+        window.addEventListener('scroll', setNavState, { passive: true });
 
-        document.addEventListener('theme:changed', function (event) {
-            syncPanel(event.detail || {});
+        window.addEventListener('beforeunload', function () {
+            document.body.classList.remove('dashboard-lux-active');
+            document.body.classList.remove('nav-scrolled');
         });
 
-        if (select && window.themePreferenceAPI && typeof window.themePreferenceAPI.setPreference === 'function') {
-            select.addEventListener('change', function () {
-                saveNote.textContent = 'جاري حفظ تفضيلك...';
-                window.themePreferenceAPI
-                    .setPreference(select.value)
-                    .then(function (result) {
-                        syncPanel(result);
-                        saveNote.textContent = 'تم الحفظ بنجاح';
-                    })
-                    .catch(function () {
-                        saveNote.textContent = 'تعذر الحفظ الآن، حاول مرة أخرى.';
-                    });
-            });
-        }
     });
 </script>
 {% endblock %}

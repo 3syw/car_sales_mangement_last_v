@@ -45,7 +45,7 @@ from .models import (
     TaxRate,
     UserThemePreference,
 )
-from django.db.models import Sum, F, Q
+from django.db.models import Sum, F, Q, Count
 from django.db import transaction, IntegrityError, connections
 from django.db.utils import OperationalError
 from django.contrib.auth.decorators import login_required
@@ -108,9 +108,10 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods, require_POST
 from .tenant_database import migrate_tenant_database, ensure_tenant_connection, normalize_tenant_id
 from .tenant_context import clear_current_tenant, set_current_tenant, get_current_tenant_db_alias
-from .tenant_registry import get_cached_tenant_metadata, is_valid_tenant_access_key
+from .tenant_registry import get_cached_tenant_metadata
 from .platform_audit import write_platform_audit
 from .services import ReportService, SalesService
+from .car_catalog import CAR_BRAND_MODELS
 
 PERMISSION_FIELDS = [
     'can_access_dashboard',
@@ -663,25 +664,98 @@ def export_sales_excel(request):
     wb.save(response)
     return response
 
+def _brand_logo_url(brand_name):
+    normalized = (brand_name or '').strip().lower()
+    logo_map = {
+        'mercedes': '/static/sales/img/brands/mercedes.svg',
+        'mercedes-benz': '/static/sales/img/brands/mercedes.svg',
+        'مرسيدس': '/static/sales/img/brands/mercedes.svg',
+        'bmw': 'https://cdn.simpleicons.org/bmw/111111',
+        'بي ام دبليو': 'https://cdn.simpleicons.org/bmw/111111',
+        'audi': 'https://cdn.simpleicons.org/audi/111111',
+        'اودي': 'https://cdn.simpleicons.org/audi/111111',
+        'toyota': 'https://cdn.simpleicons.org/toyota/111111',
+        'تويوتا': 'https://cdn.simpleicons.org/toyota/111111',
+        'nissan': 'https://cdn.simpleicons.org/nissan/111111',
+        'نيسان': 'https://cdn.simpleicons.org/nissan/111111',
+        'hyundai': 'https://cdn.simpleicons.org/hyundai/111111',
+        'هيونداي': 'https://cdn.simpleicons.org/hyundai/111111',
+        'kia': 'https://cdn.simpleicons.org/kia/111111',
+        'كيا': 'https://cdn.simpleicons.org/kia/111111',
+        'honda': 'https://cdn.simpleicons.org/honda/111111',
+        'هوندا': 'https://cdn.simpleicons.org/honda/111111',
+        'ford': 'https://cdn.simpleicons.org/ford/111111',
+        'فورد': 'https://cdn.simpleicons.org/ford/111111',
+        'chevrolet': 'https://cdn.simpleicons.org/chevrolet/111111',
+        'شيفروليه': 'https://cdn.simpleicons.org/chevrolet/111111',
+        'lexus': '/static/sales/img/brands/lexus.svg',
+        'لكزس': '/static/sales/img/brands/lexus.svg',
+        'porsche': 'https://cdn.simpleicons.org/porsche/111111',
+        'بورش': 'https://cdn.simpleicons.org/porsche/111111',
+        'volkswagen': 'https://cdn.simpleicons.org/volkswagen/111111',
+        'فولكس واجن': 'https://cdn.simpleicons.org/volkswagen/111111',
+    }
+    return logo_map.get(normalized, '')
+
+
 @require_interface_access('can_access_cars')
 def car_list(request):
-    # استقبال نص البحث من المربع في الواجهة
-    query = request.GET.get('search')
-    
-    # جلب جميع السيارات كبداية
-    cars = Car.objects.all().order_by('-created_at')
+    # صفحة اختيار البراند فقط
+    query = (request.GET.get('search') or '').strip()
+    all_available_qs = Car.objects.filter(is_sold=False)
 
-    # إذا قام المستخدم بكتابة شيء في مربع البحث
+    brand_rows = (
+        all_available_qs.values('brand')
+        .annotate(total=Count('id'))
+    )
+    brand_count_map = {}
+    for row in brand_rows:
+        brand_name = (row.get('brand') or '').strip()
+        if brand_name:
+            key = brand_name.lower()
+            brand_count_map[key] = brand_count_map.get(key, 0) + (row.get('total') or 0)
+
+    catalog_brands = sorted(CAR_BRAND_MODELS.keys())
     if query:
-        cars = cars.filter(
-            Q(brand__icontains=query) |        # البحث في الماركة
-            Q(model_name__icontains=query) |   # البحث في الموديل
-            Q(vin__icontains=query)            # البحث في رقم الشاسيه
-        )
+        catalog_brands = [b for b in catalog_brands if query.lower() in b.lower()]
+
+    brand_cards = []
+    for brand_name in catalog_brands:
+        brand_cards.append({
+            'brand': brand_name,
+            'total': brand_count_map.get(brand_name.lower(), 0),
+            'logo_url': _brand_logo_url(brand_name),
+        })
 
     return render(request, 'sales/car_list.html', {
+        'query': query,
+        'brand_cards': brand_cards,
+        'available_total': all_available_qs.count(),
+        'car_list_ok_url': reverse('car_list'),
+    })
+
+
+@require_interface_access('can_access_cars')
+def car_available_results(request):
+    # صفحة عرض السيارات المتاحة حسب البراند المختار
+    query = (request.GET.get('search') or '').strip()
+    selected_brand = (request.GET.get('brand') or '').strip()
+
+    cars = Car.objects.filter(is_sold=False).order_by('-created_at')
+    if selected_brand:
+        cars = cars.filter(brand__iexact=selected_brand)
+
+    if query:
+        cars = cars.filter(
+            Q(brand__icontains=query) |
+            Q(model_name__icontains=query) |
+            Q(vin__icontains=query)
+        )
+
+    return render(request, 'sales/car_available_results.html', {
         'cars': cars,
         'query': query,
+        'selected_brand': selected_brand,
         'car_list_ok_url': reverse('car_list'),
     })
 
@@ -2447,7 +2521,8 @@ def _parse_bank_statement_rows(file_obj):
             continue
 
         raw_currency = str(_cell('currency', 'SR') or 'SR').strip().upper()
-        currency = raw_currency if raw_currency in {'SR', '$', '£'} else 'SR'
+        allowed_currencies = {code for code, _label in Car.CURRENCY_CHOICES}
+        currency = raw_currency if raw_currency in allowed_currencies else 'SR'
 
         parsed_rows.append({
             'line_no': line_no,
@@ -2899,6 +2974,10 @@ REPORT_CURRENCY = 'SR'
 CURRENCY_RATES_TO_SR = {
     'SR': Decimal('1'),
     '$': Decimal('3.75'),
+    'EUR': Decimal('4.06'),
+    'CNY': Decimal('0.52'),
+    'KRW': Decimal('0.0028'),
+    'YER': Decimal('0.015'),
     '£': Decimal('4.80'),
 }
 
@@ -3411,115 +3490,40 @@ def user_login(request):
         form = TenantLoginForm(request.POST)
         if form.is_valid():
             tenant_id_raw = (form.cleaned_data.get('tenant_id') or '').strip()
-            tenant_key = (form.cleaned_data.get('tenant_key') or '').strip()
             username = (form.cleaned_data.get('username') or '').strip()
             password = (form.cleaned_data.get('password') or '').strip()
 
-            # Hidden platform-admin path: when tenant credentials are omitted,
-            # allow login only for default-db superuser/staff accounts.
-            if not tenant_id_raw and not tenant_key:
-                client_ip = _extract_client_ip(request)
-                hidden_login_key = _hidden_platform_login_cache_key(username, client_ip)
-                current_attempts = int(cache.get(hidden_login_key) or 0)
+            tenant_id = normalize_tenant_id(tenant_id_raw)
+            tenant_metadata = get_cached_tenant_metadata(tenant_id)
+            if tenant_metadata is None or not tenant_metadata.get('is_active'):
+                form.add_error('tenant_id', 'معرف المعرض غير موجود أو غير نشط.')
+            else:
+                alias = ensure_tenant_connection(tenant_id)
+                set_current_tenant(tenant_id, alias)
+                user = User.objects.using(alias).filter(username=username).first()
 
-                if current_attempts >= HIDDEN_PLATFORM_LOGIN_MAX_ATTEMPTS:
-                    _write_hidden_platform_login_failure_audit(
-                        request,
-                        username,
-                        reason='rate_limited_hidden_platform_login',
-                    )
-                    form.add_error(
-                        None,
-                        'تم تقييد محاولات الدخول مؤقتًا. الرجاء المحاولة لاحقًا.',
-                    )
-                    return render(
-                        request,
-                        'admin/login.html',
-                        {
-                            'form': form,
-                            'next': next_url,
-                            'google_oauth_enabled': _google_oauth_enabled(),
-                        },
-                    )
-
-                owner = User.objects.using('default').filter(
-                    username=username,
-                    is_active=True,
-                    is_superuser=True,
-                    is_staff=True,
-                ).first()
-
-                if owner is not None and owner.check_password(password):
-                    cache.delete(hidden_login_key)
-                    clear_current_tenant()
-                    login(request, owner, backend='django.contrib.auth.backends.ModelBackend')
-                    request.session.pop('tenant_id', None)
-                    request.session.pop(TENANT_DB_ALIAS_SESSION_KEY, None)
-                    request.session[PLATFORM_OWNER_SESSION_KEY] = True
-                    request.session[PLATFORM_OWNER_USERNAME_KEY] = owner.username
+                if user is None:
+                    form.add_error('username', 'اسم المستخدم غير موجود داخل هذا المعرض.')
+                elif not user.check_password(password):
+                    form.add_error('password', 'كلمة مرور الحساب غير صحيحة.')
+                elif not user.is_active:
+                    form.add_error(None, 'هذا الحساب غير نشط.')
+                else:
+                    request.session.pop(PENDING_TENANT_LOGIN_SESSION_KEY, None)
+                    request.session.pop(PENDING_TENANT_REGISTER_SESSION_KEY, None)
+                    set_current_tenant(tenant_id, alias)
+                    login(request, user, backend='sales.auth_backend.TenantModelBackend')
+                    request.session['tenant_id'] = tenant_id
+                    request.session[TENANT_DB_ALIAS_SESSION_KEY] = alias
                     write_platform_audit(
-                        event_type='platform_login',
-                        actor_username=owner.username,
-                        notes='دخول منصة الإدارة عبر صفحة تسجيل الدخول الموحدة',
+                        event_type='tenant_login',
+                        tenant_id=tenant_id,
+                        actor_username=user.username,
+                        notes='تسجيل دخول بكلمة المرور',
                     )
-                    messages.success(request, 'تم تسجيل دخول منصة الإدارة الفوقية بنجاح.')
-
                     if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
                         return redirect(next_url)
-                    return redirect('platform_switch_tenant')
-
-                cache.set(
-                    hidden_login_key,
-                    current_attempts + 1,
-                    timeout=HIDDEN_PLATFORM_LOGIN_WINDOW_SECONDS,
-                )
-                _write_hidden_platform_login_failure_audit(
-                    request,
-                    username,
-                    reason='invalid_hidden_platform_credentials',
-                )
-                form.add_error(None, 'بيانات الدخول غير صحيحة.')
-
-            elif bool(tenant_id_raw) != bool(tenant_key):
-                if not tenant_id_raw:
-                    form.add_error('tenant_id', 'يرجى إدخال معرف المعرض أو ترك حقلي المعرض فارغين.')
-                if not tenant_key:
-                    form.add_error('tenant_key', 'يرجى إدخال كلمة مرور المعرض أو ترك حقلي المعرض فارغين.')
-
-            else:
-                tenant_id = normalize_tenant_id(tenant_id_raw)
-                tenant_metadata = get_cached_tenant_metadata(tenant_id)
-                if tenant_metadata is None or not tenant_metadata.get('is_active'):
-                    form.add_error('tenant_id', 'معرف المعرض غير موجود أو غير نشط.')
-                elif not is_valid_tenant_access_key(tenant_metadata, tenant_key):
-                    form.add_error('tenant_key', 'كلمة مرور المعرض غير صحيحة.')
-                else:
-                    alias = ensure_tenant_connection(tenant_id)
-                    set_current_tenant(tenant_id, alias)
-                    user = User.objects.using(alias).filter(username=username).first()
-
-                    if user is None:
-                        form.add_error('username', 'اسم المستخدم غير موجود داخل هذا المعرض.')
-                    elif not user.check_password(password):
-                        form.add_error('password', 'كلمة مرور الحساب غير صحيحة.')
-                    elif not user.is_active:
-                        form.add_error(None, 'هذا الحساب غير نشط.')
-                    else:
-                        request.session.pop(PENDING_TENANT_LOGIN_SESSION_KEY, None)
-                        request.session.pop(PENDING_TENANT_REGISTER_SESSION_KEY, None)
-                        set_current_tenant(tenant_id, alias)
-                        login(request, user, backend='sales.auth_backend.TenantModelBackend')
-                        request.session['tenant_id'] = tenant_id
-                        request.session[TENANT_DB_ALIAS_SESSION_KEY] = alias
-                        write_platform_audit(
-                            event_type='tenant_login',
-                            tenant_id=tenant_id,
-                            actor_username=user.username,
-                            notes='تسجيل دخول بكلمة المرور',
-                        )
-                        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
-                            return redirect(next_url)
-                        return redirect('home')
+                    return redirect('home')
     else:
         form = TenantLoginForm()
 
@@ -3647,7 +3651,6 @@ def google_auth_callback(request):
         return redirect('register')
 
     tenant_id = normalize_tenant_id(pending_register.get('tenant_id'))
-    tenant_key = pending_register.get('tenant_key') or ''
     showroom_name = pending_register.get('showroom_name') or ''
     username = pending_register.get('username') or ''
     password = pending_register.get('password') or ''
@@ -3655,7 +3658,6 @@ def google_auth_callback(request):
     try:
         with transaction.atomic(using='default'):
             tenant = PlatformTenant(name=showroom_name, tenant_id=tenant_id)
-            tenant.set_access_key(tenant_key)
             tenant.save(using='default')
     except IntegrityError:
         _clear_pending_google_flow_session(request)
@@ -3870,7 +3872,6 @@ def register(request):
         form = TenantRegisterForm(request.POST)
         if form.is_valid():
             tenant_id = normalize_tenant_id(form.cleaned_data['tenant_id'])
-            tenant_key = form.cleaned_data['tenant_key']
             showroom_name = form.cleaned_data['showroom_name']
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
@@ -3878,7 +3879,6 @@ def register(request):
             try:
                 with transaction.atomic(using='default'):
                     tenant = PlatformTenant(name=showroom_name, tenant_id=tenant_id)
-                    tenant.set_access_key(tenant_key)
                     tenant.save(using='default')
             except IntegrityError:
                 form.add_error('tenant_id', 'هذا المعرف مستخدم مسبقًا. اختر معرفًا آخر.')
@@ -3937,8 +3937,70 @@ def available_cars_table(request):
     if not request.user.is_staff:
         raise PermissionDenied
 
-    cars = Car.objects.filter(is_sold=False).order_by('-created_at')
-    return render(request, 'sales/available_cars.html', {'cars': cars})
+    def _brand_logo_url(brand_name):
+        normalized = (brand_name or '').strip().lower()
+        logo_map = {
+            'mercedes': '/static/sales/img/brands/mercedes.svg',
+            'mercedes-benz': '/static/sales/img/brands/mercedes.svg',
+            'مرسيدس': '/static/sales/img/brands/mercedes.svg',
+            'bmw': 'https://cdn.simpleicons.org/bmw/111111',
+            'بي ام دبليو': 'https://cdn.simpleicons.org/bmw/111111',
+            'audi': 'https://cdn.simpleicons.org/audi/111111',
+            'اودي': 'https://cdn.simpleicons.org/audi/111111',
+            'toyota': 'https://cdn.simpleicons.org/toyota/111111',
+            'تويوتا': 'https://cdn.simpleicons.org/toyota/111111',
+            'nissan': 'https://cdn.simpleicons.org/nissan/111111',
+            'نيسان': 'https://cdn.simpleicons.org/nissan/111111',
+            'hyundai': 'https://cdn.simpleicons.org/hyundai/111111',
+            'هيونداي': 'https://cdn.simpleicons.org/hyundai/111111',
+            'kia': 'https://cdn.simpleicons.org/kia/111111',
+            'كيا': 'https://cdn.simpleicons.org/kia/111111',
+            'honda': 'https://cdn.simpleicons.org/honda/111111',
+            'هوندا': 'https://cdn.simpleicons.org/honda/111111',
+            'ford': 'https://cdn.simpleicons.org/ford/111111',
+            'فورد': 'https://cdn.simpleicons.org/ford/111111',
+            'chevrolet': 'https://cdn.simpleicons.org/chevrolet/111111',
+            'شيفروليه': 'https://cdn.simpleicons.org/chevrolet/111111',
+            'lexus': '/static/sales/img/brands/lexus.svg',
+            'لكزس': '/static/sales/img/brands/lexus.svg',
+            'porsche': 'https://cdn.simpleicons.org/porsche/111111',
+            'بورش': 'https://cdn.simpleicons.org/porsche/111111',
+            'volkswagen': 'https://cdn.simpleicons.org/volkswagen/111111',
+            'فولكس واجن': 'https://cdn.simpleicons.org/volkswagen/111111',
+        }
+        return logo_map.get(normalized, '')
+
+    selected_brand = (request.GET.get('brand') or '').strip()
+    base_qs = Car.objects.filter(is_sold=False)
+
+    if selected_brand:
+        cars = base_qs.filter(brand__iexact=selected_brand).order_by('-created_at')
+    else:
+        cars = base_qs.order_by('-created_at')
+
+    brand_cards = []
+    brand_rows = (
+        base_qs.values('brand')
+        .annotate(total=Count('id'))
+        .order_by('brand')
+    )
+    for row in brand_rows:
+        brand_name = (row.get('brand') or '').strip()
+        if not brand_name:
+            continue
+        brand_cards.append({
+            'brand': brand_name,
+            'total': row.get('total') or 0,
+            'logo_url': _brand_logo_url(brand_name),
+        })
+
+    context = {
+        'cars': cars,
+        'brand_cards': brand_cards,
+        'selected_brand': selected_brand,
+        'available_total': base_qs.count(),
+    }
+    return render(request, 'sales/available_cars.html', context)
 
 
 @require_interface_access('can_access_cars')
